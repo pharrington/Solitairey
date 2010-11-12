@@ -1,12 +1,121 @@
-<html>
+<!doctype html>
+<html class="yui3-cssreset">
 <head>
-<title>Solitaire.</title>
-<link rel="stylesheet" type="text/css" href="cards.css" />
-	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-	<script type="text/javascript" src="js/jquery-ui-1.8.4.custom.js"></script>
+	<title>Solitaire.</title>
+	<link rel="stylesheet" type="text/css" href="cards.css" />
+	<script type="text/javascript" src="js/yui-debug.js"></script>
 	<script type="text/javascript" src="js/solitaire.js"></script>
+	<script type="text/javascript" src="js/klondike.js"></script>
+	<script type="text/javascript" src="js/flowergarden.js"></script>
+	<script type="text/javascript" src="js/fortythieves.js"></script>
 	<script type="text/javascript" src="js/freecell.js"></script>
+	<script type="text/javascript" src="js/grandclock.js"></script>
+	<script type="text/javascript" src="js/montecarlo.js"></script>
+	<script type="text/javascript" src="js/pyramid.js"></script>
+	<script type="text/javascript" src="js/scorpion.js"></script>
+	<script type="text/javascript" src="js/spider.js"></script>
+	<script type="text/javascript" src="js/spider1s.js"></script>
+	<script type="text/javascript" src="js/yukon.js"></script>
+	<script type="text/javascript" src="js/spade.js"></script>
+	<script type="text/javascript" src="js/application.js"></script>
 </head>
 <body>
+	<ul id="menu">
+		<li>
+			<a id="new_deal">Deal New Cards</a>
+		</li>
+		<li>
+			<a id="choose_game">Choose Solitaire Game...</a>
+		</li>
+		<li>
+			<a id="undo">Undo</a>
+		</li>
+		<li>
+			<a id="options">Options...</a>
+		</li>
+	</ul>
+	<div id="options-chooser">
+		<div class="titlebar"><div class="close"></div></div>
+	</div>
+	<div id="game-chooser">
+		<div class="titlebar"><div class="close"></div></div>
+		<div id="game-chooser-contents">
+		<ul id="descriptions">
+			<li id="flower-garden">
+				<h2>Flower Garden</h2>
+				<div class="description">
+					<h3>Layout:</h3>
+					<img src="layouts/flower-garden.png" class="layout">
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Play:</h3>
+					<p>Any card from the bouquet (reserve) may be played on the foundation or garden (tableau). The top card of each garden pile may be played on the foundation or another garden pile. The garden may be built downwards, regardless of suit. Free garden spaces may be filled by any card.</p>
+					<button class="choose">Play Flower Garden</button>
+				</div>
+			</li>
+			<li id="forty-thieves">
+				<h2>Forty Thieves</h2>
+				<div class="description">
+					<h3>Layout:</h3>
+					<img src="layouts/forty-thieves.png" class="layout">
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Play:</h3>
+					<p>The top card of each tableau pile may be played on the foundation or another tableau. The tableau is built downwards but suit. Piles may not be moved. Free tableau spaces may be filled by any card.
+					<h3>Wastepile:</h3>
+					<p>Click the stock to transfer 1 card to the wastepile. The top card may be played on the foundation or a tableau pile.</p>
+					<button class="choose">Play Forty Thieves</button>
+				</div>
+			</li>
+			<li id="freecell">
+				<h2>Freecell</h2>
+				<div class="description">Write something about Freecell here</div>
+			</li>
+			<li id="grandfathers-clock">
+				<h2>Grandfather's Clock</h2>
+				<div class="description">Write something about Grandfather's Clock here</div>
+			</li>
+			<li id="klondike">
+				<h2>Klondike</h2>
+				<div class="description">
+					<h3>Layout:</h3>
+					<img src="layouts/klondike.png" class="layout">
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Tableau:</h3>
+					<p>The top card of each pile may be played on another tableau pile or on the foundation. Tableau piles are built downwards by alternating color. Partial or complete face up piles may be moved. Free spaces may only be filled by a King or a pile starting with a King.
+					<h3>Wastepile</h3>
+					<p>Click the stock to transfer 3 cards to the wastepile. The top card on the wastepile may be played on the foundation or tableau. When the stock is deplected, click it to start a new stock with the remaining waste cards.</p>
+					<button class="choose">Play Klondike</button>
+				</div>
+			</li>
+			<li id="monte-carlo">
+				<h2>Monte Carlo</h2>
+				<div class="description"><button class="choose">Play Monte Carlo</button></div>
+			</li>
+			<li id="pyramid">
+				<h2>Pyramid</h2>
+				<div class="description"><button class="choose">Play Pyramid</button></div>
+			</li>
+			<li id="scorpion">
+				<h2>Scorpion</h2>
+				<div class="description">Write something about Scorpion here</div>
+			</li>
+			<li id="spider">
+				<h2>Spider</h2>
+				<div class="description">Write something about Spider here</div>
+			</li>
+			<li id="spider1s">
+				<h2>Spider (1 Suite)</h2>
+				<div class="description"><button class="choose">Play Spider 1 Suite</button></div>
+			</li>
+			<li id="yukon">
+				<h2>Yukon</h2>
+				<div class="description">Write something about Yukon here</div>
+			</li>
+		</ul>
+		</div>
+	</div>
+	<div id="game"></div>
 </body>
 </html>

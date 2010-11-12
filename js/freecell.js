@@ -1,19 +1,21 @@
-var Freecell = instance(Solitaire, {
+YUI.add("freecell", function (Y) {
+
+var Solitaire = Y.Solitaire,
+    Freecell = Y.namespace("freecell");
+
+    Y.mix(Freecell, instance(Solitaire, {
+	fields: ["Foundation", "Reserve", "Tableau"],
+
 	deal: function () {
 		var card,
 		    stack = 0,
 		    stacks = this.tableau.stacks;
 
 		while (card = this.deck.pop()) {
-			stacks[stack].push(card);			
+			stacks[stack].push(card.faceUp());			
 			stack++;
 			if (stack === 8) { stack = 0; }
 		}
-		$.each([this.foundation, this.tableau, this.reserve], function () {
-			$.each(this.stacks, function () {
-				this.createDOMElement();
-			});
-		});
 	},
 
 	openSlots: function (exclude) {
@@ -42,9 +44,9 @@ var Freecell = instance(Solitaire, {
 		stackConfig: {
 			total: 4,
 			layout: {
-				spacing: 1.25,
+				hspacing: 1.25,
 				top: 0,
-				right: 0
+				left: function () { return Solitaire.Card.width * 6; }
 			}
 		},
 		field: "foundation",
@@ -55,7 +57,7 @@ var Freecell = instance(Solitaire, {
 		stackConfig: {
 			total: 4,
 			layout: {
-				spacing: 1.25,
+				hspacing: 1.25,
 				top: 0,
 				left: 0
 			}
@@ -68,7 +70,7 @@ var Freecell = instance(Solitaire, {
 		stackConfig: {
 			total: 8,
 			layout: {
-				spacing: 1.25,
+				hspacing: 1.25,
 				top: function () { return Solitaire.Card.height * 1.5; },
 				left: 0
 			}
@@ -78,6 +80,13 @@ var Freecell = instance(Solitaire, {
 	},
 
 	Card: instance(Solitaire.Card, {
+		createProxyStack: function () {
+			var stack = Solitaire.Card.createProxyStack.call(this);
+
+			this.proxyStack = stack && stack.cards.length <= Freecell.openSlots(stack) + 1 ? stack : null;
+			return this.proxyStack;
+		},
+
 		validTarget: function (stack) {
 			var target = stack.last();
 
@@ -102,22 +111,24 @@ var Freecell = instance(Solitaire, {
 			}
 		}
 	})
-});
+}));
 
-$.each(["Foundation", "Tableau", "Reserve"], function () {
-	Freecell[this].Stack = instance(Freecell.Stack);
-});
+Y.Array.each(Freecell.fields, function (field) {
+	Freecell[field].Stack = instance(Freecell.Stack);
+}, true);
 
-$.extend(Freecell.Stack, {
+Y.mix(Freecell.Stack, {
+	cssClass: "freestack",
+
 	validTarget: function (stack) {
 		if (stack.field !== "tableau" ||
 		    !this.first().validTarget(stack)) { return false; }
 
 		return this.cards.length <= Freecell.openSlots(stack, this.last()) + 1;
 	}
-});
+}, true);
 
-$.extend(Freecell.Tableau.Stack, {
+Y.mix(Freecell.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
 		    top = last ? last.top + Solitaire.Card.rankHeight : this.top,
@@ -126,9 +137,8 @@ $.extend(Freecell.Tableau.Stack, {
 		card.left = left;
 		card.top = top;
 	}
-});
+}, true);
 
-$(function () {
-	Freecell.init();
-	Freecell.deal();
-});
+Freecell.Foundation.Stack.cssClass = "freefoundation";
+
+}, {requires: ["solitaire"]});

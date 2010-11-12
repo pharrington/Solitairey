@@ -24,13 +24,28 @@ function argsArray(args) {
 
 Array.prototype.last = function () {
 	return this[this.length - 1];
-}
+};
 
 Array.prototype.deleteItem = function (item) {
 	var i = this.indexOf(item);
 
-	i != -1 && this.splice(i, 1);
-}
+	i !== -1 && this.splice(i, 1);
+};
+
+Array.prototype.shuffle = function () {
+	var i = this.length,
+	    r,
+	    item,
+	    temp;
+
+	while (--i) {
+		r = ~~(Math.random() * i);
+		item = this[i];
+		temp = this[r];
+		this[r] = item;
+		this[i] = temp;
+	}
+};
 
 Function.prototype.bind = function (o) {
 	var f = this;
@@ -40,7 +55,7 @@ Function.prototype.bind = function (o) {
 
 		return f.apply(o, args);
 	};
-}
+};
 
 Function.prototype.partial = function () {
 	var f = this, args = argsArray(arguments);
@@ -54,15 +69,23 @@ Function.prototype.partial = function () {
 
 		return f.apply(this, args);
 	};
-}
+};
 
 function instance(proto, attrs) {
-	var maker = function () {},
-	    o;
+	var maker = new Function(),
+	//var maker = function () {},
+	    o,
+	    p;
 
 	maker.prototype = proto;
 	o = new maker;
-	typeof attrs === "object" && $.extend(o, attrs);
+	if (typeof attrs === "object") {
+		for (p in attrs) {
+			if (attrs.hasOwnProperty(p)) {
+				o[p] = attrs[p];
+			}
+		}
+	}
 
 	return o;
 }
@@ -73,128 +96,597 @@ function normalize(valOrFunction) {
 	return isNaN(val) ? undefined : val;
 }
 
-/* The card that's currently being dragged
- * Before, each card set .data("card") on its respective dom element,
- * and droppables checked ui.draggable.data("card") to see what card was dropped on it
- * however, jquery ui tends to keep old, invalid data in its ddmanager, making the documented and recommend approach broken.
- */
-var Solitaire = {
+YUI.add("solitaire", function (Y) {
+var Solitaire = Y.namespace("Solitaire");
+
+Y.mix(Solitaire, {
 	activeCard: null,
+	moves: null,
+	selector: "#game",
+	noop: function () {},
+
+	container: function () {
+		return Y.one(Solitaire.selector);
+	},
+
+	width: function () { return this.Card.base.width * 10; },
+	height: function () { return this.Card.base.height * 6; },
+
+	undo: function () {
+		Undo.undo();
+		Solitaire.endTurn();
+	},
+
+	pushMove: function (move) {
+		var moves = Solitaire.moves;
+		moves && moves.push(move);
+	},
+
+	serialize: function () {
+		var serialized = [],
+		    lengths = [],
+		    data,
+		    stacks,
+		    i, len;
+
+		Y.Array.each(this.fields, function (field) {
+			stacks = this[field.toLowerCase()].stacks;
+
+			for (i = 0, len = stacks.length; i < len; i++) {
+				data = stacks[i].serialize();
+				serialized.push(data);
+				lengths.push(String.fromCharCode(data.length));
+			}
+		}, this);
+
+		return [String.fromCharCode(serialized.length)].concat(lengths, serialized).join("");
+	},
+
+	unanimated: function (callback) {
+		var anim = this.Animation,
+		    animate = anim.animate;
+
+		anim.animate = false;
+		callback.call(this);
+		anim.animate = animate;
+	},
+
+	unserialize: function (serialized) {
+		this.unanimated(function () {
+			var numStacks = serialized.charCodeAt(0),
+			    lengths = serialized.substr(1, numStacks),
+			    offset = numStacks + 1,
+			    data,
+			    fields = this.fields, fieldIndex = -1,
+			    stacks = [], stackIndex,
+			    i,
+			    length;
+
+			for (i = 0, stackIndex = 0; i < numStacks; i++, stackIndex++, offset += length) {
+				length = lengths.charCodeAt(i);
+				data = serialized.substr(offset, length);
+
+				if (stackIndex === stacks.length) {
+					fieldIndex++;
+					stacks = this[fields[fieldIndex].toLowerCase()].stacks;
+					stackIndex = 0;
+				}
+
+				stacks[stackIndex].unserialize(data);
+			}
+		});
+	},
+
+	save: function () {
+		var data = this.serialize(),
+		    twoWeeks = 1206900000;
+
+		Y.Cookie.set("saved-game", data, {expires: new Date(new Date().getTime() + twoWeeks)});
+	},
+
+	loadGame: function (data) {
+		this.setup(function () {
+			this.unserialize(data);
+		});		
+	},
+
+	newGame: function () {
+		Y.Cookie.remove("saved-game");
+		this.setup(this.deal);
+	},
+
+	setup: function (callback) {
+		Solitaire.moves = null;
+		Undo.clear();
+
+		this.init();
+		this.Animation.initQueue();
+		Solitaire.Card.animation = Solitaire.Animation;
+		this.createStacks();
+		callback.call(this);
+
+		Solitaire.moves = [];
+	},
 
 	createField: function (field) {
+		if (!field) { return; }
+
 		var f = instance(field),
-		    stackLayout = field.stackConfig.layout,
-		    stacks = new Array(field.stackConfig.total);
+		    stackLayout,
+		    stack,
+		    stacks,
+		    i, len;
 
-		field.Stack.field = field.field;
-		f.stacks = $.map(stacks, function (_, i) {
-			var stack;
+		if (field.stackConfig) {
+			stackLayout = field.stackConfig.layout;
+			stacks = new Array(field.stackConfig.total);
+			field.Stack.field = field.field;
 
-			stack = instance(field.Stack);
-			stack.layout($.extend({}, stackLayout, {offset: i * stackLayout.spacing}));
-			stack.createDOMElement();
-			return stack;
-		});
+			for (i = 0, len = stacks.length; i < len; i++) {
+
+				stack = instance(field.Stack);
+				stack.configLayout = stackLayout;
+
+				stack.layout(Y.merge(stackLayout, {
+					hoffset: i * stackLayout.hspacing || 0,
+					voffset: i * stackLayout.vspacing || 0}), i);
+
+				stacks[i] = stack;
+			};
+		}
+		f.stacks = stacks;
+
+		typeof f.init === "function" && f.init();
 
 		return f;
 	},
 
-	init: function () {
-		this.foundation = this.createField(this.Foundation);
-		this.tableau = this.createField(this.Tableau);
-		this.reserve = this.createField(this.Reserve);
-		this.deck = new Solitaire.Deck(this);
-		Solitaire.game = this;
-	},
-
-	autoPlay: function (card) {
-		$.each(Solitaire.game.foundation.stacks, function () {
-			if (card.stack.last() === card && card.validTarget(this)) {
-				card.moveTo(this);
-				return;
-			}
+	createStacks: function () {
+		this.eachStack(function (stack) {
+			stack.cards = [];
+			stack.createNode();
 		});
 	},
 
-	Deck: function (game) {
-		var suits = ["c", "s", "h", "d"],
-		    colors = {c: 0, s: 0, h: 1, d: 1},
-		    suit, s,
-		    rank;
+	eachStack: function (callback) {
+		var game = Solitaire.game;
 
-		this.cards = [];
+		Y.Array.each(game.fields, function (name) {
+			var field = game[name.toLowerCase()];
+			field.stacks && Y.Array.each(field.stacks, callback);
+		});
+	},
 
-		for (rank = 1; rank <= 13; rank++ ) {
-			for (s = 0; suit = suits[s]; s++) {
-				this.cards.push(instance(game.Card, {rank: rank, suit: suit, color: colors[suit]}));
+	resize: function (scale) {
+		this.scale(scale);
+
+		Y.all(".stack, .card").remove();
+		this.unanimated(function () {
+			this.eachStack(function (stack, i) {
+				var cards = stack.cards,
+				    layout = stack.configLayout;
+
+				stack.cards = [];
+				stack.layout(Y.merge(layout, {
+					hoffset: i * layout.hspacing || 0,
+					voffset: i * layout.vspacing || 0}), i);
+
+				stack.createNode();
+
+				stack.setCards(cards.length, function (i) {
+					var card = cards[i];
+
+					card.destroyNode();
+					return card;
+				});	
+
+				stack.update();
+			});
+		});
+	},
+
+	scale: function (scale) {
+		var Card = Solitaire.Card,
+		    base = Card.base,
+		    prop;
+
+		Card.scale = scale;
+
+		for (prop in base) {
+			if (base.hasOwnProperty(prop)) {
+				Card[prop] = base[prop] * scale;
 			}
+		};
+	},
+
+	init: function () {
+		var game = Solitaire.game = this;
+
+		Y.on("selectstart", function (e) { e.preventDefault(); }, document);
+		Y.on("mousedown", function (e) { e.preventDefault(); }, document);
+
+		Y.Array.each(game.fields, function (field) {
+			game[field.toLowerCase()] = game.createField(game[field]);
+		});
+
+		// TODO: refactor this conditional into the above iteration
+		if (game.fields.indexOf("Deck" === -1)) {
+			game.deck = game.createField(game.Deck);
+		}
+	},
+
+	autoPlay: function (card, e) {
+		var origin = card.stack,
+		    last = origin.last(),
+		    stacks,
+		    foundation,
+		    i, len;
+
+		e.type === "contextmenu" && e.preventDefault();
+
+		if (card.isFaceDown) { return; }
+
+		stacks = Solitaire.game.foundation.stacks;
+		for (i = 0, len = stacks.length; i < len; i++) {
+			foundation = stacks[i];
+			if (card.isFree() && card.validTarget(foundation)) {
+				card.moveTo(foundation);
+				origin.update();
+
+				e.preventDefault();
+				Solitaire.endTurn();
+				return true;
+			}
+		}
+	},
+
+	isWon: function () {
+		var foundations = this.foundation.stacks,
+		    deck = this.deck,
+		    total,
+		    placed = 0,
+		    i, len;
+
+		total = deck.suits.length * 13 * deck.count;
+		for (i = 0, len = foundations.length; i < len; i++) {
+			placed += foundations[i].cards.length;
+		}
+
+		return placed === total;
+	},
+
+	won: function () {
+		Y.Cookie.remove("saved-game");
+		alert("yay");
+	},
+
+	endTurn: function () {
+		var game = Solitaire.game;
+
+		Solitaire.moves.length && Undo.push(Solitaire.moves);
+		Solitaire.moves = [];
+		Solitaire.activeCard = null;
+		if (game.isWon()) {
+			game.won();
+		} else {
+			game.save();
 		}
 	},
 
 	Events: {
-		dragStart: function (card, event) {
-			if (!card.dragStack) {
-				$(this).css("zIndex", null);
-				return false;
-			}
+		clickEmptyDeck: function (event) {
+			Solitaire.game.redeal();
+			Solitaire.moves.reverse();
+			Solitaire.endTurn();
+		},
+
+		dragCheck: function (card) {
+			var stack = card.createProxyStack(),
+			    game = Solitaire.game;
+
+			if (!stack) { return; }
+
 			Solitaire.activeCard = card;
-		},
 
-		dragStop: function (card) {
-			var body = $("body");
-
-			$.each(card.dragStack.cards, function () {
-				this.dragStack = null;
-				body.append(this.domElement);
+			Y.Array.each(game.fields, function (field) {
+				Y.Array.each(game[field.toLowerCase()].stacks, function (s) {
+					s.updateDragGroups();
+				});
 			});
-			Solitaire.activeCard = null;
 		},
 
-		drop: function (target, event, ui) {
-			var stack = Solitaire.activeCard.dragStack,
+		dragStart: function (card) {
+			var node = this.get("dragNode"),
+			    xy = node.getXY();
+
+			this.set("offset", -xy[0], -xy[1]);
+			node.setContent(card.createProxy());
+
+			!card.proxyStack && Y.one(".yui3-dd-shim").setStyle("cursor", "not-allowed");
+		},
+
+		dragMiss: function (card) {
+			var offset = this.get("offset"),
+			    node = card.node;
+
+			node.setStyle("zIndex", card.zIndex);
+			node.setXY(offset);
+		},
+
+		dragEnd: function (target) {
+			if (!target.proxyStack) { return; }
+
+			var root = Solitaire.container(),
+			    drag = this;
+
+			Y.Array.each(target.proxyStack.cards, function (card) {
+				if (!card) { return; }
+				card.proxyStack = null;
+				root.append(card.node);
+			});
+
+			Solitaire.endTurn();
+		},
+
+		drop: function (e) {
+			if (!Solitaire.activeCard) { return; }
+
+			var card = Solitaire.activeCard,
+			    stack = card.proxyStack,
+			    origin = card.stack,
+			    target = e.drop.get("node").getData("target"),
+			    offset = Solitaire.container().getXY(),
+			    first = stack.first();
+			    drag = this;
+
 			    target = target.stack || target;
 
-			if ((stack.cards.length === 1 && stack.first().validTarget(target)) ||
+			if ((stack.cards.length === 1 && first.validTarget(target)) ||
 			    stack.validTarget(target)) {
-				$(Solitaire.activeCard.domElement).draggable("option", "revert", false);
-				$.each(stack.cards, function () {
-					this.moveTo(target);
-				});
+
+				target.pushStack(stack);
+
+				origin.update();
 			}
 		}
 	},
 
+	Deck: {
+		count: 1,
+		suits: ["c", "s", "h", "d"],
+
+		init: function () {
+			var suits = this.suits,
+			    suit, s,
+			    rank,
+			    count,
+			    Card = Solitaire.game.Card;
+
+			this.cards = [];
+
+			for (count = 0; count < this.count; count++) {
+				for (rank = 1; rank <= 13; rank++ ) {
+					for (s = 0; suit = suits[s]; s++) {
+						this.cards.push(Card.create(rank, suit).faceDown());
+					}
+				}
+			}
+
+			this.cards.shuffle();
+		},
+
+		createStack: function () {
+			var i, len;
+
+			for (i = this.cards.length - 1; i >= 0; i--) {
+				this.stacks[0].push(this.cards[i]);
+			}
+		},
+
+		last: function () {
+			return this.cards.last();
+		},
+
+		pop: function () {
+			return this.cards.pop();
+		}
+	},
+
 	Card: {
-		zIndex: 0,
-		width: 72,
-		height: 96,
-		rankHeight: 18,
+		zIndex: 1,
+		index: -1,
+		width: null,
+		height: null,
+		spriteWidth: null,
+		spriteHeight: null,
+		rankHeight: null,
+		hiddenRankHeight: null,
+		isFaceDown: false,
+		positioned: false,
+		scale: 1,
+		node: null,
 
-		createDOMElement: function () {
-			this.domElement =
-				$("<div class='card'>")
-				.addClass(this.suit + this.rank)
-				/* if position is not set here, jquery ui draggable will set position: relative */
-				.css({left: this.left, top: this.top, position: "absolute"})
-				.dblclick(Solitaire.autoPlay.partial(this))
-				.draggable({
-					revert: true,
-					revertDuration: 100,
-					zIndex: 100,
-					helper: this.stackHelper.bind(this),
-					start: Solitaire.Events.dragStart.partial(this),
-					stop: Solitaire.Events.dragStop.partial(this)
-				})
-				.droppable({
-					tolerance: "pointer",
-					drop: Solitaire.Events.drop.partial(this)
+		base: {
+			hiddenRankHeight: 10,
+			rankHeight: 32,
+			width: 79,
+			height: 123,
+			spriteWidth: 1300,
+			spriteHeight: 775
+		},
+
+		origin: {
+			left: function () {
+				var offset = Solitaire.container().getXY()[0];
+				
+				return -offset - Solitaire.Card.width;
+			},
+			top: function () {
+				var offset = Solitaire.container().getXY()[1];
+
+				return -offset - Solitaire.Card.height;
+			},
+		},
+
+		animSpeeds: {slow: 0.5, mid: 0.2, fast: 0.1},
+
+		create: function (rank, suit) {
+			var colors = {c: 0, s: 0, h: 1, d: 1};
+
+			return instance(this, {rank: rank, suit: suit, color: colors[suit]});
+		},
+
+		faceDown: function (undo) {
+			this.isFaceDown = true;
+			this.setRankHeight();
+			this.setStyle();
+
+			undo || Solitaire.pushMove({card: this, faceDown: true});
+
+			return this;
+		},
+
+		faceUp: function (undo) {
+			this.isFaceDown = false;
+			this.setRankHeight();
+			this.setStyle();
+
+			undo || Solitaire.pushMove({card: this, faceDown: false});
+
+			return this;
+		},
+
+		setRankHeight: function () {
+			this.rankHeight = this.isFaceDown ?
+				Solitaire.Card.hiddenRankHeight :
+				Solitaire.Card.rankHeight;
+		},
+
+		setStyle: function (callback) {
+			var img = this.img;
+
+			img && img.setStyles(this.imgStyle());
+		},
+
+		wrapperStyle: function () {
+			return {
+				width: Math.ceil(this.width),
+				height: Math.ceil(this.height),
+				overflow: "hidden"
+			};
+		},
+
+		imgStyle: function () {
+			var left, top,
+			    suits = {"c": 0, "d": 1, "h": 2, "s": 3};
+
+			if (this.isFaceDown) {
+				top = 4 * this.height;
+				left = 2 * this.width;
+			} else {
+				left = (this.rank - 1) * this.width;
+				top = suits[this.suit] * this.height;
+			}
+
+			return {
+				left: -left,
+				top: -top,
+				width: this.spriteWidth,
+				height: this.spriteHeight
+			};
+		},
+
+		turnOver: function (e) {
+			if (!this.isFaceDown) { return; }
+
+			var stack = this.stack;
+
+			if (stack.field === "deck") {
+				Solitaire.game.turnOver();
+			} else if (this === stack.last()) {
+				this.faceUp();
+			}
+
+			e.stopPropagation();
+		},
+
+		ensureDOM: function () {
+			!this.node && this.createNode();
+		},
+
+		isFree: function () {
+			return this === this.stack.last();
+		},
+
+		createImg: function () {
+			var img = Y.Node.create("<img>")
+			    .setAttribute("src", "cards/dondorf.png")
+			    .setStyles(this.imgStyle());
+
+			this.img = img;
+			return img;
+		},
+
+		createNode: function () {
+			var game = Solitaire.game,
+			    groups,
+			    node, dd,
+			    card = this;
+
+			this.destroyNode();
+
+			node = this.node = Y.Node.create("<div class='card'>")
+				.setStyles(this.wrapperStyle())
+				.setData("target", this)
+				.append(this.createImg())
+				.plug(Y.Plugin.Drop, {
+					useShim: false
 				});
-			$("body").append(this.domElement);
 
-			return this.domElement;
+			node.on("click", function (e) {
+				card.turnOver(e);
+				Solitaire.moves.reverse();
+				Solitaire.endTurn();
+			});
+			node.on("dblclick", game.autoPlay.partial(this));
+			node.on("contextmenu", game.autoPlay.partial(this));
+
+			dd = new Y.DD.Drag({
+				dragMode: "intersect",
+				groups: ["open"],
+				clickPixelThresh: 0,
+				node: node
+			}).plug(Y.Plugin.DDProxy, {
+				borderStyle: "none",
+				moveOnEnd: false
+			});
+
+			dd.on("drag:mouseDown", game.Events.dragCheck.partial(this));
+			dd.on("drag:start", game.Events.dragStart.partial(this));
+			dd.on("drag:dropmiss", game.Events.dragMiss.partial(this));
+			dd.on("drag:drophit", game.Events.drop);
+			dd.on("drag:end", game.Events.dragEnd.partial(this));
+
+			this.setRankHeight();
+
+			Solitaire.container().append(node);
 		},
 		
-		createStack: function () {
+		destroyNode: function () {
+			if (!this.node) { return; }
+
+			this.node.clearData()
+				.destroy(true);
+
+			this.node = null;
+		},
+
+		createProxyStack: function () {
+			if (this.isFaceDown || this.stack.field === "foundation") {
+				this.proxyStack = null;
+				return null;
+			}
+
 			var stack = instance(this.stack),
 			    cards = stack.cards,
 			    card,
@@ -205,66 +697,184 @@ var Solitaire = {
 
 			for (i = cards.indexOf(this) + 1, len = cards.length; i < len; i++) {
 				card = cards[i];
-				if (card.validTarget(stack)) {
+				if (stack.validProxy(card)) {
 					stack.push(card, true);
 				} else {
 					break;
 				}
 			}
 
-			this.dragStack = i === len ? stack : null;
-			return this.dragStack;
+			this.proxyStack = i === len ? stack : null;
+			return this.proxyStack;
 		},
 
-		stackHelper: function () {
-			var stack = this.createStack(),
-			    domElement,
-			    top = this.top,
-			    left = this.left;
+		proxyCards: function () {
+			return this.proxyStack.cards;
+		},
+
+		createProxy: function () {
+			var stack = this.proxyStack,
+			    node,
+			    child;
 			
-			if (!stack) { return this.domElement; }
-			domElement = $("<div class='stack'>").css({left: -left, top: -top});
+			// if the card isn't playable, create ghost copy
+			if (!stack) {
+				node = new Y.Node(document.createElement("div"))
+					.setStyles({
+						opacity: 0.6,
+						top: -this.top,
+						left: -this.left
+					}).append(this.node.cloneNode(true));
 
-			$.each(stack.cards, function () {
-				this.dragStack = stack;
-				domElement.append(this.domElement);
-			});
+			} else {
+				node = new Y.Node(document.createElement("div"))
+					.setStyles({top: -this.top, left: -this.left});
 
-			$("body").append(domElement);
-			return domElement;
+				Y.Array.each(this.proxyCards(), function (c) {
+					c.proxyStack = stack;
+					node.append(c.node);
+				});
+			}
+
+			return node;
 		},
 
-		updatePosition: function () {
-			this.domElement && this.domElement.css({
+		updatePosition: function (fields) {
+			if (!this.node) { return; }
+
+			var to = {left: this.left, top: this.top},
+			    origin = this.origin;
+
+			this.node.setStyle("zIndex", this.zIndex);
+			if (!this.positioned) {
+				this.node.setStyles({left: normalize(origin.left), top: normalize(origin.top)});
+			}
+
+			this.animation.init(this, to, fields);
+		},
+
+		pushPosition: function () {
+			var index = this.index >= 0 ?
+				this.index :
+				this.stack.cards.indexOf(this);
+
+			Solitaire.pushMove({
+				card: this,
 				left: this.left,
-				right: this.right,
 				top: this.top,
-				zIndex: this.zIndex
+				zIndex: this.zIndex,
+				index: index,
+				from: this.stack
 			});
 		},
 
 		moveTo: function (stack) {
+			this.pushPosition(stack);
 			this.stack.deleteItem(this);
 			stack.push(this);
-			this.updatePosition();
 		}
 	},
 
 	Stack: {
-		layout: function (layout) {
-			var offset = normalize(layout.offset) * Solitaire.Card.width,
-			    self = this;
+		node: null,
 
-			$.each(["top", "right", "left"], function () {
-				self[this] = normalize(layout[this]);
+		serialize: function () {
+			var i, len,
+			    cards = this.cards,
+			    card,
+			    suits = Solitaire.game.deck.suits,
+			    byte,
+			    serialized = [];
+
+			for (i = 0, len = cards.length; i < len; i++) {
+				card = cards[i];
+				if (card) {
+					byte = suits.indexOf(card.suit) |
+						card.rank << 2 |
+						card.isFaceDown << 6; // type coersion!
+				} else {
+					byte = 128;
+				}
+				serialized.push(String.fromCharCode(byte));
+			}
+
+			return serialized.join("");
+		},
+
+		setCards: function (count, cardGen) {
+			var i, len,
+			    card, cards,
+			    empty = instance(Solitaire.game.Card, {
+				updatePosition: Solitaire.noop,
+				ensureDOM: Solitaire.noop
+			    });
+
+			cards = this.cards = [];
+
+			for (i = 0; i < count; i++) {
+				card = cardGen(i) || empty;
+				this.push(card);
+			}
+
+			for (i = 0; i < count; i++) {
+				if (cards[i] === empty) {
+					cards[i] = null;
+				}
+			}
+		},
+
+		unserialize: function (serialized) {
+			var game = Solitaire.game,
+			    deck = game.deck,
+			    Card = game.Card;
+
+			this.setCards(serialized.length, function (i) {
+				var value,
+				    card;
+
+				value = serialized.charCodeAt(i);
+
+				if (value === 128) {
+					card = null;
+				} else {
+					card = Card.create(
+						(value >> 2) & 15, // rank
+						deck.suits[value & 3] // suit
+					);
+
+					value & 64 ? card.faceDown(true) : card.faceUp(true);
+				}
+
+				return card;
 			});
 
-			if (!isNaN(this.left)) { this.left += offset; }
-			if (!isNaN(this.right)) { this.right += offset; }
-			this.width = Solitaire.Card.width;
-			this.height = Solitaire.Card.height;
+			this.update();
+		},
 
-			this.cards = [];
+		imgStyle: function () {
+			var Card = Solitaire.Card,
+			    left = 3 * Card.width,
+			    top = 4 * Card.height;
+
+			return {
+				left: -left,
+				top: -top,
+				width: Card.spriteWidth,
+				height: Card.spriteHeight
+			};
+		},
+
+		layout: function (layout) {
+			var hoffset = layout.hoffset * Solitaire.Card.width,
+			    voffset = layout.voffset * Solitaire.Card.height,
+			    self = this;
+
+			Y.Array.each(["top", "left"], function (p) {
+				self[p] = normalize(layout[p]);
+			});
+
+			this.left += hoffset;
+			this.top += voffset;
 		},
 
 		deleteItem: function (card) {
@@ -272,16 +882,49 @@ var Solitaire = {
 		},
 
 		push: function (card, temp) {
-			var last = this.last();
-
-			if (!temp) {
-				this.setCardPosition(card);
-				card.stack = this;
-			}
+			var last = this.last(),
+			    to = this.field,
+			    from = card.stack ? card.stack.field : "deck";
 
 			if (last) { card.zIndex = last.zIndex + 1; }
+			else if (to === "deck") { card.zIndex = 200; }
+			else if (from === "deck") { card.zIndex = Solitaire.game.Card.zIndex; }
+
+			if (!temp) {
+				card.stack = this;
+				this.setCardPosition(card);
+				card.ensureDOM();
+			}
 
 			this.cards.push(card);
+			temp || card.updatePosition({from: from, to: to});
+		},
+
+		afterPush: function () { return true; },
+
+		pushStack: function (proxy) {
+			var game = Solitaire.game,
+			    updatePosition = game.Card.updatePosition,
+			    stack = this;
+
+			Y.Array.each(Solitaire.activeCard.stack.cards, function (card, i) {
+				card.index = i;
+			});
+
+			game.Card.updatePosition = Solitaire.noop;
+			Y.Array.each(proxy.cards, function (card, i) {
+				card.moveTo(stack);
+				card.index = -1;
+			});
+			game.Card.updatePosition = updatePosition;
+
+			game.unanimated(function () {
+				Y.Array.each(proxy.cards, function (card) {
+					card.updatePosition();
+				});
+			});
+
+			this.afterPush();
 		},
 
 		first: function () { 
@@ -295,32 +938,190 @@ var Solitaire = {
 		setCardPosition: function (card) {
 			card.top = this.top;
 			card.left = isNaN(this.left) ? null : this.left;
-			card.right = isNaN(this.right) ? null : this.right;
 		},
 
-		createDOMElement: function () {
-			this.domElement = $("<div class='stack freestack'>")
-					.css({left: this.left, top: this.top, right: this.right})
-					.droppable({
-						tolerance: "pointer",
-						drop: Solitaire.Events.drop.partial(this)
-					});
-			$("body").append(this.domElement);
-			$.each(this.cards, Solitaire.Card.createDOMElement);
+		reposition: function () {
 
-			return this.domElement;
+		},
+
+		wrapperStyle: function () {
+			return {
+				left: this.left,
+				top: this.top,
+				width: Math.ceil(Solitaire.Card.width),
+				height: Math.ceil(Solitaire.Card.height),
+				overflow: "hidden",
+				zIndex: 0
+			};
+		},
+
+		createNode: function () {
+			var game = Solitaire.game,
+			    node;
+
+			this.destroyNode();
+
+			node = this.node = Y.Node.create("<div class='stack'>")
+				.setStyles(this.wrapperStyle())
+				.setData("target", this)
+				.append(Solitaire.Card.createImg.call(this))
+				.plug(Y.Plugin.Drop, {
+					useShim: false
+				});
+
+			game.container().append(this.node);
+		},
+
+		destroyNode: function () {
+			if (!this.node) { return; }
+
+			this.node.clearData()
+				.destroy(true);
+
+			this.node = null;
+		},
+
+		updateDragGroups: function () {
+			var active = Solitaire.activeCard,
+			    cards = this.cards,
+			    last = this.last(),
+			    drop,
+			    i = cards.length - 1;
+
+			Y.Array.each(cards, function (card) {
+				card.node.drop.removeFromGroup("open");
+			});
+
+			if (active.validTarget(this)) {
+				if (last) {
+					last.node.drop.addToGroup("open");
+				}
+				this.node.drop.addToGroup("open");
+			} else {
+				this.node.drop.removeFromGroup("open");
+			}
+		},
+
+		validCard: function () { return true; },
+
+		validProxy: function (card) {
+			return card.validTarget(this) && this.validCard(card);
+		},
+
+		update: function () {}
+	},
+
+	Animation: {
+		animate: false,
+		duration: 0.5, // seconds
+		interval: 30, // milliseconds
+		queue: new Y.AsyncQueue(),
+
+		init: function (card, to, fields) {
+			if (!this.animate) {
+				card.node.setStyles(to);
+				card.positioned = true;
+				return;
+			}
+
+			var node = card.node,
+			    q = this.queue,
+			    speeds = card.animSpeeds,
+			    duration,
+			    callback,
+			    anim;
+		       
+			if (!fields || fields.from === fields.to || fields.to === "waste") {
+				duration = speeds.fast;
+			} else if (fields.from === "deck") {
+				duration = speeds.slow;
+			} else {
+				duration = speeds.mid;
+			}
+
+			anim = new Y.Anim({
+				node: node,
+				to: to,
+				easing: Y.Easing.easeOut,
+				duration: duration
+			    });
+
+			anim.on("end", function () {
+				card.positioned = true;
+				card.animDuration = 0.2;
+				fields && typeof fields.callback === "function" && fields.callback();
+			});
+			q.add(function () { anim.run(); });
+			q.run();
+		},
+
+		initQueue: function () {
+			var q = this.queue;
+
+			q.defaults.timeout = this.interval;
+		}
+	}
+
+});
+
+var Undo = {
+	stack: null,
+
+	clear: function () {
+		this.stack = [];
+	},
+
+	push: function (moves) {
+		this.stack.push(moves);
+	},
+
+	pop: function () {
+		return this.stack.pop();
+	},
+
+	undo: function () {
+		var origins;
+
+		if (this.stack.length) {
+			origins = Y.Array.unique(Y.Array.map(this.pop(), this.act));
+
+			Y.Array.each(origins, function (stack) {
+				stack.update();
+			});
+		}
+	},
+
+	act: function (move) {
+		var from = move.from,
+		    card = move.card,
+		    to = card.stack,
+		    cards = card.stack.cards;
+
+		if (from) {
+			card.left = move.left;
+			card.top = move.top;
+			card.zIndex = move.zIndex;
+
+			if (from === card.stack) {
+				cards[cards.indexOf(card)] = null;
+			} else {
+				cards.deleteItem(card);
+			}
+
+			from.cards[move.index] = card;
+
+			card.stack = from;
+
+			Solitaire.container().append(card.node);
+			card.updatePosition();
 		}
 
-	}
+		if ("faceDown" in move) {
+			move.faceDown ? card.faceUp(true) : card.faceDown(true);
+		}
+
+		return to;
+	},
 };
 
-$.extend(Solitaire.Deck.prototype, {
-	pop: function () {
-		var cards = this.cards,
-		    i = ~~(Math.random() * cards.length),
-		    card;
-		
-		card = cards.splice(i, 1)[0];
-		return card;
-	}
-});
+}, "0.0.1", {requires: ["dd", "dd-plugin", "anim", "async-queue", "cookie", "array-extras"]});

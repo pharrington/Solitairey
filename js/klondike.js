@@ -50,7 +50,6 @@ var Solitaire = Y.Solitaire,
 		while (waste.cards.length) {
 			waste.last().faceDown().moveTo(deck);
 		}
-
 	},
 
 	Stack: instance(Solitaire.Stack),

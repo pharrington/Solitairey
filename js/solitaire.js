@@ -182,7 +182,7 @@ Y.mix(Solitaire, {
 		    twoWeeks = 1206900000;
 
 		if (data.length !== 66) {
-			throw "missing card";
+			console.log("missing card");
 		}
 		Y.Cookie.set("saved-game", data, {expires: new Date(new Date().getTime() + twoWeeks)});
 	},
@@ -303,10 +303,12 @@ Y.mix(Solitaire, {
 	},
 
 	init: function () {
-		var game = Solitaire.game = this;
+		var game = Solitaire.game = this,
+		    cancel = Solitaire.preventDefault;
 
-		Y.on("selectstart", function (e) { e.preventDefault(); }, document);
-		Y.on("mousedown", function (e) { e.preventDefault(); }, document);
+		Y.on("selectstart", cancel, document);
+		Y.on("mousedown", cancel, document);
+		Y.on("contextmenu", cancel, document);
 
 		Y.Array.each(game.fields, function (field) {
 			game[field.toLowerCase()] = game.createField(game[field]);
@@ -318,14 +320,16 @@ Y.mix(Solitaire, {
 		}
 	},
 
+	preventDefault: function (e) {
+		e.preventDefault();
+	},
+
 	autoPlay: function (card, e) {
 		var origin = card.stack,
 		    last = origin.last(),
 		    stacks,
 		    foundation,
 		    i, len;
-
-		e.type === "contextmenu" && e.preventDefault();
 
 		if (card.isFaceDown) { return; }
 
@@ -336,7 +340,6 @@ Y.mix(Solitaire, {
 				card.moveTo(foundation);
 				origin.update();
 
-				e.preventDefault();
 				Solitaire.endTurn();
 				return true;
 			}
@@ -1093,7 +1096,7 @@ var Undo = {
 			origins = Y.Array.unique(Y.Array.map(this.pop(), this.act));
 
 			Y.Array.each(origins, function (stack) {
-				stack.update();
+				stack.update(true);
 			});
 		}
 	},

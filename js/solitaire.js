@@ -181,6 +181,9 @@ Y.mix(Solitaire, {
 		var data = this.serialize(),
 		    twoWeeks = 1206900000;
 
+		if (data.length !== 66) {
+			throw "missing card";
+		}
 		Y.Cookie.set("saved-game", data, {expires: new Date(new Date().getTime() + twoWeeks)});
 	},
 
@@ -769,7 +772,7 @@ Y.mix(Solitaire, {
 		},
 
 		moveTo: function (stack) {
-			this.pushPosition(stack);
+			this.pushPosition();
 			this.stack.deleteItem(this);
 			stack.push(this);
 		}
@@ -905,15 +908,19 @@ Y.mix(Solitaire, {
 		pushStack: function (proxy) {
 			var game = Solitaire.game,
 			    updatePosition = game.Card.updatePosition,
+			    origin = Solitaire.activeCard.stack.cards,
 			    stack = this;
 
-			Y.Array.each(Solitaire.activeCard.stack.cards, function (card, i) {
+			Y.Array.each(origin, function (card, i) {
 				card.index = i;
 			});
 
 			game.Card.updatePosition = Solitaire.noop;
-			Y.Array.each(proxy.cards, function (card, i) {
+			Y.Array.each(proxy.cards, function (card) {
 				card.moveTo(stack);
+				card.index = -1;
+			});
+			Y.Array.each(origin, function (card) {
 				card.index = -1;
 			});
 			game.Card.updatePosition = updatePosition;
@@ -1095,7 +1102,7 @@ var Undo = {
 		var from = move.from,
 		    card = move.card,
 		    to = card.stack,
-		    cards = card.stack.cards;
+		    cards = to.cards;
 
 		if (from) {
 			card.left = move.left;

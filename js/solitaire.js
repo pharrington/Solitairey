@@ -202,6 +202,10 @@ Y.mix(Solitaire, {
 		Solitaire.moves = null;
 		Undo.clear();
 
+		/*
+		Y.DD.DDM.set("throttleTime", 50);
+		console.log(Y.DD.DDM.get("throttleTime"));
+		*/
 		this.init();
 		this.Animation.initQueue();
 		Solitaire.Card.animation = Solitaire.Animation;
@@ -718,32 +722,38 @@ Y.mix(Solitaire, {
 			return this.proxyStack.cards;
 		},
 
-		createProxy: function () {
-			var stack = this.proxyStack,
-			    node,
-			    child;
-			
-			// if the card isn't playable, create ghost copy
-			if (!stack) {
-				node = new Y.Node(document.createElement("div"))
-					.setStyles({
-						opacity: 0.6,
-						top: -this.top,
-						left: -this.left
-					}).append(this.node.cloneNode(true));
+		createProxy: (function () {
+			//var node = new Y.Node.create("<div id='test'>");
+			var fragment = new Y.Node(document.createDocumentFragment());
 
-			} else {
-				node = new Y.Node(document.createElement("div"))
-					.setStyles({top: -this.top, left: -this.left});
+			return function () {
+				var stack = this.proxyStack,
+				    node,
+				    child;
 
-				Y.Array.each(this.proxyCards(), function (c) {
-					c.proxyStack = stack;
-					node.append(c.node);
-				});
-			}
+				// if the card isn't playable, create ghost copy
+				if (!stack) {
+					node = new Y.Node(document.createElement("div"))
+						node.setStyles({
+							opacity: 0.6,
+							top: -this.top,
+							left: -this.left
+						}).append(this.node.cloneNode(true));
+				} else {
+					node = new Y.Node(document.createElement("div"))
+						node.setStyles({opacity: 1, top: -this.top, left: -this.left});
 
-			return node;
-		},
+					Y.Array.each(this.proxyCards(), function (c) {
+						c.proxyStack = stack;
+						node.append(c.node);
+					});
+				}
+
+				fragment.setContent(node);
+				return fragment;
+				//return node;
+			};
+		})(),
 
 		updatePosition: function (fields) {
 			if (!this.node) { return; }
@@ -1096,7 +1106,7 @@ var Undo = {
 			origins = Y.Array.unique(Y.Array.map(this.pop(), this.act));
 
 			Y.Array.each(origins, function (stack) {
-				stack.update(true);
+				stack.update(false);
 			});
 		}
 	},

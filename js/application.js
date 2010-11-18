@@ -3,7 +3,7 @@
 		name: "klondike",
 		game: null
 	    },
-	    yui = YUI(), Y,
+	    yui = YUI({filter: "raw"}), Y,
 	    games = {
 	        "test": "Test",
 		"flower-garden": "FlowerGarden",
@@ -142,7 +142,6 @@
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
 		Y.on("click", function () { GameChooser.hide(); }, Y.one("#game-chooser .close"));
-		Y.on("click", function () { active.game.resize(0.8); }, Y.one("#options"));
 
 		Y.delegate("click", showDescription, "#descriptions", "h2");
 		Y.delegate("click", function () { GameChooser.choose(); }, "#game-chooser", ".choose");
@@ -165,6 +164,7 @@
 	}
 
 	function resize() {
+		resizeBackground();
 		active.game.resize(sizeRatio());
 	}
 
@@ -186,6 +186,12 @@
 		newGame();
 	}
 
+	function resizeBackground() {
+		var bg = new Y.Node(document.body);
+
+		bg.setStyle("height", bg.get("winHeight"));
+	}
+
 	function loadOptions() {
 		var options = Y.Cookie.get("options");
 
@@ -197,6 +203,7 @@
 
 		attachEvents();
 		loadOptions();
+		resizeBackground();
 
 		if (save) {
 			active.game = Y[games[active.name]].game;

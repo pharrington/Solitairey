@@ -28,6 +28,7 @@ var Solitaire = Y.Solitaire,
 		    waste = this.waste.stacks[0];
 
 		if (deck.cards.length === 1) { return; }
+		console.log("!");
 		deck.last().moveTo(waste);
 	},
 
@@ -90,11 +91,6 @@ var Solitaire = Y.Solitaire,
 			}
 		},
 		field: "deck",
-
-		init: function () {
-			Solitaire.Deck.init.call(this);
-			Y.Array.each(this.cards, function (c) { c.faceDown(); });
-		},
 
 		createStack: function () {
 			var i, len;
@@ -224,10 +220,10 @@ Y.mix(Pyramid.Deck.Stack, {
 		this.update();
 	},
 
-	update: function () {
+	update: function (undo) {
 		var last = this.last();
 
-		last && last.faceUp();
+		last && last.faceUp(undo);
 	},
 
 

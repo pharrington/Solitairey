@@ -181,6 +181,9 @@ Y.mix(Solitaire, {
 		var data = this.serialize(),
 		    twoWeeks = 1206900000;
 
+		if (data.length !== 66) {
+			console.log("missing card");
+		}
 		Y.Cookie.set("saved-game", data, {expires: new Date(new Date().getTime() + twoWeeks)});
 	},
 
@@ -199,6 +202,10 @@ Y.mix(Solitaire, {
 		Solitaire.moves = null;
 		Undo.clear();
 
+		/*
+		Y.DD.DDM.set("throttleTime", 50);
+		console.log(Y.DD.DDM.get("throttleTime"));
+		*/
 		this.init();
 		this.Animation.initQueue();
 		Solitaire.Card.animation = Solitaire.Animation;
@@ -300,10 +307,12 @@ Y.mix(Solitaire, {
 	},
 
 	init: function () {
-		var game = Solitaire.game = this;
+		var game = Solitaire.game = this,
+		    cancel = Solitaire.preventDefault;
 
-		Y.on("selectstart", function (e) { e.preventDefault(); }, document);
-		Y.on("mousedown", function (e) { e.preventDefault(); }, document);
+		Y.on("selectstart", cancel, document);
+		Y.on("mousedown", cancel, document);
+		Y.on("contextmenu", cancel, document);
 
 		Y.Array.each(game.fields, function (field) {
 			game[field.toLowerCase()] = game.createField(game[field]);
@@ -315,14 +324,16 @@ Y.mix(Solitaire, {
 		}
 	},
 
+	preventDefault: function (e) {
+		e.preventDefault();
+	},
+
 	autoPlay: function (card, e) {
 		var origin = card.stack,
 		    last = origin.last(),
 		    stacks,
 		    foundation,
 		    i, len;
-
-		e.type === "contextmenu" && e.preventDefault();
 
 		if (card.isFaceDown) { return; }
 
@@ -333,7 +344,6 @@ Y.mix(Solitaire, {
 				card.moveTo(foundation);
 				origin.update();
 
-				e.preventDefault();
 				Solitaire.endTurn();
 				return true;
 			}
@@ -712,32 +722,39 @@ Y.mix(Solitaire, {
 			return this.proxyStack.cards;
 		},
 
-		createProxy: function () {
-			var stack = this.proxyStack,
-			    node,
-			    child;
-			
-			// if the card isn't playable, create ghost copy
-			if (!stack) {
-				node = new Y.Node(document.createElement("div"))
-					.setStyles({
-						opacity: 0.6,
-						top: -this.top,
-						left: -this.left
-					}).append(this.node.cloneNode(true));
+		createProxy: (function () {
+			//var node = new Y.Node.create("<div id='test'>");
+			var fragment = new Y.Node(document.createDocumentFragment());
 
-			} else {
-				node = new Y.Node(document.createElement("div"))
-					.setStyles({top: -this.top, left: -this.left});
+			return function () {
+				var stack = this.proxyStack,
+				    node,
+				    child;
 
-				Y.Array.each(this.proxyCards(), function (c) {
-					c.proxyStack = stack;
-					node.append(c.node);
-				});
-			}
+				node.setContent("");
+				// if the card isn't playable, create ghost copy
+				if (!stack) {
+					node = new Y.Node(document.createElement("div"))
+						node.setStyles({
+							opacity: 0.6,
+							top: -this.top,
+							left: -this.left
+						}).append(this.node.cloneNode(true));
+				} else {
+					node = new Y.Node(document.createElement("div"))
+						node.setStyles({opacity: 1, top: -this.top, left: -this.left});
 
-			return node;
-		},
+					Y.Array.each(this.proxyCards(), function (c) {
+						c.proxyStack = stack;
+						node.append(c.node);
+					});
+				}
+
+				fragment.setContent(node);
+				return fragment;
+				//return node;
+			};
+		})(),
 
 		updatePosition: function (fields) {
 			if (!this.node) { return; }
@@ -769,7 +786,7 @@ Y.mix(Solitaire, {
 		},
 
 		moveTo: function (stack) {
-			this.pushPosition(stack);
+			this.pushPosition();
 			this.stack.deleteItem(this);
 			stack.push(this);
 		}
@@ -905,15 +922,19 @@ Y.mix(Solitaire, {
 		pushStack: function (proxy) {
 			var game = Solitaire.game,
 			    updatePosition = game.Card.updatePosition,
+			    origin = Solitaire.activeCard.stack.cards,
 			    stack = this;
 
-			Y.Array.each(Solitaire.activeCard.stack.cards, function (card, i) {
+			Y.Array.each(origin, function (card, i) {
 				card.index = i;
 			});
 
 			game.Card.updatePosition = Solitaire.noop;
-			Y.Array.each(proxy.cards, function (card, i) {
+			Y.Array.each(proxy.cards, function (card) {
 				card.moveTo(stack);
+				card.index = -1;
+			});
+			Y.Array.each(origin, function (card) {
 				card.index = -1;
 			});
 			game.Card.updatePosition = updatePosition;
@@ -1012,7 +1033,7 @@ Y.mix(Solitaire, {
 	},
 
 	Animation: {
-		animate: false,
+		animate: true,
 		duration: 0.5, // seconds
 		interval: 30, // milliseconds
 		queue: new Y.AsyncQueue(),
@@ -1086,7 +1107,7 @@ var Undo = {
 			origins = Y.Array.unique(Y.Array.map(this.pop(), this.act));
 
 			Y.Array.each(origins, function (stack) {
-				stack.update();
+				stack.update(false);
 			});
 		}
 	},
@@ -1095,7 +1116,7 @@ var Undo = {
 		var from = move.from,
 		    card = move.card,
 		    to = card.stack,
-		    cards = card.stack.cards;
+		    cards = to.cards;
 
 		if (from) {
 			card.left = move.left;

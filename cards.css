@@ -7,6 +7,9 @@ html, body, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
 
 body {
 	background: #147243;
+	background: url(green.jpg) no-repeat;
+	background-size: cover;
+	-moz-background-size: cover;
 	overflow: hidden;
 	font-family: helvetica, verdana, sans;
 }
@@ -155,3 +158,12 @@ p {
 	width: 35px;
 	cursor: pointer;
 }
+
+/*
+#background {
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: -1;
+}
+*/

@@ -1,24 +1,55 @@
-width = ARGV[1] || 79
-height = ARGV[2] || 123
+require "RMagick"
+require "fileutils"
 
-def rule card, x, y, w, h
-  ".#{card} { background-position: #{x}px #{y}px; width: #{w}px; height: #{h}px; }\n"
-end
-
-def cards w, h
-  style = ".card, .stack { width: #{w}px; height: #{h}px; background-image: url('cards/dondorf.png'); background-repeat: no-repeat; }\n"
-  y = 0
-  ["c", "d", "h", "s"].each do |suit|
-    x = 0
-    (1..13).each do |rank|
-      style << rule("#{suit}#{rank}", x, y, w, h)
-      x -= w
-    end
-    y -= h
+module Card
+  def card_width
+    self.columns / 13
   end
-  style << rule("face_down", -2 * w, -4 * h, w, h)
-  style << rule("freestack", -3 * w, -4 * h, w, h)
-  style << rule("freefoundation", -3 * w, -4 * h, w, h)
+
+  def card_height
+    self.rows / 5
+  end
+
+  def each_card
+    w = self.card_width
+    h = self.card_height
+
+    y = 0
+    ["c", "d", "h", "s"].each do |suit|
+      x = 0
+      (1..13).each do |rank|
+        yield suit, rank, x, y
+        x += w
+      end
+      y += h
+    end
+  end
+
+  def extract_card x, y
+    w = self.card_width
+    h = self.card_height
+
+    pixels = self.export_pixels x, y, w, h, "RGBA"
+
+    card = Magick::Image.new(w, h) do
+      self.background_color = Magick::Pixel.new 0, 0, 0, 255
+    end
+
+    card.import_pixels 0, 0, w, h, "RGBA", pixels
+  end
 end
 
-puts cards(width, height)
+def split name
+  image = Magick::Image.read("#{name}.png").first
+  image.extend Card
+
+  FileUtils.mkdir_p name
+
+  image.each_card do |suit, rank, x, y|
+    card = image.extract_card x, y
+
+    card.write "#{name}/#{suit}#{rank}.png"
+  end
+end
+
+split "dondorf"

@@ -23,6 +23,10 @@ module Card
       end
       y += h
     end
+
+    ["facedown", "freeslot"].each_with_index do |name, i|
+      yield name, "", w * (2 + i), h * 4
+    end
   end
 
   def extract_card x, y

@@ -267,7 +267,6 @@ Y.mix(Solitaire, {
 	resize: function (scale) {
 		this.scale(scale);
 
-		Y.all(".stack, .card").remove();
 		this.unanimated(function () {
 			this.eachStack(function (stack, i) {
 				var cards = stack.cards,
@@ -278,12 +277,12 @@ Y.mix(Solitaire, {
 					hoffset: i * layout.hspacing || 0,
 					voffset: i * layout.vspacing || 0}), i);
 
-				stack.createNode();
+				stack.updateStyle();
 
 				stack.setCards(cards.length, function (i) {
 					var card = cards[i];
 
-					card.destroyNode();
+					card.updateStyle();
 					return card;
 				});	
 
@@ -507,8 +506,6 @@ Y.mix(Solitaire, {
 		index: -1,
 		width: null,
 		height: null,
-		spriteWidth: null,
-		spriteHeight: null,
 		rankHeight: null,
 		hiddenRankHeight: null,
 		isFaceDown: false,
@@ -521,8 +518,6 @@ Y.mix(Solitaire, {
 			rankHeight: 32,
 			width: 79,
 			height: 123,
-			spriteWidth: 1300,
-			spriteHeight: 775
 		},
 
 		origin: {
@@ -549,7 +544,7 @@ Y.mix(Solitaire, {
 		faceDown: function (undo) {
 			this.isFaceDown = true;
 			this.setRankHeight();
-			this.setStyle();
+			this.setImageSrc();
 
 			undo || Solitaire.pushMove({card: this, faceDown: true});
 
@@ -559,7 +554,7 @@ Y.mix(Solitaire, {
 		faceUp: function (undo) {
 			this.isFaceDown = false;
 			this.setRankHeight();
-			this.setStyle();
+			this.setImageSrc();
 
 			undo || Solitaire.pushMove({card: this, faceDown: false});
 
@@ -572,38 +567,38 @@ Y.mix(Solitaire, {
 				Solitaire.Card.rankHeight;
 		},
 
-		setStyle: function (callback) {
-			var img = this.img;
+		imageSrc: function () {
+			var src = "dondorf/";
 
-			img && img.setStyles(this.imgStyle());
+			src += this.isFaceDown ?
+				"facedown" :
+				this.suit + this.rank;
+
+			src += ".png";
+			
+			return src;
+		},
+
+		setImageSrc: function () {
+			var n = this.node;
+
+			n && n.setAttribute("src", this.imageSrc());
 		},
 
 		wrapperStyle: function () {
 			return {
-				width: Math.ceil(this.width),
-				height: Math.ceil(this.height),
-				overflow: "hidden"
+				left: this.left,
+				top: this.top,
+				width: this.width,
+				height: this.height
 			};
 		},
 
-		imgStyle: function () {
-			var left, top,
-			    suits = {"c": 0, "d": 1, "h": 2, "s": 3};
+		updateStyle: function () {
+			var n = this.node;
 
-			if (this.isFaceDown) {
-				top = 4 * this.height;
-				left = 2 * this.width;
-			} else {
-				left = (this.rank - 1) * this.width;
-				top = suits[this.suit] * this.height;
-			}
-
-			return {
-				left: -left,
-				top: -top,
-				width: this.spriteWidth,
-				height: this.spriteHeight
-			};
+			n && n.setStyles(this.wrapperStyle());
+			this.setRankHeight();
 		},
 
 		turnOver: function (e) {
@@ -628,38 +623,18 @@ Y.mix(Solitaire, {
 			return this === this.stack.last();
 		},
 
-		createImg: function () {
-			var img = Y.Node.create("<img>")
-			    .setAttribute("src", "cards/dondorf.png")
-			    .setStyles(this.imgStyle());
-
-			this.img = img;
-			return img;
-		},
-
 		createNode: function () {
 			var game = Solitaire.game,
 			    groups,
 			    node, dd,
 			    card = this;
 
-			this.destroyNode();
-
-			node = this.node = Y.Node.create("<div class='card'>")
-				.setStyles(this.wrapperStyle())
+			node = this.node = Y.Node.create("<img class='card'>")
 				.setData("target", this)
-				.append(this.createImg())
+				.setAttribute("src", this.imageSrc())
 				.plug(Y.Plugin.Drop, {
 					useShim: false
 				});
-
-			node.on("click", function (e) {
-				card.turnOver(e);
-				Solitaire.moves.reverse();
-				Solitaire.endTurn();
-			});
-			node.on("dblclick", game.autoPlay.partial(this));
-			node.on("contextmenu", game.autoPlay.partial(this));
 
 			dd = new Y.DD.Drag({
 				dragMode: "intersect",
@@ -677,18 +652,24 @@ Y.mix(Solitaire, {
 			dd.on("drag:drophit", game.Events.drop);
 			dd.on("drag:end", game.Events.dragEnd.partial(this));
 
+			node.on("click", function (e) {
+				card.turnOver(e);
+				Solitaire.moves.reverse();
+				Solitaire.endTurn();
+			});
+			node.on("dblclick", game.autoPlay.partial(this));
+			node.on("contextmenu", game.autoPlay.partial(this));
+
+			this.updateStyle();
 			this.setRankHeight();
 
 			Solitaire.container().append(node);
 		},
 		
 		destroyNode: function () {
-			if (!this.node) { return; }
+			var n = this.node
 
-			this.node.clearData()
-				.destroy(true);
-
-			this.node = null;
+			n && n.clearData().destroy(true);
 		},
 
 		createProxyStack: function () {
@@ -867,17 +848,8 @@ Y.mix(Solitaire, {
 			this.update();
 		},
 
-		imgStyle: function () {
-			var Card = Solitaire.Card,
-			    left = 3 * Card.width,
-			    top = 4 * Card.height;
-
-			return {
-				left: -left,
-				top: -top,
-				width: Card.spriteWidth,
-				height: Card.spriteHeight
-			};
+		imageSrc: function () {
+			return "dondorf/freeslot.png";
 		},
 
 		layout: function (layout) {
@@ -960,45 +932,39 @@ Y.mix(Solitaire, {
 			card.left = isNaN(this.left) ? null : this.left;
 		},
 
-		reposition: function () {
-
-		},
-
 		wrapperStyle: function () {
 			return {
 				left: this.left,
 				top: this.top,
-				width: Math.ceil(Solitaire.Card.width),
-				height: Math.ceil(Solitaire.Card.height),
-				overflow: "hidden",
-				zIndex: 0
+				width: Solitaire.Card.width,
+				height: Solitaire.Card.height
 			};
+		},
+
+		updateStyle: function () {
+			var n = this.node;
+
+			n && n.setStyles(this.wrapperStyle());
 		},
 
 		createNode: function () {
 			var game = Solitaire.game,
-			    node;
+			    node = this.node;
 
-			this.destroyNode();
-
-			node = this.node = Y.Node.create("<div class='stack'>")
-				.setStyles(this.wrapperStyle())
+			node = this.node = Y.Node.create("<img class='stack'>")
+				.setAttribute("src", this.imageSrc())
 				.setData("target", this)
-				.append(Solitaire.Card.createImg.call(this))
 				.plug(Y.Plugin.Drop, {
 					useShim: false
 				});
 
-			game.container().append(this.node);
+			this.updateStyle();
+
+			game.container().append(node);
 		},
 
 		destroyNode: function () {
-			if (!this.node) { return; }
-
-			this.node.clearData()
-				.destroy(true);
-
-			this.node = null;
+			Solitaire.Card.destroyNode.call(this);
 		},
 
 		updateDragGroups: function () {

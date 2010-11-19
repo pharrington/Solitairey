@@ -1000,7 +1000,7 @@ Y.mix(Solitaire, {
 	},
 
 	Animation: {
-		animate: true,
+		animate: false,
 		duration: 0.5, // seconds
 		interval: 30, // milliseconds
 		queue: new Y.AsyncQueue(),

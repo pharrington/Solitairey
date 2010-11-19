@@ -446,7 +446,6 @@ Y.mix(Solitaire, {
 			    stack = card.proxyStack,
 			    origin = card.stack,
 			    target = e.drop.get("node").getData("target"),
-			    offset = Solitaire.container().getXY(),
 			    first = stack.first();
 			    drag = this;
 

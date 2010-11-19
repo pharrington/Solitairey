@@ -1,6 +1,6 @@
 (function () {
 	var active = {
-		name: "klondike",
+		name: "test",
 		game: null
 	    },
 	    yui = YUI({filter: "raw"}), Y,
@@ -68,9 +68,6 @@
 				node: Y.one("#game-chooser"),
 				handles: [Y.one("#game-chooser > .titlebar")]
 			});
-		},
-
-		choose: function () {
 		},
 
 		show: function () {
@@ -225,6 +222,7 @@
 		var game = active.game;
 
 		clearDOM();
+		game.cleanup();
 		game.newGame();
 	}
 

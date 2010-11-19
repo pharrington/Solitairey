@@ -7,9 +7,15 @@ html, body, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
 
 body {
 	background: #147243;
-	background: url(green.jpg) no-repeat;
+	background: url(green.jpg) no-repeat;*/
+	background-origin: content;
+	background-size: 100% 100%;
+	-moz-background-origin: content;
+	-moz-background-size: 100% 100%;
+	/*
 	background-size: cover;
 	-moz-background-size: cover;
+	*/
 	overflow: hidden;
 	font-family: helvetica, verdana, sans;
 }
@@ -29,7 +35,7 @@ a {
 }
 
 .stack {
-	background-position: 999px 999px;
+	z-index: 0;
 }
 
 #game {

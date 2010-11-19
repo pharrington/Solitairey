@@ -198,14 +198,16 @@ Y.mix(Solitaire, {
 		this.setup(this.deal);
 	},
 
+	cleanup: function () {
+		this.eachStack(function (stack) {
+			stack.cleanup();
+		});
+	},
+
 	setup: function (callback) {
 		Solitaire.moves = null;
 		Undo.clear();
 
-		/*
-		Y.DD.DDM.set("throttleTime", 50);
-		console.log(Y.DD.DDM.get("throttleTime"));
-		*/
 		this.init();
 		this.Animation.initQueue();
 		Solitaire.Card.animation = Solitaire.Animation;
@@ -258,7 +260,7 @@ Y.mix(Solitaire, {
 	eachStack: function (callback) {
 		var game = Solitaire.game;
 
-		Y.Array.each(game.fields, function (name) {
+		game && Y.Array.each(game.fields, function (name) {
 			var field = game[name.toLowerCase()];
 			field.stacks && Y.Array.each(field.stacks, callback);
 		});
@@ -405,28 +407,28 @@ Y.mix(Solitaire, {
 		},
 
 		dragStart: function (card) {
-			var node = this.get("dragNode"),
-			    xy = node.getXY();
+			var node = this.get("dragNode");
 
-			this.set("offset", -xy[0], -xy[1]);
 			node.setContent(card.createProxy());
 
 			!card.proxyStack && Y.one(".yui3-dd-shim").setStyle("cursor", "not-allowed");
 		},
 
 		dragMiss: function (card) {
-			var offset = this.get("offset"),
-			    node = card.node;
-
-			node.setStyle("zIndex", card.zIndex);
-			node.setXY(offset);
+			Solitaire.game.unanimated(function () {
+				card.updatePosition();
+			});
 		},
 
 		dragEnd: function (target) {
-			if (!target.proxyStack) { return; }
-
 			var root = Solitaire.container(),
+			    node,
 			    drag = this;
+
+			node = drag.get("dragNode").one("div");
+			node.setContent("");
+
+			if (!target.proxyStack) { return; }
 
 			Y.Array.each(target.proxyStack.cards, function (card) {
 				if (!card) { return; }
@@ -667,7 +669,7 @@ Y.mix(Solitaire, {
 		},
 		
 		destroyNode: function () {
-			var n = this.node
+			var n = this.node;
 
 			n && n.clearData().destroy(true);
 		},
@@ -704,25 +706,21 @@ Y.mix(Solitaire, {
 		},
 
 		createProxy: (function () {
-			//var node = new Y.Node.create("<div id='test'>");
-			var fragment = new Y.Node(document.createDocumentFragment());
+			var node = new Y.Node.create("<div>");
 
 			return function () {
 				var stack = this.proxyStack,
-				    node,
 				    child;
 
 				// if the card isn't playable, create ghost copy
 				if (!stack) {
-					node = new Y.Node(document.createElement("div"))
-						node.setStyles({
-							opacity: 0.6,
-							top: -this.top,
-							left: -this.left
-						}).append(this.node.cloneNode(true));
+					node.setStyles({
+						opacity: 0.6,
+						top: -this.top,
+						left: -this.left
+					}).append(this.node.cloneNode(true));
 				} else {
-					node = new Y.Node(document.createElement("div"))
-						node.setStyles({opacity: 1, top: -this.top, left: -this.left});
+					node.setStyles({opacity: "", top: -this.top, left: -this.left});
 
 					Y.Array.each(this.proxyCards(), function (c) {
 						c.proxyStack = stack;
@@ -730,9 +728,7 @@ Y.mix(Solitaire, {
 					});
 				}
 
-				fragment.setContent(node);
-				return fragment;
-				//return node;
+				return node;
 			};
 		})(),
 
@@ -773,6 +769,7 @@ Y.mix(Solitaire, {
 	},
 
 	Stack: {
+		cards: null,
 		node: null,
 
 		serialize: function () {
@@ -963,8 +960,14 @@ Y.mix(Solitaire, {
 			game.container().append(node);
 		},
 
-		destroyNode: function () {
-			Solitaire.Card.destroyNode.call(this);
+		cleanup: function () {
+			var n = this.node;
+
+			n && n.clearData().destroy(true);
+
+			Y.Array.each(this.cards, function (c) {
+				c.destroyNode();
+			});
 		},
 
 		updateDragGroups: function () {

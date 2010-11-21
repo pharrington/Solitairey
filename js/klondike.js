@@ -1,8 +1,9 @@
 YUI.add("klondike", function (Y) {
 
+Y.namespace("Solitaire.Klondike");
+
 var Solitaire = Y.Solitaire,
-    ns = Y.namespace("Klondike"),
-    Klondike = instance(Solitaire, {
+    Klondike = Y.Solitaire.Klondike = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Waste", "Tableau"],
 
 	deal: function () {
@@ -183,6 +184,5 @@ Y.mix(Klondike.Deck.Stack, {
 
 
 Klondike.Foundation.Stack.cssClass = "freefoundation";
-ns.game = Klondike;
 
 }, "0.0.1", {requires: ["solitaire"]});

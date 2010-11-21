@@ -1,9 +1,9 @@
 YUI.add("yukon", function (Y) {
 
+Y.namespace("yukon");
+
 var Solitaire = Y.Solitaire,
-    Yukon = Y.namespace("yukon");
-    
-Y.mix(Yukon, instance(Solitaire, {
+    Yukon = Solitaire.Yukon = instance(Solitaire, {
 	fields: ["Foundation", "Tableau"],
 
 	deal: function () {
@@ -84,7 +84,7 @@ Y.mix(Yukon, instance(Solitaire, {
 			}
 		}
 	})
-}));
+});
 
 Y.Array.each(Yukon.fields, function (field) {
 	Yukon[field].Stack = instance(Yukon.Stack);

@@ -1,9 +1,9 @@
 YUI.add("freecell", function (Y) {
 
-var Solitaire = Y.Solitaire,
-    Freecell = Y.namespace("freecell");
+Y.namespace("freecell");
 
-    Y.mix(Freecell, instance(Solitaire, {
+var Solitaire = Y.Solitaire,
+    Freecell = Y.Solitaire.Freecell =  instance(Solitaire, {
 	fields: ["Foundation", "Reserve", "Tableau"],
 
 	deal: function () {
@@ -111,7 +111,7 @@ var Solitaire = Y.Solitaire,
 			}
 		}
 	})
-}));
+});
 
 Y.Array.each(Freecell.fields, function (field) {
 	Freecell[field].Stack = instance(Freecell.Stack);

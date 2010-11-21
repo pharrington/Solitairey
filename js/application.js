@@ -1,16 +1,15 @@
 (function () {
 	var active = {
-		name: "test",
+		name: "klondike",
 		game: null
 	    },
 	    yui = YUI({filter: "raw"}), Y,
 	    games = {
-	        "test": "Test",
+		"klondike": "Klondike",
 		"flower-garden": "FlowerGarden",
 		"forty-thieves": "FortyThieves",
 		"freecell": "Freecell",
 		"grandfathers-clock": "GClock",
-		"klondike": "Klondike",
 		"monte-carlo": "MonteCarlo",
 		"pyramid": "Pyramid",
 		"scorpion": "Scorpion",
@@ -178,7 +177,7 @@
 		var twoWeeks = 1206900000;
 
 		active.name = name;
-		active.game = Y[games[name]].game;
+		active.game = Y.Solitaire[games[name]];
 		Y.Cookie.set("options", name, {expires: new Date(new Date().getTime() + twoWeeks)});
 		newGame();
 	}
@@ -203,7 +202,7 @@
 		resizeBackground();
 
 		if (save) {
-			active.game = Y[games[active.name]].game;
+			active.game = Y.Solitaire[games[active.name]];
 			clearDOM();
 			active.game.loadGame(save);
 		} else {

@@ -97,7 +97,9 @@ function normalize(valOrFunction) {
 }
 
 YUI.add("solitaire", function (Y) {
-var Solitaire = Y.namespace("Solitaire");
+
+var Game,
+    Solitaire = Y.namespace("Solitaire");
 
 Y.mix(Solitaire, {
 	activeCard: null,
@@ -143,7 +145,7 @@ Y.mix(Solitaire, {
 	},
 
 	unanimated: function (callback) {
-		var anim = this.Animation,
+		var anim = Y.Solitaire.Animation,
 		    animate = anim.animate;
 
 		anim.animate = false;
@@ -209,8 +211,7 @@ Y.mix(Solitaire, {
 		Undo.clear();
 
 		this.init();
-		this.Animation.initQueue();
-		Solitaire.Card.animation = Solitaire.Animation;
+		Y.Solitaire.Animation.initQueue();
 		this.createStacks();
 		callback.call(this);
 
@@ -258,10 +259,8 @@ Y.mix(Solitaire, {
 	},
 
 	eachStack: function (callback) {
-		var game = Solitaire.game;
-
-		game && Y.Array.each(game.fields, function (name) {
-			var field = game[name.toLowerCase()];
+		Game && Y.Array.each(Game.fields, function (name) {
+			var field = Game[name.toLowerCase()];
 			field.stacks && Y.Array.each(field.stacks, callback);
 		});
 	},
@@ -294,7 +293,7 @@ Y.mix(Solitaire, {
 	},
 
 	scale: function (scale) {
-		var Card = Solitaire.Card,
+		var Card = Y.Solitaire.Card,
 		    base = Card.base,
 		    prop;
 
@@ -308,20 +307,21 @@ Y.mix(Solitaire, {
 	},
 
 	init: function () {
-		var game = Solitaire.game = this,
-		    cancel = Solitaire.preventDefault;
+		var cancel = Solitaire.preventDefault;
+
+		Game = Solitaire.game = this;
 
 		Y.on("selectstart", cancel, document);
 		Y.on("mousedown", cancel, document);
 		Y.on("contextmenu", cancel, document);
 
-		Y.Array.each(game.fields, function (field) {
-			game[field.toLowerCase()] = game.createField(game[field]);
+		Y.Array.each(Game.fields, function (field) {
+			Game[field.toLowerCase()] = Game.createField(Game[field]);
 		});
 
 		// TODO: refactor this conditional into the above iteration
-		if (game.fields.indexOf("Deck" === -1)) {
-			game.deck = game.createField(game.Deck);
+		if (Game.fields.indexOf("Deck" === -1)) {
+			Game.deck = Game.createField(Game.Deck);
 		}
 	},
 
@@ -338,7 +338,7 @@ Y.mix(Solitaire, {
 
 		if (card.isFaceDown) { return; }
 
-		stacks = Solitaire.game.foundation.stacks;
+		stacks = Game.foundation.stacks;
 		for (i = 0, len = stacks.length; i < len; i++) {
 			foundation = stacks[i];
 			if (card.isFree() && card.validTarget(foundation)) {
@@ -372,35 +372,33 @@ Y.mix(Solitaire, {
 	},
 
 	endTurn: function () {
-		var game = Solitaire.game;
-
 		Solitaire.moves.length && Undo.push(Solitaire.moves);
 		Solitaire.moves = [];
 		Solitaire.activeCard = null;
-		if (game.isWon()) {
-			game.won();
+		if (Game.isWon()) {
+			Game.won();
 		} else {
-			game.save();
+			Game.save();
 		}
-	},
+	}
+});
 
-	Events: {
+Y.Solitaire.Events = {
 		clickEmptyDeck: function (event) {
-			Solitaire.game.redeal();
+			Game.redeal();
 			Solitaire.moves.reverse();
 			Solitaire.endTurn();
 		},
 
 		dragCheck: function (card) {
-			var stack = card.createProxyStack(),
-			    game = Solitaire.game;
+			var stack = card.createProxyStack();
 
 			if (!stack) { return; }
 
 			Solitaire.activeCard = card;
 
-			Y.Array.each(game.fields, function (field) {
-				Y.Array.each(game[field.toLowerCase()].stacks, function (s) {
+			Y.Array.each(Game.fields, function (field) {
+				Y.Array.each(Game[field.toLowerCase()].stacks, function (s) {
 					s.updateDragGroups();
 				});
 			});
@@ -415,7 +413,7 @@ Y.mix(Solitaire, {
 		},
 
 		dragMiss: function (card) {
-			Solitaire.game.unanimated(function () {
+			Game.unanimated(function () {
 				card.updatePosition();
 			});
 		},
@@ -459,9 +457,9 @@ Y.mix(Solitaire, {
 				origin.update();
 			}
 		}
-	},
+};
 
-	Deck: {
+Y.Solitaire.Deck = {
 		count: 1,
 		suits: ["c", "s", "h", "d"],
 
@@ -470,7 +468,7 @@ Y.mix(Solitaire, {
 			    suit, s,
 			    rank,
 			    count,
-			    Card = Solitaire.game.Card;
+			    Card = Game.Card;
 
 			this.cards = [];
 
@@ -500,9 +498,9 @@ Y.mix(Solitaire, {
 		pop: function () {
 			return this.cards.pop();
 		}
-	},
+	};
 
-	Card: {
+Y.Solitaire.Card = {
 		zIndex: 1,
 		index: -1,
 		width: null,
@@ -525,12 +523,12 @@ Y.mix(Solitaire, {
 			left: function () {
 				var offset = Solitaire.container().getXY()[0];
 				
-				return -offset - Solitaire.Card.width;
+				return -offset - Y.Solitaire.Card.width;
 			},
 			top: function () {
 				var offset = Solitaire.container().getXY()[1];
 
-				return -offset - Solitaire.Card.height;
+				return -offset - Y.Solitaire.Card.height;
 			},
 		},
 
@@ -564,8 +562,8 @@ Y.mix(Solitaire, {
 
 		setRankHeight: function () {
 			this.rankHeight = this.isFaceDown ?
-				Solitaire.Card.hiddenRankHeight :
-				Solitaire.Card.rankHeight;
+				Y.Solitaire.Card.hiddenRankHeight :
+				Y.Solitaire.Card.rankHeight;
 		},
 
 		imageSrc: function () {
@@ -608,7 +606,7 @@ Y.mix(Solitaire, {
 			var stack = this.stack;
 
 			if (stack.field === "deck") {
-				Solitaire.game.turnOver();
+				Game.turnOver();
 			} else if (this === stack.last()) {
 				this.faceUp();
 			}
@@ -625,10 +623,10 @@ Y.mix(Solitaire, {
 		},
 
 		createNode: function () {
-			var game = Solitaire.game,
-			    groups,
+			var groups,
 			    node, dd,
-			    card = this;
+			    card = this,
+			    events = Game.Events;
 
 			node = this.node = Y.Node.create("<img class='card'>")
 				.setData("target", this)
@@ -647,19 +645,19 @@ Y.mix(Solitaire, {
 				moveOnEnd: false
 			});
 
-			dd.on("drag:mouseDown", game.Events.dragCheck.partial(this));
-			dd.on("drag:start", game.Events.dragStart.partial(this));
-			dd.on("drag:dropmiss", game.Events.dragMiss.partial(this));
-			dd.on("drag:drophit", game.Events.drop);
-			dd.on("drag:end", game.Events.dragEnd.partial(this));
+			dd.on("drag:mouseDown", events.dragCheck.partial(this));
+			dd.on("drag:start", events.dragStart.partial(this));
+			dd.on("drag:dropmiss", events.dragMiss.partial(this));
+			dd.on("drag:drophit", events.drop);
+			dd.on("drag:end", events.dragEnd.partial(this));
 
 			node.on("click", function (e) {
 				card.turnOver(e);
 				Solitaire.moves.reverse();
 				Solitaire.endTurn();
 			});
-			node.on("dblclick", game.autoPlay.partial(this));
-			node.on("contextmenu", game.autoPlay.partial(this));
+			node.on("dblclick", Game.autoPlay.partial(this));
+			node.on("contextmenu", Game.autoPlay.partial(this));
 
 			this.updateStyle();
 			this.setRankHeight();
@@ -742,7 +740,7 @@ Y.mix(Solitaire, {
 				this.node.setStyles({left: normalize(origin.left), top: normalize(origin.top)});
 			}
 
-			this.animation.init(this, to, fields);
+			Y.Solitaire.Animation.init(this, to, fields);
 		},
 
 		pushPosition: function () {
@@ -765,9 +763,9 @@ Y.mix(Solitaire, {
 			this.stack.deleteItem(this);
 			stack.push(this);
 		}
-	},
+	};
 
-	Stack: {
+Y.Solitaire.Stack = {
 		cards: null,
 		node: null,
 
@@ -775,7 +773,7 @@ Y.mix(Solitaire, {
 			var i, len,
 			    cards = this.cards,
 			    card,
-			    suits = Solitaire.game.deck.suits,
+			    suits = Game.deck.suits,
 			    byte,
 			    serialized = [];
 
@@ -797,7 +795,7 @@ Y.mix(Solitaire, {
 		setCards: function (count, cardGen) {
 			var i, len,
 			    card, cards,
-			    empty = instance(Solitaire.game.Card, {
+			    empty = instance(Game.Card, {
 				updatePosition: Solitaire.noop,
 				ensureDOM: Solitaire.noop
 			    });
@@ -817,9 +815,8 @@ Y.mix(Solitaire, {
 		},
 
 		unserialize: function (serialized) {
-			var game = Solitaire.game,
-			    deck = game.deck,
-			    Card = game.Card;
+			var deck = Game.deck,
+			    Card = Game.Card;
 
 			this.setCards(serialized.length, function (i) {
 				var value,
@@ -849,8 +846,8 @@ Y.mix(Solitaire, {
 		},
 
 		layout: function (layout) {
-			var hoffset = layout.hoffset * Solitaire.Card.width,
-			    voffset = layout.voffset * Solitaire.Card.height,
+			var hoffset = layout.hoffset * Y.Solitaire.Card.width,
+			    voffset = layout.voffset * Y.Solitaire.Card.height,
 			    self = this;
 
 			Y.Array.each(["top", "left"], function (p) {
@@ -872,7 +869,7 @@ Y.mix(Solitaire, {
 
 			if (last) { card.zIndex = last.zIndex + 1; }
 			else if (to === "deck") { card.zIndex = 200; }
-			else if (from === "deck") { card.zIndex = Solitaire.game.Card.zIndex; }
+			else if (from === "deck") { card.zIndex = Game.Card.zIndex; }
 
 			if (!temp) {
 				card.stack = this;
@@ -887,8 +884,7 @@ Y.mix(Solitaire, {
 		afterPush: function () { return true; },
 
 		pushStack: function (proxy) {
-			var game = Solitaire.game,
-			    updatePosition = game.Card.updatePosition,
+			var updatePosition = Game.Card.updatePosition,
 			    origin = Solitaire.activeCard.stack.cards,
 			    stack = this;
 
@@ -896,7 +892,7 @@ Y.mix(Solitaire, {
 				card.index = i;
 			});
 
-			game.Card.updatePosition = Solitaire.noop;
+			Game.Card.updatePosition = Solitaire.noop;
 			Y.Array.each(proxy.cards, function (card) {
 				card.moveTo(stack);
 				card.index = -1;
@@ -904,9 +900,9 @@ Y.mix(Solitaire, {
 			Y.Array.each(origin, function (card) {
 				card.index = -1;
 			});
-			game.Card.updatePosition = updatePosition;
+			Game.Card.updatePosition = updatePosition;
 
-			game.unanimated(function () {
+			Game.unanimated(function () {
 				Y.Array.each(proxy.cards, function (card) {
 					card.updatePosition();
 				});
@@ -932,8 +928,8 @@ Y.mix(Solitaire, {
 			return {
 				left: this.left,
 				top: this.top,
-				width: Solitaire.Card.width,
-				height: Solitaire.Card.height
+				width: Y.Solitaire.Card.width,
+				height: Y.Solitaire.Card.height
 			};
 		},
 
@@ -944,8 +940,7 @@ Y.mix(Solitaire, {
 		},
 
 		createNode: function () {
-			var game = Solitaire.game,
-			    node = this.node;
+			var node = this.node;
 
 			node = this.node = Y.Node.create("<img class='stack'>")
 				.setAttribute("src", this.imageSrc())
@@ -956,7 +951,7 @@ Y.mix(Solitaire, {
 
 			this.updateStyle();
 
-			game.container().append(node);
+			Solitaire.container().append(node);
 		},
 
 		cleanup: function () {
@@ -997,10 +992,10 @@ Y.mix(Solitaire, {
 		},
 
 		update: function () {}
-	},
+	};
 
-	Animation: {
-		animate: false,
+Y.Solitaire.Animation = {
+		animate: true,
 		duration: 0.5, // seconds
 		interval: 30, // milliseconds
 		queue: new Y.AsyncQueue(),
@@ -1015,6 +1010,7 @@ Y.mix(Solitaire, {
 			var node = card.node,
 			    q = this.queue,
 			    speeds = card.animSpeeds,
+			    from = {top: node.getStyle("top"), left: node.getStyle("left")},
 			    duration,
 			    callback,
 			    anim;
@@ -1029,6 +1025,7 @@ Y.mix(Solitaire, {
 
 			anim = new Y.Anim({
 				node: node,
+				from: from,
 				to: to,
 				easing: Y.Easing.easeOut,
 				duration: duration
@@ -1048,9 +1045,7 @@ Y.mix(Solitaire, {
 
 			q.defaults.timeout = this.interval;
 		}
-	}
-
-});
+	};
 
 var Undo = {
 	stack: null,

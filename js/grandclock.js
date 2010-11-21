@@ -17,9 +17,10 @@ function inRange(low, high, value) {
 	}
 }
 
+Y.namespace("GClock");
+
 var Solitaire = Y.Solitaire,
-    ns = Y.namespace("GClock"),
-    GClock = instance(Solitaire, {
+    GClock = Y.Solitaire.GClock = instance(Solitaire, {
 	fields: ["Foundation", "Tableau"],
 
 	deal: function () {
@@ -171,6 +172,5 @@ Y.mix(GClock.Foundation.Stack, {
 }, true);
 
 GClock.Foundation.Stack.cssClass = "freefoundation";
-ns.game = GClock;
 
 }, {requires: ["solitaire"]});

@@ -1,14 +1,10 @@
 YUI.add("monte-carlo", function (Y) {
 
-var Solitaire = Y.Solitaire,
-    ns = Y.namespace("MonteCarlo"),
-    MonteCarlo = instance(Solitaire, {
-	fields: ["Foundation", "Deck", "Tableau"],
+Y.namespace("MonteCarlo");
 
-	/*
-	autoPlay: function (card, e) {
-	},
-	*/
+var Solitaire = Y.Solitaire,
+    MonteCarlo = Y.Solitaire.MonteCarlo = instance(Solitaire, {
+	fields: ["Foundation", "Deck", "Tableau"],
 
 	deal: function () {
 		var card,
@@ -259,7 +255,5 @@ Y.mix(MonteCarlo.Deck.Stack, {
 		this.node.on("click", Solitaire.Events.clickEmptyDeck);
 	}
 }, true);
-
-ns.game = MonteCarlo;
 
 }, "0.0.1", {requires: ["solitaire", "array-extras"]});

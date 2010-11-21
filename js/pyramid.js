@@ -1,8 +1,9 @@
 YUI.add("pyramid", function (Y) {
 
+Y.namespace("Pyramid");
+
 var Solitaire = Y.Solitaire,
-    ns = Y.namespace("Pyramid"),
-    Pyramid = instance(Solitaire, {
+    Pyramid = Y.Solitaire.Pyramid = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Waste", "Tableau"],
 
 	deal: function () {
@@ -28,7 +29,6 @@ var Solitaire = Y.Solitaire,
 		    waste = this.waste.stacks[0];
 
 		if (deck.cards.length === 1) { return; }
-		console.log("!");
 		deck.last().moveTo(waste);
 	},
 
@@ -242,7 +242,5 @@ Y.mix(Pyramid.Deck.Stack, {
 }, true);
 
 Pyramid.Waste.Stack.updateDragGroups = Pyramid.Deck.Stack.updateDragGroups;
-
-ns.game = Pyramid;
 
 }, "0.0.1", {requires: ["solitaire"]});

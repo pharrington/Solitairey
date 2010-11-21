@@ -1,9 +1,9 @@
 YUI.add("scorpion", function (Y) {
 
+Y.namespace("scorpion");
+
 var Solitaire = Y.Solitaire,
-    Scorpion = Y.namespace("scorpion");
-    
-Y.mix(Scorpion, instance(Solitaire, {
+    Scorpion = Solitaire.Scorpion = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],
 
 	deal: function () {
@@ -93,7 +93,7 @@ Y.mix(Scorpion, instance(Solitaire, {
 			}
 		}
 	})
-}));
+});
 
 Y.Array.each(Scorpion.fields, function (field) {
 	Scorpion[field].Stack = instance(Scorpion.Stack);

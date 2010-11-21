@@ -1,8 +1,9 @@
 YUI.add("spider", function (Y) {
 
+Y.namespace("Spider");
+
 var Solitaire = Y.Solitaire,
-    ns = Y.namespace("Spider"),
-    Spider = instance(Solitaire, {
+    Spider = Solitaire.Spider = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],
 
 	deal: function () {
@@ -171,7 +172,5 @@ Y.mix(Spider.Tableau.Stack, {
 
 Spider.Foundation.Stack.cssClass = "freefoundation";
 Spider.Deck.Stack.cssClass = "";
-
-ns.game = Spider;
 
 }, {requires: ["solitaire"]});

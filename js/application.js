@@ -192,7 +192,6 @@
 
 		attachEvents();
 		loadOptions();
-		resizeBackground();
 
 		if (save) {
 			active.game = Y.Solitaire[games[active.name]];

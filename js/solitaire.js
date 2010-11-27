@@ -101,6 +101,12 @@ YUI.add("solitaire", function (Y) {
 var Game,
     Solitaire = Y.namespace("Solitaire");
 
+Y.extend(Y.DD.Delegate, {
+	getCard: function () {
+		return this.get("currentNode").getData("target");
+	}
+});
+
 Y.mix(Solitaire, {
 	activeCard: null,
 	moves: null,

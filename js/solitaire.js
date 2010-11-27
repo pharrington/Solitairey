@@ -218,6 +218,24 @@ Y.mix(Solitaire, {
 		Solitaire.moves = [];
 	},
 
+	createDraggables: function () {
+		var dd = new Y.DD.Delegate({
+			dragMode: "intersect",
+			groups: ["open"],
+			container: Solitaire.selector,
+			nodes: ".card"
+		}).plug(Y.Plugin.DDProxy, {
+			borderStyle: "none",
+			moveOnEnd: false
+		});
+
+		dd.on("drag:mouseDown", game.Events.dragCheck);
+		dd.on("drag:start", game.Events.dragStart);
+		dd.on("drag:dropmiss", game.Events.dragMiss);
+		dd.on("drag:drophit", game.Events.drop);
+		dd.on("drag:end", game.Events.dragEnd);
+	},
+
 	createField: function (field) {
 		if (!field) { return; }
 

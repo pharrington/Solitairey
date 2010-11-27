@@ -101,8 +101,8 @@ YUI.add("solitaire", function (Y) {
 var Game,
     Solitaire = Y.namespace("Solitaire");
 
-function CardDelegate() {
-	CardDelegate.superclass.constructor.apply(this, arguments);
+function CardDelegate(cfg) {
+	CardDelegate.superclass.constructor.call(this, cfg);
 }
 
 Y.extend(CardDelegate, Y.DD.Delegate, {
@@ -231,8 +231,10 @@ Y.mix(Solitaire, {
 
 	createDraggables: function () {
 		var del = new CardDelegate({
-			dragMode: "intersect",
-			groups: ["open"],
+			dragConfig: {
+				dragMode: "intersect",
+				groups: ["open"],
+			},
 			container: Solitaire.selector,
 			nodes: ".card"
 		});

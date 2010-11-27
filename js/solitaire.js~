@@ -414,8 +414,9 @@ Y.Solitaire.Events = {
 			Solitaire.endTurn();
 		},
 
-		dragCheck: function (card) {
-			var stack = card.createProxyStack();
+		dragCheck: function () {
+			var card = this.getCard(),
+			    stack = card.createProxyStack();
 
 			if (!stack) { return; }
 
@@ -428,22 +429,26 @@ Y.Solitaire.Events = {
 			});
 		},
 
-		dragStart: function (card) {
-			var node = this.get("dragNode");
+		dragStart: function () {
+			var card = this.getCard(),
+			    node = this.get("dragNode");
 
 			node.setContent(card.createProxy());
 
 			!card.proxyStack && Y.one(".yui3-dd-shim").setStyle("cursor", "not-allowed");
 		},
 
-		dragMiss: function (card) {
+		dragMiss: function () {
+			var card = this.getCard();
+
 			Game.unanimated(function () {
 				card.updatePosition();
 			});
 		},
 
-		dragEnd: function (target) {
-			var root = Solitaire.container(),
+		dragEnd: function () {
+			var target = this.getCard(),
+			    root = Solitaire.container(),
 			    node,
 			    drag = this;
 

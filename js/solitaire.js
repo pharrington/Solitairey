@@ -101,7 +101,11 @@ YUI.add("solitaire", function (Y) {
 var Game,
     Solitaire = Y.namespace("Solitaire");
 
-Y.extend(Y.DD.Delegate, {
+function CardDelegate() {
+	CardDelegate.superclass.constructor.apply(this, arguments);
+}
+
+Y.extend(CardDelegate, Y.DD.Delegate, {
 	getCard: function () {
 		return this.get("currentNode").getData("target");
 	}
@@ -219,13 +223,14 @@ Y.mix(Solitaire, {
 		this.init();
 		Y.Solitaire.Animation.initQueue();
 		this.createStacks();
+		this.createDraggables();
 		callback.call(this);
 
 		Solitaire.moves = [];
 	},
 
 	createDraggables: function () {
-		var dd = new Y.DD.Delegate({
+		var dd = new CardDelegate({
 			dragMode: "intersect",
 			groups: ["open"],
 			container: Solitaire.selector,
@@ -1120,4 +1125,4 @@ var Undo = {
 	},
 };
 
-}, "0.0.1", {requires: ["dd", "dd-plugin", "anim", "async-queue", "cookie", "array-extras"]});
+}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "async-queue", "cookie", "array-extras"]});

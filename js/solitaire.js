@@ -653,7 +653,7 @@ Y.Solitaire.Card = {
 
 		createNode: function () {
 			var groups,
-			    node, dd,
+			    node,
 			    card = this,
 			    events = Game.Events;
 
@@ -663,22 +663,6 @@ Y.Solitaire.Card = {
 				.plug(Y.Plugin.Drop, {
 					useShim: false
 				});
-
-			dd = new Y.DD.Drag({
-				dragMode: "intersect",
-				groups: ["open"],
-				clickPixelThresh: 0,
-				node: node
-			}).plug(Y.Plugin.DDProxy, {
-				borderStyle: "none",
-				moveOnEnd: false
-			});
-
-			dd.on("drag:mouseDown", events.dragCheck.partial(this));
-			dd.on("drag:start", events.dragStart.partial(this));
-			dd.on("drag:dropmiss", events.dragMiss.partial(this));
-			dd.on("drag:drophit", events.drop);
-			dd.on("drag:end", events.dragEnd.partial(this));
 
 			node.on("click", function (e) {
 				card.turnOver(e);

@@ -230,21 +230,23 @@ Y.mix(Solitaire, {
 	},
 
 	createDraggables: function () {
-		var dd = new CardDelegate({
+		var del = new CardDelegate({
 			dragMode: "intersect",
 			groups: ["open"],
 			container: Solitaire.selector,
 			nodes: ".card"
-		}).plug(Y.Plugin.DDProxy, {
+		});
+		
+		del.dd.plug(Y.Plugin.DDProxy, {
 			borderStyle: "none",
 			moveOnEnd: false
 		});
 
-		dd.on("drag:mouseDown", Game.Events.dragCheck);
-		dd.on("drag:start", Game.Events.dragStart);
-		dd.on("drag:dropmiss", Game.Events.dragMiss);
-		dd.on("drag:drophit", Game.Events.drop);
-		dd.on("drag:end", Game.Events.dragEnd);
+		del.on("drag:mouseDown", Game.Events.dragCheck);
+		del.on("drag:start", Game.Events.dragStart);
+		del.on("drag:dropmiss", Game.Events.dragMiss);
+		del.on("drag:drophit", Game.Events.drop);
+		del.on("drag:end", Game.Events.dragEnd);
 	},
 
 	createField: function (field) {

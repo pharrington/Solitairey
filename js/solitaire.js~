@@ -230,12 +230,14 @@ Y.mix(Solitaire, {
 	},
 
 	createDraggables: function () {
-		var dd = new Y.DD.Delegate({
+		var dd = new CardDelegate({
 			dragMode: "intersect",
 			groups: ["open"],
 			container: Solitaire.selector,
 			nodes: ".card"
-		}).plug(Y.Plugin.DDProxy, {
+		});
+		
+		dd.dd.plug(Y.Plugin.DDProxy, {
 			borderStyle: "none",
 			moveOnEnd: false
 		});

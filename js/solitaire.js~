@@ -229,11 +229,11 @@ Y.mix(Solitaire, {
 			moveOnEnd: false
 		});
 
-		dd.on("drag:mouseDown", game.Events.dragCheck);
-		dd.on("drag:start", game.Events.dragStart);
-		dd.on("drag:dropmiss", game.Events.dragMiss);
-		dd.on("drag:drophit", game.Events.drop);
-		dd.on("drag:end", game.Events.dragEnd);
+		dd.on("drag:mouseDown", Game.Events.dragCheck);
+		dd.on("drag:start", Game.Events.dragStart);
+		dd.on("drag:dropmiss", Game.Events.dragMiss);
+		dd.on("drag:drophit", Game.Events.drop);
+		dd.on("drag:end", Game.Events.dragEnd);
 	},
 
 	createField: function (field) {

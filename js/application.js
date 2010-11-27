@@ -160,7 +160,6 @@
 	}
 
 	function resize() {
-		resizeBackground();
 		active.game.resize(sizeRatio());
 	}
 
@@ -180,12 +179,6 @@
 		active.game = Y.Solitaire[games[name]];
 		Y.Cookie.set("options", name, {expires: new Date(new Date().getTime() + twoWeeks)});
 		newGame();
-	}
-
-	function resizeBackground() {
-		var bg = new Y.Node(document.body);
-
-		bg.setStyle("height", bg.get("winHeight"));
 	}
 
 	function loadOptions() {

@@ -234,6 +234,7 @@ Y.mix(Solitaire, {
 			dragConfig: {
 				dragMode: "intersect",
 				groups: ["open"],
+				clickPixelThresh: 0
 			},
 			container: Solitaire.selector,
 			nodes: ".card"
@@ -431,10 +432,8 @@ Y.Solitaire.Events = {
 
 			Solitaire.activeCard = card;
 
-			Y.Array.each(Game.fields, function (field) {
-				Y.Array.each(Game[field.toLowerCase()].stacks, function (s) {
-					s.updateDragGroups();
-				});
+			Game.eachStack(function (stack) {
+				stack.updateDragGroups();
 			});
 		},
 
@@ -461,7 +460,7 @@ Y.Solitaire.Events = {
 			    node,
 			    drag = this;
 
-			node = drag.get("dragNode").one("div");
+			node = drag.get("dragNode");
 			node.setContent("");
 
 			if (!target.proxyStack) { return; }
@@ -731,6 +730,7 @@ Y.Solitaire.Card = {
 				var stack = this.proxyStack,
 				    child;
 
+				node.setContent("");
 				// if the card isn't playable, create ghost copy
 				if (!stack) {
 					node.setStyles({

@@ -193,9 +193,6 @@ Y.mix(Solitaire, {
 		var data = this.serialize(),
 		    twoWeeks = 1206900000;
 
-		if (data.length !== 66) {
-			console.log("missing card");
-		}
 		Y.Cookie.set("saved-game", data, {expires: new Date(new Date().getTime() + twoWeeks)});
 	},
 
@@ -457,11 +454,7 @@ Y.Solitaire.Events = {
 		dragEnd: function () {
 			var target = this.getCard(),
 			    root = Solitaire.container(),
-			    node,
 			    drag = this;
-
-			node = drag.get("dragNode");
-			node.setContent("");
 
 			if (!target.proxyStack) { return; }
 
@@ -662,8 +655,7 @@ Y.Solitaire.Card = {
 		createNode: function () {
 			var groups,
 			    node,
-			    card = this,
-			    events = Game.Events;
+			    card = this;
 
 			node = this.node = Y.Node.create("<img class='card'>")
 				.setData("target", this)

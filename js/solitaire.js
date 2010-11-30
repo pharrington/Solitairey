@@ -234,7 +234,6 @@ Y.mix(Solitaire, {
 		container.delegate("contextmenu", Game.autoPlay, ".card");
 
 		container.delegate("click", function (e) {
-			console.log("!");
 			e.target.getData("target").turnOver(e);
 			Solitaire.moves.reverse();
 			Solitaire.endTurn();

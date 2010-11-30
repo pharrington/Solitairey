@@ -433,7 +433,7 @@ Y.mix(Solitaire, {
 });
 
 Y.Solitaire.Events = {
-		clickEmptyDeck: function (event) {
+		clickEmptyDeck: function () {
 			Game.redeal();
 			Solitaire.moves.reverse();
 			Solitaire.endTurn();

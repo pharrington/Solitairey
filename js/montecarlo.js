@@ -6,6 +6,12 @@ var Solitaire = Y.Solitaire,
     MonteCarlo = Y.Solitaire.MonteCarlo = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],
 
+	createEvents: function () {
+		Solitaire.createEvents.call(this);
+
+		Y.delegate("click", Solitaire.Events.clickEmptyDeck, Solitaire.selector, ".stack");
+	},
+
 	deal: function () {
 		var card,
 		    stack,
@@ -73,9 +79,9 @@ var Solitaire = Y.Solitaire,
 	}),
 
 	Events: instance(Solitaire.Events, {
-		dragCheck: function (card, e) {
-			if (!Solitaire.game.autoPlay(card, e)) {
-				Solitaire.Events.dragCheck(card, e);
+		dragCheck: function () {
+			if (!Solitaire.game.autoPlay.call(this)) {
+				Solitaire.Events.dragCheck.call(this);
 			}
 		},
 
@@ -248,11 +254,6 @@ Y.mix(MonteCarlo.Deck.Stack, {
 		} else {
 			card.node.drop.removeFromGroup("open");
 		}
-	},
-
-	createNode: function () {
-		Solitaire.Stack.createNode.call(this);
-		this.node.on("click", Solitaire.Events.clickEmptyDeck);
 	}
 }, true);
 

@@ -454,7 +454,10 @@ Y.Solitaire.Events = {
 		dragEnd: function () {
 			var target = this.getCard(),
 			    root = Solitaire.container(),
-			    drag = this;
+			    node;
+
+			node = this.get("dragNode").one("div");
+			node.remove();
 
 			if (!target.proxyStack) { return; }
 
@@ -475,7 +478,6 @@ Y.Solitaire.Events = {
 			    origin = card.stack,
 			    target = e.drop.get("node").getData("target"),
 			    first = stack.first();
-			    drag = this;
 
 			    target = target.stack || target;
 

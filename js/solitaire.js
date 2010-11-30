@@ -329,7 +329,7 @@ Y.mix(Solitaire, {
 				stack.setCards(cards.length, function (i) {
 					var card = cards[i];
 
-					card.updateStyle();
+					card && card.updateStyle();
 					return card;
 				});	
 
@@ -818,6 +818,15 @@ Y.Solitaire.Stack = {
 			return serialized.join("");
 		},
 
+		eachCard: function (callback) {
+			var i, len,
+			    cards = this.cards;
+
+			for (i = 0, len = cards.length; i < len; i++) {
+				cards[i] && callback(cards[i]);
+			}
+		},
+
 		setCards: function (count, cardGen) {
 			var i, len,
 			    card, cards,
@@ -985,8 +994,8 @@ Y.Solitaire.Stack = {
 
 			n && n.clearData().destroy(true);
 
-			Y.Array.each(this.cards, function (c) {
-				c && c.destroyNode();
+			this.eachCard(function (c) {
+				c.destroyNode();
 			});
 		},
 

@@ -1006,8 +1006,8 @@ Y.Solitaire.Stack = {
 			    drop,
 			    i = cards.length - 1;
 
-			Y.Array.each(cards, function (card) {
-				card.node.drop.removeFromGroup("open");
+			this.eachCard(function (c) {
+				c.node.drop.removeFromGroup("open");
 			});
 
 			if (active.validTarget(this)) {

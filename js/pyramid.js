@@ -6,6 +6,12 @@ var Solitaire = Y.Solitaire,
     Pyramid = Y.Solitaire.Pyramid = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Waste", "Tableau"],
 
+	createEvents: function () {
+		Solitaire.createEvents.call(this);
+
+		Y.delegate("mousedown", this.autoPlay, this.selector, ".card");
+	},
+
 	deal: function () {
 		var card,
 		    stack,
@@ -52,9 +58,9 @@ var Solitaire = Y.Solitaire,
 	}),
 
 	Events: instance(Solitaire.Events, {
-		dragCheck: function (card, e) {
-			if (!Solitaire.game.autoPlay(card, e)) {
-				Solitaire.Events.dragCheck(card, e);
+		dragCheck: function (e) {
+			if (!Solitaire.game.autoPlay.call(this)) {
+				Solitaire.Events.dragCheck.call(this);
 			}
 		},
 
@@ -170,11 +176,6 @@ var Solitaire = Y.Solitaire,
 		},
 
 		createStack: function () {},
-
-		createNode: function () {
-			Solitaire.Card.createNode.call(this);
-			this.node.on("mousedown", Solitaire.game.autoPlay.partial(this));
-		},
 
 		stackHelper: function () {
 			this.dragStack = {cards: []};

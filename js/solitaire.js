@@ -376,7 +376,9 @@ Y.mix(Solitaire, {
 	},
 
 	autoPlay: function (e) {
-		var card = e.target.getData("target"),
+		var card = typeof this.getCard === "function"
+			? this.getCard()
+			: this.getData("target"),
 		    origin = card.stack,
 		    last = origin.last(),
 		    stacks,
@@ -984,7 +986,7 @@ Y.Solitaire.Stack = {
 			n && n.clearData().destroy(true);
 
 			Y.Array.each(this.cards, function (c) {
-				c.destroyNode();
+				c && c.destroyNode();
 			});
 		},
 

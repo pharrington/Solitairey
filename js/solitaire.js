@@ -220,11 +220,27 @@ Y.mix(Solitaire, {
 		this.init();
 		Y.Solitaire.Animation.initQueue();
 		this.createStacks();
+		this.createEvents();
 		this.createDraggables();
 		callback.call(this);
 
 		Solitaire.moves = [];
 	},
+
+	createEvents: function () {
+		var container = Y.one(Solitaire.selector);
+
+		container.delegate("dblclick", Game.autoPlay, ".card");
+		container.delegate("contextmenu", Game.autoPlay, ".card");
+
+		container.delegate("click", function (e) {
+			console.log("!");
+			e.target.getData("target").turnOver(e);
+			Solitaire.moves.reverse();
+			Solitaire.endTurn();
+		}, ".card");
+	},
+
 
 	createDraggables: function () {
 		var del = new CardDelegate({
@@ -360,8 +376,9 @@ Y.mix(Solitaire, {
 		e.preventDefault();
 	},
 
-	autoPlay: function (card, e) {
-		var origin = card.stack,
+	autoPlay: function (e) {
+		var card = e.target.getData("target"),
+		    origin = card.stack,
 		    last = origin.last(),
 		    stacks,
 		    foundation,
@@ -665,14 +682,6 @@ Y.Solitaire.Card = {
 				.plug(Y.Plugin.Drop, {
 					useShim: false
 				});
-
-			node.on("click", function (e) {
-				card.turnOver(e);
-				Solitaire.moves.reverse();
-				Solitaire.endTurn();
-			});
-			node.on("dblclick", Game.autoPlay.partial(this));
-			node.on("contextmenu", Game.autoPlay.partial(this));
 
 			this.updateStyle();
 			this.setRankHeight();

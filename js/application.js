@@ -15,6 +15,7 @@
 		"scorpion": "Scorpion",
 		"spider": "Spider",
 		"spider1s": "Spider1S",
+		"spider2s": "Spider2S",
 		"yukon": "Yukon"
 	},
 

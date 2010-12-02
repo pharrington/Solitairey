@@ -125,16 +125,17 @@ Y.mix(Spider.Tableau.Stack, {
 	isComplete: function (callback) {
 		var cards = this.cards,
 		    rank,
+		    suit,
 		    card,
 		    complete,
 		    i;
 
 		if (!cards.length) { return false; }
 
-		for (i = cards.length - 1, rank = 1; i >= 0 && rank < 14; i--, rank++) {
+		for (i = cards.length - 1, rank = 1, suit = cards[i].suit; i >= 0 && rank < 14; i--, rank++) {
 			card = cards[i];
 
-			if (card.isFaceDown || card.rank !== rank) {
+			if (card.isFaceDown || card.rank !== rank || card.suit !== suit) {
 				return false;
 			}
 		}

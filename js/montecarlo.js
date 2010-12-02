@@ -61,6 +61,7 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Stack: instance(Solitaire.Stack, {
+		images: { deck: "dondorf/freeslot.png" },
 
 		updateDragGroups: function () {
 			var active = Solitaire.activeCard;

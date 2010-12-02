@@ -39,7 +39,7 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Stack: instance(Solitaire.Stack, {
-		cssClass: "",
+		images: {},
 
 		updateDragGroups: function () {
 			var active = Solitaire.activeCard;

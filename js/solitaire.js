@@ -794,6 +794,12 @@ Y.Solitaire.Card = {
 Y.Solitaire.Stack = {
 		cards: null,
 		node: null,
+		images: {
+			tableau: "dondorf/freeslot.png",
+			deck: "dondorf/freeslot.png",
+			reserve: "dondorf/freeslot.png",
+			foundation: "dondorf/freeslot.png"
+		},
 
 		serialize: function () {
 			var i, len,
@@ -877,7 +883,7 @@ Y.Solitaire.Stack = {
 		},
 
 		imageSrc: function () {
-			return "dondorf/freeslot.png";
+			return this.images[this.field] || "trans.gif";
 		},
 
 		layout: function (layout) {

@@ -208,6 +208,7 @@ Y.mix(Solitaire, {
 	},
 
 	cleanup: function () {
+		Y.Event.purgeElement(this.container());
 		this.eachStack(function (stack) {
 			stack.cleanup();
 		});

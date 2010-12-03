@@ -49,11 +49,11 @@ var Solitaire = Y.Solitaire,
 
 	Foundation: {
 		stackConfig: {
-			total: 1,
+			total: 8,
 			layout: {
 				hspacing: 1.25,
 				top: 0,
-				left: function () { return Solitaire.Card.width * 11.25; }
+				left: function () { return Solitaire.Card.width * 2.5; }
 			}
 		},
 		field: "foundation",
@@ -146,10 +146,14 @@ Y.mix(Spider.Tableau.Stack, {
 	},
 
 	clearComplete: function (startIndex) {
-		var foundation = Solitaire.game.foundation.stacks[0],
+		var foundation,
 		    cards = this.cards,
 		    count = cards.length - startIndex;
 
+		// find the first empty foundation
+		foundation = Y.Array.find(Solitaire.game.foundation.stacks, function (stack) {
+			return !stack.cards.length;
+		});
 
 		while (count) {
 			cards.last().moveTo(foundation);

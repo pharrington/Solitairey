@@ -473,17 +473,51 @@ Y.Solitaire.Events = {
 		dragEnd: function () {
 			var target = this.getCard(),
 			    root = Solitaire.container(),
-			    node;
+			    dragNode,
+			    node,
 
-			node = this.get("dragNode").one("div");
+			    dragXY = this.dd.realXY,
+			    containerXY = root.getXY(),
+
+			    cards,
+			    
+			    stack,
+			    proxyStack = target.proxyStack;
+
+			dragNode = this.get("dragNode");
+			node = dragNode.get("firstChild");
+
 			node.remove();
 
-			if (!target.proxyStack) { return; }
+			if (!proxyStack) { return; }
 
-			Y.Array.each(target.proxyStack.cards, function (card) {
+			cards = proxyStack.cards;
+			stack = cards[0].stack;
+
+			proxyStack.left = dragXY[0] - containerXY[0];
+			proxyStack.top = dragXY[1] - containerXY[1];
+
+			Game.unanimated(function() {
+				proxyStack.setCards(cards.length, function (i) {
+					return cards[i];
+				});
+			});
+
+			Y.Array.each(cards, function (card) {
 				if (!card) { return; }
+
+				var node = card.node;
+
 				card.proxyStack = null;
-				root.append(card.node);
+				root.append(node);
+			});
+
+
+			cards = stack.cards;
+			//Y.Array.each(proxyStack.cards, function (card) {
+			stack.setCards(cards.length, function (i) {
+				return cards[i];
+				//card.updatePosition();
 			});
 
 			Solitaire.endTurn();
@@ -493,10 +527,12 @@ Y.Solitaire.Events = {
 			if (!Solitaire.activeCard) { return; }
 
 			var card = Solitaire.activeCard,
+
 			    stack = card.proxyStack,
 			    origin = card.stack,
-			    target = e.drop.get("node").getData("target"),
 			    first = stack.first();
+
+			    target = e.drop.get("node").getData("target");
 
 			    target = target.stack || target;
 
@@ -561,6 +597,7 @@ Y.Solitaire.Card = {
 		isFaceDown: false,
 		positioned: false,
 		scale: 1,
+		stack: null,
 		node: null,
 
 		base: {
@@ -943,12 +980,6 @@ Y.Solitaire.Stack = {
 				card.index = -1;
 			});
 			Game.Card.updatePosition = updatePosition;
-
-			Game.unanimated(function () {
-				Y.Array.each(proxy.cards, function (card) {
-					card.updatePosition();
-				});
-			});
 
 			this.afterPush();
 		},

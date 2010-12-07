@@ -514,10 +514,8 @@ Y.Solitaire.Events = {
 
 
 			cards = stack.cards;
-			//Y.Array.each(proxyStack.cards, function (card) {
 			stack.setCards(cards.length, function (i) {
 				return cards[i];
-				//card.updatePosition();
 			});
 
 			Solitaire.endTurn();

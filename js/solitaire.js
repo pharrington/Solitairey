@@ -457,7 +457,7 @@ Y.Solitaire.Events = {
 			var card = this.getCard(),
 			    node = this.get("dragNode");
 
-			node.setContent(card.createProxy());
+			node.setContent(card.createProxyNode());
 
 			!card.proxyStack && Y.one(".yui3-dd-shim").setStyle("cursor", "not-allowed");
 		},
@@ -492,7 +492,7 @@ Y.Solitaire.Events = {
 			if (!proxyStack) { return; }
 
 			cards = proxyStack.cards;
-			stack = cards[0].stack;
+			stack = target.stack;
 
 			proxyStack.left = dragXY[0] - containerXY[0];
 			proxyStack.top = dragXY[1] - containerXY[1];
@@ -763,7 +763,7 @@ Y.Solitaire.Card = {
 			return this.proxyStack.cards;
 		},
 
-		createProxy: (function () {
+		createProxyNode: (function () {
 			var node = new Y.Node.create("<div>");
 
 			return function () {
@@ -1086,6 +1086,8 @@ Y.Solitaire.Animation = {
 			    callback,
 			    anim;
 		       
+			if (from.top === to.top && from.left === to.left) { return; }
+
 			if (!fields || fields.from === fields.to || fields.to === "waste") {
 				duration = speeds.fast;
 			} else if (fields.from === "deck") {

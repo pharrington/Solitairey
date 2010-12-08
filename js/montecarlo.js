@@ -246,8 +246,6 @@ Y.mix(MonteCarlo.Tableau.Stack, {
 }, true);
 
 Y.mix(MonteCarlo.Deck.Stack, {
-	cssClass: "freestack",
-
 	updateDragGroups: function () {
 		var active = Solitaire.activeCard,
 		    card = this.last();

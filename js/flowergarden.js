@@ -136,7 +136,8 @@ Y.Array.each(FlowerGarden.fields, function (field) {
 }, true);
 
 Y.mix(FlowerGarden.Stack, {
-	cssClass: "freestack",
+	images: { foundation: "dondorf/freeslot.png",
+		  tableau: "dondorf/freeslot.png" },
 
 	validTarget: function (stack) {
 		return stack.field === "tableau" && this.first().validTarget(stack);
@@ -157,7 +158,6 @@ Y.mix(FlowerGarden.Tableau.Stack, {
 }, true);
 
 Y.mix(FlowerGarden.Reserve.Stack, {
-	cssClass: "",
 
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
@@ -181,7 +181,5 @@ Y.mix(FlowerGarden.Reserve.Stack, {
 		});
 	}
 }, true);
-
-FlowerGarden.Foundation.Stack.cssClass = "freefoundation";
 
 }, "0.0.1", {requires: ["solitaire"]});

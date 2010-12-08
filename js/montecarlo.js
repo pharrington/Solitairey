@@ -153,13 +153,11 @@ var Solitaire = Y.Solitaire,
 		},
 
 		createProxyStack: function () {
-			var stack;
+			var stack = null;
 
 			if (this.isFree()) {
 				stack = instance(this.stack);
 				stack.cards = this.proxyCards();
-			} else {
-				stack = null;
 			}
 
 			this.proxyStack = stack;

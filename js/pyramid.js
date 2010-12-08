@@ -70,8 +70,11 @@ var Solitaire = Y.Solitaire,
 			    target = e.drop.get("node").getData("target");
 
 			if (!active) { return; }
-			target.moveTo(foundation);
-			active.moveTo(foundation);
+
+			Solitaire.stationary(function () {
+				target.moveTo(foundation);
+				active.moveTo(foundation);
+			});
 		}
 	}),
 
@@ -146,7 +149,14 @@ var Solitaire = Y.Solitaire,
 		},
 
 		createProxyStack: function () {
-			this.proxyStack = this.isFree() ? this.stack : null;
+			var stack = null;
+
+			if (this.isFree()) {
+				stack = instance(this.stack);
+				stack.cards = this.proxyCards();
+			}
+
+			this.proxyStack = stack;
 
 			return this.proxyStack;
 		},

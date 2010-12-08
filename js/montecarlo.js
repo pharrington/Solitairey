@@ -86,8 +86,11 @@ var Solitaire = Y.Solitaire,
 			    target = e.drop.get("node").getData("target");
 
 			if (!active) { return; }
-			target.moveTo(foundation);
-			active.moveTo(foundation);
+
+			Solitaire.stationary(function () {
+				target.moveTo(foundation);
+				active.moveTo(foundation);
+			});
 		}
 	}),
 

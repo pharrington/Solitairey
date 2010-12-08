@@ -153,7 +153,16 @@ var Solitaire = Y.Solitaire,
 		},
 
 		createProxyStack: function () {
-			this.proxyStack = this.isFree() ? this.stack : null;
+			var stack;
+
+			if (this.isFree()) {
+				stack = instance(this.stack);
+				stack.cards = this.proxyCards();
+			} else {
+				stack = null;
+			}
+
+			this.proxyStack = stack;
 
 			return this.proxyStack;
 		},

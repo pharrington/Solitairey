@@ -166,6 +166,14 @@ Y.mix(Solitaire, {
 		return [String.fromCharCode(serialized.length)].concat(lengths, serialized).join("");
 	},
 
+	stationary: function (callback) {
+		var updatePosition = Game.Card.updatePosition;
+
+		Game.Card.updatePosition = Solitaire.noop;
+		callback.call(this);
+		Game.Card.updatePosition = updatePosition;
+	},
+
 	unanimated: function (callback) {
 		var anim = Y.Solitaire.Animation,
 		    animate = anim.animate;
@@ -974,23 +982,22 @@ Y.Solitaire.Stack = {
 		afterPush: function () { return true; },
 
 		pushStack: function (proxy) {
-			var updatePosition = Game.Card.updatePosition,
-			    origin = Solitaire.activeCard.stack.cards,
+			var origin = Solitaire.activeCard.stack.cards,
 			    stack = this;
 
 			Y.Array.each(origin, function (card, i) {
 				card.index = i;
 			});
 
-			Game.Card.updatePosition = Solitaire.noop;
-			Y.Array.each(proxy.cards, function (card) {
-				card.moveTo(stack);
-				card.index = -1;
+			Game.stationary(function () {
+				Y.Array.each(proxy.cards, function (card) {
+					card.moveTo(stack);
+					card.index = -1;
+				});
+				Y.Array.each(origin, function (card) {
+					card.index = -1;
+				});
 			});
-			Y.Array.each(origin, function (card) {
-				card.index = -1;
-			});
-			Game.Card.updatePosition = updatePosition;
 
 			this.afterPush();
 		},

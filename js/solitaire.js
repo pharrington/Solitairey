@@ -96,6 +96,18 @@ function normalize(valOrFunction) {
 	return isNaN(val) ? undefined : val;
 }
 
+function mapToFloat(obj) {
+	var p;
+
+	for (p in obj) {
+		if (obj.hasOwnProperty(p)) {
+			obj[p] = parseFloat(obj[p]);
+		}
+	}
+
+	return obj;
+}
+
 YUI.add("solitaire", function (Y) {
 
 var Game,
@@ -756,6 +768,7 @@ Y.Solitaire.Card = {
 			}
 
 			this.proxyStack = i === len ? stack : null;
+
 			return this.proxyStack;
 		},
 
@@ -1081,7 +1094,7 @@ Y.Solitaire.Animation = {
 			var node = card.node,
 			    q = this.queue,
 			    speeds = card.animSpeeds,
-			    from = {top: node.getStyle("top"), left: node.getStyle("left")},
+			    from = mapToFloat({top: node.getStyle("top"), left: node.getStyle("left")}),
 			    duration,
 			    callback,
 			    anim;

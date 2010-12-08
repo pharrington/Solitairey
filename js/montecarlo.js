@@ -80,12 +80,6 @@ var Solitaire = Y.Solitaire,
 	}),
 
 	Events: instance(Solitaire.Events, {
-		dragCheck: function () {
-			if (!Solitaire.game.autoPlay.call(this)) {
-				Solitaire.Events.dragCheck.call(this);
-			}
-		},
-
 		drop: function (e) {
 			var active = Solitaire.activeCard,
 			    foundation = Solitaire.game.foundation.stacks[0];

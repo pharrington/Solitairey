@@ -93,11 +93,19 @@ var Solitaire = Y.Solitaire,
 			    index = cards.indexOf(this),
 			    i, len;
 
-			for (i = index, len = cards.length; i < len; i++) {
-				cards[i].pushPosition();
-			}
+			/*
+			 * TODO: fix this hack
+			 * if moveTo.call is called after the other card's positions have been saved, the card move is animated twice on undo
+			 * the insertion of null is to preserve indexes and prevent this card from getting deleted on undo
+			 */
 
 			Solitaire.Card.moveTo.call(this, stack);
+
+			cards.splice(index, 0, null);
+			for (i = index + 1, len = cards.length; i < len; i++) {
+				cards[i].pushPosition();
+			}
+			cards.splice(index, 1);
 		},
 
 		validTarget: function (stack) {
@@ -168,12 +176,15 @@ Y.mix(FlowerGarden.Reserve.Stack, {
 		card.top = top;
 	},
 
-	update: function () {
+	update: function (undo) {
+		if (undo === false) { return; }
+
 		var stack = this,
 		    left;
 
 		Y.Array.each(this.cards, function (card, i) {
 			left = stack.left + i * card.width * 0.4;
+
 			if (left !== card.left) {
 				card.left = left;
 				card.updatePosition();

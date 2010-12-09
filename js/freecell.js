@@ -38,6 +38,8 @@ var Solitaire = Y.Solitaire,
 		return total;
 	},
 
+	width: function () { return this.Card.base.width * 11; },
+
 	Stack: instance(Solitaire.Stack),
 
 	Foundation: {

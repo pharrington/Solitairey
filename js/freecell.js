@@ -118,8 +118,6 @@ Y.Array.each(Freecell.fields, function (field) {
 }, true);
 
 Y.mix(Freecell.Stack, {
-	cssClass: "freestack",
-
 	validTarget: function (stack) {
 		if (stack.field !== "tableau" ||
 		    !this.first().validTarget(stack)) { return false; }
@@ -138,7 +136,5 @@ Y.mix(Freecell.Tableau.Stack, {
 		card.top = top;
 	}
 }, true);
-
-Freecell.Foundation.Stack.cssClass = "freefoundation";
 
 }, {requires: ["solitaire"]});

@@ -32,7 +32,7 @@ a {
 }
 
 .stack {
-	z-index: 0;
+	z-index: -10;
 }
 
 #game {

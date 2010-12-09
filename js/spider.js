@@ -45,6 +45,9 @@ var Solitaire = Y.Solitaire,
 		}
 	},
 
+	width: function () { return this.Card.base.width * 14.25; },
+	height: function () { return this.Card.base.height * 8; },
+
 	Stack: instance(Solitaire.Stack),
 
 	Foundation: {

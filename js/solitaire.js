@@ -1108,7 +1108,10 @@ Y.Solitaire.Animation = {
 		       
 			if (from.top === to.top && from.left === to.left) { return; }
 
-			if (!fields || fields.from === fields.to || fields.to === "waste") {
+			if (!fields ||
+			    fields.from === fields.to ||
+			    fields.to === "waste" ||
+			    fields.to === "foundation") {
 				duration = speeds.fast;
 			} else if (fields.from === "deck") {
 				duration = speeds.slow;
@@ -1152,19 +1155,18 @@ var Undo = {
 	},
 
 	pop: function () {
-		return this.stack.pop();
+		return this.stack.pop() || [];
 	},
 
 	undo: function () {
 		var origins;
 
-		if (this.stack.length) {
-			origins = Y.Array.unique(Y.Array.map(this.pop(), this.act));
+		origins = Y.Array.unique(Y.Array.map(this.pop(), this.act));
 
-			Y.Array.each(origins, function (stack) {
-				stack.update(false);
-			});
-		}
+		Y.Array.each(origins, function (stack) {
+			stack.update(false);
+		});
+		console.dir(this.stack);
 	},
 
 	act: function (move) {

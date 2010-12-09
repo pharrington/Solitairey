@@ -507,7 +507,7 @@ Y.Solitaire.Events = {
 			dragNode = this.get("dragNode");
 			node = dragNode.get("firstChild");
 
-			node.remove();
+			node && node.remove();
 
 			if (!proxyStack) { return; }
 

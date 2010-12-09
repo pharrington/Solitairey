@@ -406,7 +406,7 @@ Y.mix(Solitaire, {
 		    foundation,
 		    i, len;
 
-		if (card.isFaceDown) { return; }
+		if (card.isFaceDown || card.stack.field === "foundation") { return; }
 
 		stacks = Game.foundation.stacks;
 		for (i = 0, len = stacks.length; i < len; i++) {

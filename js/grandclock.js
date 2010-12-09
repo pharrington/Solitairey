@@ -140,8 +140,6 @@ Y.Array.each(GClock.fields, function (field) {
 }, true);
 
 Y.mix(GClock.Stack, {
-	cssClass: "freestack",
-
 	validTarget: function (stack) {
 		return stack.field === "tableau" && this.first().validTarget(stack);
 	},
@@ -173,7 +171,5 @@ Y.mix(GClock.Foundation.Stack, {
 		this.left = left + normalize(layout.left);
 	}
 }, true);
-
-GClock.Foundation.Stack.cssClass = "freefoundation";
 
 }, {requires: ["solitaire"]});

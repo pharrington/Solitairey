@@ -29,6 +29,11 @@ var Solitaire = Y.Solitaire,
 		deck.createStack();
 	},
 
+	/*
+	 * 1) gather all tableau cards into an array
+	 * 2) clear every tableau row/stack, then redeal the cards from the previous step onto the tableau
+	 * 3) deal cards from the deck to fill the remaining free rows
+	 */
 	redeal: function () {
 		var stacks = this.tableau.stacks,
 		    deck = this.deck.stacks[0],
@@ -148,6 +153,13 @@ var Solitaire = Y.Solitaire,
 			return this.stack.cards.indexOf(this);
 		},
 
+		/*
+		 * return true if:
+		 * 1) the target card is free
+		 * 2) both cards are the same rank
+		 * 3) both cards are adjacent vertically, horizontally, or diagonally
+		 */
+
 		validTarget: function (card) {
 			if (!(this.rank === card.rank && card.isFree())) { return false; }
 
@@ -186,6 +198,7 @@ Y.Array.each(MonteCarlo.fields, function (field) {
 	MonteCarlo[field].Stack = instance(MonteCarlo.Stack);
 });
 
+// Each tableau row is treated as a "stack"
 Y.mix(MonteCarlo.Tableau.Stack, {
 	deleteItem: function (card) {
 		var cards = this.cards,

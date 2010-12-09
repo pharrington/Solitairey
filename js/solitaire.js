@@ -1166,7 +1166,6 @@ var Undo = {
 		Y.Array.each(origins, function (stack) {
 			stack.update(true);
 		});
-		console.dir(this.stack);
 	},
 
 	act: function (move) {

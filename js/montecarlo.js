@@ -178,13 +178,6 @@ var Solitaire = Y.Solitaire,
 
 		turnOver: function () {
 			this.stack.field === "deck" && Solitaire.game.redeal();
-		},
-
-		createStack: function () {},
-
-		stackHelper: function () {
-			this.dragStack = {cards: []};
-			return this.node;
 		}
 	})
 });

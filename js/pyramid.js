@@ -6,12 +6,6 @@ var Solitaire = Y.Solitaire,
     Pyramid = Y.Solitaire.Pyramid = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Waste", "Tableau"],
 
-	createEvents: function () {
-		Solitaire.createEvents.call(this);
-
-		Y.delegate("mousedown", this.autoPlay, this.selector, ".card");
-	},
-
 	deal: function () {
 		var card,
 		    stack,
@@ -183,13 +177,6 @@ var Solitaire = Y.Solitaire,
 
 		turnOver: function () {
 			this.stack.field === "deck" && !this.isFaceDown && Solitaire.game.turnOver();
-		},
-
-		createStack: function () {},
-
-		stackHelper: function () {
-			this.dragStack = {cards: []};
-			return this.node;
 		}
 	})
 });

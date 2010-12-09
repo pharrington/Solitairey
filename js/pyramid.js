@@ -142,6 +142,12 @@ var Solitaire = Y.Solitaire,
 			return false;
 		},
 
+		createProxyNode: function () {
+			return this.rank === 13 ?
+				"" :
+				Solitaire.Card.createProxyNode.call(this);
+		},
+
 		createProxyStack: function () {
 			var stack = null;
 

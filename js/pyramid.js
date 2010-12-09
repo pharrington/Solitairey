@@ -32,6 +32,9 @@ var Solitaire = Y.Solitaire,
 		deck.last().moveTo(waste);
 	},
 
+	width: function () { return this.Card.base.width * 11; },
+	height: function () { return this.Card.base.height * 5.85; },
+
 	Stack: instance(Solitaire.Stack, {
 		images: {},
 

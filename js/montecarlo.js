@@ -65,6 +65,9 @@ var Solitaire = Y.Solitaire,
 
 	},
 
+	width: function () { return this.Card.base.width * 10.75; },
+	height: function () { return this.Card.base.height * 7.5; },
+
 	Stack: instance(Solitaire.Stack, {
 		images: { deck: "dondorf/freeslot.png" },
 

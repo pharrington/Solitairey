@@ -60,6 +60,9 @@ var Solitaire = Y.Solitaire,
 		}
 	},
 
+	width: function () { return this.Card.base.width * 18.2; },
+	height: function () { return this.Card.base.height * 6.7; },
+
 	Stack: instance(Solitaire.Stack),
 
 	Foundation: {

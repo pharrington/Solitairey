@@ -177,7 +177,7 @@ Y.mix(FlowerGarden.Reserve.Stack, {
 	},
 
 	update: function (undo) {
-		if (undo === false) { return; }
+		if (undo) { return; }
 
 		var stack = this,
 		    left;

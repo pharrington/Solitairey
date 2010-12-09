@@ -23,6 +23,10 @@ var Solitaire = Y.Solitaire,
 		deck.createStack();
 	},
 
+	redeal: function () {
+		// ggpo
+	},
+
 	turnOver: function () {
 		var deck = this.deck.stacks[0],
 		    waste = this.waste.stacks[0],
@@ -33,9 +37,8 @@ var Solitaire = Y.Solitaire,
 		}
 	},
 
-	redeal: function () {
-		// ggpo
-	},
+	width: function () { return this.Card.base.width * 14.25; },
+	height: function () { return this.Card.base.height * 6.2; },
 
 	Stack: instance(Solitaire.Stack),
 

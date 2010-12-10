@@ -59,10 +59,11 @@ var Solitaire = Y.Solitaire,
 
 	Foundation: {
 		stackConfig: {
-			total: 1,
+			total: 4,
 			layout: {
-				top: function () { return Solitaire.Card.height * 1.25; },
-				left: function () { return Solitaire.Card.width * 9; }
+				top: function () { return Solitaire.Card.height * 1.1; },
+				left: function () { return Solitaire.Card.width * 9; },
+				vspacing: 1.1,
 			}
 		},
 		field: "foundation"
@@ -101,8 +102,6 @@ Y.Array.each(Scorpion.fields, function (field) {
 
 
 Y.mix(Scorpion.Stack, {
-	cssClass: "freestack",
-
 	validTarget: function (stack) {
 		return stack.field === "tableau" &&
 		    this.first().validTarget(stack);
@@ -145,7 +144,5 @@ Y.mix(Scorpion.Tableau.Stack, {
 		card.top = top;
 	}
 }, true);
-
-Scorpion.Foundation.Stack.cssClass = "freefoundation";
 
 }, {requires: ["solitaire"]});

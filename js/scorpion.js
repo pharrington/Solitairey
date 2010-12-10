@@ -1,7 +1,5 @@
 YUI.add("scorpion", function (Y) {
 
-Y.namespace("scorpion");
-
 var Solitaire = Y.Solitaire,
     Scorpion = Solitaire.Scorpion = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],
@@ -145,4 +143,4 @@ Y.mix(Scorpion.Tableau.Stack, {
 	}
 }, true);
 
-}, {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire"]});

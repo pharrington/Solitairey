@@ -1,7 +1,4 @@
 YUI.add("spider2s", function (Y) {
-	
-	Y.namespace("Spider2S")
-
 	var Spider = Y.Solitaire.Spider2S = instance(Y.Solitaire.Spider);
 
 	Spider.Deck.suits = ["s", "h"];

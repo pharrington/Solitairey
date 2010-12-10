@@ -1,7 +1,5 @@
 YUI.add("monte-carlo", function (Y) {
 
-Y.namespace("Solitaire.MonteCarlo");
-
 var Solitaire = Y.Solitaire,
     MonteCarlo = Y.Solitaire.MonteCarlo = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],

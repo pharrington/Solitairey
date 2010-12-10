@@ -1,7 +1,5 @@
 YUI.add("spider", function (Y) {
 
-Y.namespace("Spider");
-
 var Solitaire = Y.Solitaire,
     Spider = Solitaire.Spider = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],
@@ -106,8 +104,6 @@ Y.Array.each(Spider.fields, function (field) {
 
 
 Y.mix(Spider.Stack, {
-	cssClass: "freestack",
-
 	validCard: function (card) {
 		return card.suit === this.cards.last().suit;
 	},
@@ -124,50 +120,8 @@ Y.mix(Spider.Stack, {
 	}
 }, true);
 
+//Y.mix(Spider.Tableau.Stack, Solitaire.AutoStackClear, true);
 Y.mix(Spider.Tableau.Stack, {
-	isComplete: function (callback) {
-		var cards = this.cards,
-		    rank,
-		    suit,
-		    card,
-		    complete,
-		    i;
-
-		if (!cards.length) { return false; }
-
-		for (i = cards.length - 1, rank = 1, suit = cards[i].suit; i >= 0 && rank < 14; i--, rank++) {
-			card = cards[i];
-
-			if (card.isFaceDown || card.rank !== rank || card.suit !== suit) {
-				return false;
-			}
-		}
-
-		complete = rank === 14;
-		complete && typeof callback === "function" && callback.call(this, i + 1);
-		return complete;
-	},
-
-	clearComplete: function (startIndex) {
-		var foundation,
-		    cards = this.cards,
-		    count = cards.length - startIndex;
-
-		// find the first empty foundation
-		foundation = Y.Array.find(Solitaire.game.foundation.stacks, function (stack) {
-			return !stack.cards.length;
-		});
-
-		while (count) {
-			cards.last().moveTo(foundation);
-			count --;
-		}
-	},
-
-	afterPush: function () {
-		return !this.isComplete(this.clearComplete);
-	},
-
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
 		    top = last ? last.top + last.rankHeight : this.top,
@@ -178,7 +132,4 @@ Y.mix(Spider.Tableau.Stack, {
 	}
 }, true);
 
-Spider.Foundation.Stack.cssClass = "freefoundation";
-Spider.Deck.Stack.cssClass = "";
-
-}, {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["auto-stack-clear"]});

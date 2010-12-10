@@ -120,7 +120,7 @@ Y.mix(Spider.Stack, {
 	}
 }, true);
 
-//Y.mix(Spider.Tableau.Stack, Solitaire.AutoStackClear, true);
+Y.mix(Spider.Tableau.Stack, Solitaire.AutoStackClear, true);
 Y.mix(Spider.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),

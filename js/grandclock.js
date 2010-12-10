@@ -172,4 +172,4 @@ Y.mix(GClock.Foundation.Stack, {
 	}
 }, true);
 
-}, {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire"]});

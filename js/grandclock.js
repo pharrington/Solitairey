@@ -17,7 +17,7 @@ function inRange(low, high, value) {
 	}
 }
 
-Y.namespace("GClock");
+Y.namespace("Solitaire.GClock");
 
 var Solitaire = Y.Solitaire,
     GClock = Y.Solitaire.GClock = instance(Solitaire, {

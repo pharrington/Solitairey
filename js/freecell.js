@@ -139,4 +139,4 @@ Y.mix(Freecell.Tableau.Stack, {
 	}
 }, true);
 
-}, {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire"]});

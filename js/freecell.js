@@ -1,7 +1,5 @@
 YUI.add("freecell", function (Y) {
 
-Y.namespace("freecell");
-
 var Solitaire = Y.Solitaire,
     Freecell = Y.Solitaire.Freecell =  instance(Solitaire, {
 	fields: ["Foundation", "Reserve", "Tableau"],

@@ -132,6 +132,7 @@ Y.mix(Scorpion.Stack, {
 	}
 }, true);
 
+Y.mix(Scorpion.Tableau.Stack, Solitaire.AutoStackClear);
 Y.mix(Scorpion.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),

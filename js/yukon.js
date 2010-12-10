@@ -1,7 +1,5 @@
 YUI.add("yukon", function (Y) {
 
-Y.namespace("yukon");
-
 var Solitaire = Y.Solitaire,
     Yukon = Solitaire.Yukon = instance(Solitaire, {
 	fields: ["Foundation", "Tableau"],
@@ -92,8 +90,6 @@ Y.Array.each(Yukon.fields, function (field) {
 
 
 Y.mix(Yukon.Stack, {
-	cssClass: "freestack",
-
 	validTarget: function (stack) {
 		return stack.field === "tableau" &&
 		    this.first().validTarget(stack);
@@ -115,6 +111,4 @@ Y.mix(Yukon.Tableau.Stack, {
 	}
 }, true);
 
-Yukon.Foundation.Stack.cssClass = "freefoundation";
-
-}, {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire"]});

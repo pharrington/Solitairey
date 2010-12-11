@@ -851,7 +851,6 @@ Y.Solitaire.Card = {
 			stack.push(this);
 
 			Y.fire(origin.field + ":afterPop", origin);
-			Y.fire(stack.field + ":afterPush", stack);
 		}
 	};
 
@@ -1006,8 +1005,8 @@ Y.Solitaire.Stack = {
 				});
 			});
 
-
 			origin.update();
+			Y.fire(stack.field + ":afterPush", stack);
 		},
 
 		first: function () { 

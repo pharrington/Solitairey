@@ -541,8 +541,6 @@ Y.Solitaire.Events = {
 			stack.setCards(cards.length, function (i) {
 				return cards[i];
 			});
-
-			Solitaire.endTurn();
 		},
 
 		drop: function (e) {
@@ -563,6 +561,8 @@ Y.Solitaire.Events = {
 
 				target.pushStack(stack);
 			}
+
+			Solitaire.endTurn();
 		}
 };
 

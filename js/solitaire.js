@@ -229,6 +229,10 @@ Y.mix(Solitaire, {
 
 	cleanup: function () {
 		Y.Event.purgeElement(this.container());
+
+		//remove custom events
+		Y.detach("solitaire|*");
+
 		this.eachStack(function (stack) {
 			stack.cleanup();
 		});
@@ -558,8 +562,6 @@ Y.Solitaire.Events = {
 			    stack.validTarget(target)) {
 
 				target.pushStack(stack);
-
-				origin.update();
 			}
 		}
 };
@@ -842,9 +844,14 @@ Y.Solitaire.Card = {
 		},
 
 		moveTo: function (stack) {
+			var origin = this.stack;
+
 			this.pushPosition();
-			this.stack.deleteItem(this);
+			origin.deleteItem(this);
 			stack.push(this);
+
+			Y.fire(origin.field + ":afterPop", origin);
+			Y.fire(stack.field + ":afterPush", stack);
 		}
 	};
 
@@ -982,10 +989,12 @@ Y.Solitaire.Stack = {
 		afterPush: function () { return true; },
 
 		pushStack: function (proxy) {
-			var origin = Solitaire.activeCard.stack.cards,
+			var origin = Solitaire.activeCard.stack,
+			    cards = origin.cards,
 			    stack = this;
 
-			Y.Array.each(origin, function (card, i) {
+			/* save the card's index in the stack so we can properly undo this move */
+			Y.Array.each(cards, function (card, i) {
 				card.index = i;
 			});
 
@@ -994,10 +1003,13 @@ Y.Solitaire.Stack = {
 					card.moveTo(stack);
 					card.index = -1;
 				});
-				Y.Array.each(origin, function (card) {
+				Y.Array.each(cards, function (card) {
 					card.index = -1;
 				});
 			});
+
+
+			origin.update();
 
 			this.afterPush();
 		},

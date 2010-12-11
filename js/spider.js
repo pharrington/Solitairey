@@ -4,6 +4,11 @@ var Solitaire = Y.Solitaire,
     Spider = Solitaire.Spider = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],
 
+	createEvents: function () {
+		Solitaire.AutoStackClear.register();
+		Solitaire.createEvents.call(this);
+	},
+
 	deal: function () {
 		var stack = 0,
 		    deck = this.deck,
@@ -120,7 +125,6 @@ Y.mix(Spider.Stack, {
 	}
 }, true);
 
-Y.mix(Spider.Tableau.Stack, Solitaire.AutoStackClear, true);
 Y.mix(Spider.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),

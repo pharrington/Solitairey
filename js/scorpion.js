@@ -4,6 +4,11 @@ var Solitaire = Y.Solitaire,
     Scorpion = Solitaire.Scorpion = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],
 
+	createEvents: function () {
+		Solitaire.AutoStackClear.register();
+		Solitaire.createEvents.call(this);
+	},
+
 	deal: function () {
 		var card,
 		    stack,
@@ -135,7 +140,6 @@ Y.mix(Scorpion.Stack, {
 	}
 }, true);
 
-Y.mix(Scorpion.Tableau.Stack, Solitaire.AutoStackClear);
 Y.mix(Scorpion.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
@@ -147,4 +151,4 @@ Y.mix(Scorpion.Tableau.Stack, {
 	}
 }, true);
 
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["auto-stack-clear"]});

@@ -16,8 +16,10 @@
 		"spider": "Spider",
 		"spider1s": "Spider1S",
 		"spider2s": "Spider2S",
-		"yukon": "Yukon"
-	},
+		"yukon": "Yukon"},
+
+	    extensions = [
+		"auto-turnover"],
 
 	Fade = (function() {
 		var el = null,
@@ -112,7 +114,7 @@
 	};
 
 	function modules() {
-		var modules = [],
+		var modules = extensions.slice(),
 		    m;
 
 		for (m in games) {

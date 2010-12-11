@@ -142,7 +142,6 @@ Y.mix(Klondike.Stack, {
 	}
 }, true);
 
-Y.mix(Klondike.Tableau.Stack, Solitaire.AutoTurnover, true);
 Y.mix(Klondike.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
@@ -180,4 +179,4 @@ Y.mix(Klondike.Deck.Stack, {
 }, true);
 
 
-}, "0.0.1", {requires: ["solitaire", "auto-turnover"]});
+}, "0.0.1", {requires: ["solitaire"]});

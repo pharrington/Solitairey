@@ -986,8 +986,6 @@ Y.Solitaire.Stack = {
 			temp || card.updatePosition({from: from, to: to});
 		},
 
-		afterPush: function () { return true; },
-
 		pushStack: function (proxy) {
 			var origin = Solitaire.activeCard.stack,
 			    cards = origin.cards,
@@ -1010,8 +1008,6 @@ Y.Solitaire.Stack = {
 
 
 			origin.update();
-
-			this.afterPush();
 		},
 
 		first: function () { 

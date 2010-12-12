@@ -227,12 +227,16 @@ Y.mix(Solitaire, {
 	loadGame: function (data) {
 		this.setup(function () {
 			this.unserialize(data);
-		});		
+		});
+
+		Y.fire("loadGame");
 	},
 
 	newGame: function () {
 		Y.Cookie.remove("saved-game");
 		this.setup(this.deal);
+
+		Y.fire("newGame");
 	},
 
 	cleanup: function () {
@@ -448,17 +452,20 @@ Y.mix(Solitaire, {
 		return placed === total;
 	},
 
-	won: function () {
+	win: function () {
+		Y.fire("win");
 		Y.Cookie.remove("saved-game");
 		alert("yay");
 	},
 
 	endTurn: function () {
+		Y.fire("endTurn");
+
 		Solitaire.moves.length && Undo.push(Solitaire.moves);
 		Solitaire.moves = [];
 		Solitaire.activeCard = null;
 		if (Game.isWon()) {
-			Game.won();
+			Game.win();
 		} else {
 			Game.save();
 		}

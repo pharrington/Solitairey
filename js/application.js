@@ -19,7 +19,8 @@
 		"yukon": "Yukon"},
 
 	    extensions = [
-		"auto-turnover"],
+		"auto-turnover",
+	        "statistics"],
 
 	Fade = (function() {
 		var el = null,

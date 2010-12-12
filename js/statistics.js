@@ -14,6 +14,7 @@ YUI.add("statistics", function (Y) {
 
 	Y.on("loadGame", function () {
 		loaded = Solitaire.game.name();
+		saveProgress();
 	});
 
 	Y.on("endTurn", function () {
@@ -47,7 +48,7 @@ YUI.add("statistics", function (Y) {
 	function recordWin() {
 		record(1);
 
-		clearProgess();
+		clearProgress();
 	}
 
 	function clearProgress() {

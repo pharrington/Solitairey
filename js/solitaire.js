@@ -1095,7 +1095,7 @@ Y.Solitaire.Stack = {
 Y.Solitaire.Animation = {
 		animate: true,
 		duration: 0.5, // seconds
-		interval: 30, // milliseconds
+		interval: 20, // milliseconds
 		queue: new Y.AsyncQueue(),
 
 		init: function (card, to, fields) {

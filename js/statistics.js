@@ -80,7 +80,7 @@ YUI.add("statistics", function (Y) {
 	}
 
 	function record(value) {
-		var key = Solitaire.game.name() + "record",
+		var key = localStorage["currentGame"] + "record",
 		    record = localStorage[key] || "";
 
 		record += new Date().getTime() + "_" + value + "|";

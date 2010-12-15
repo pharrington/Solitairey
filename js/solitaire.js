@@ -457,7 +457,6 @@ Y.mix(Solitaire, {
 	win: function () {
 		Y.fire("win");
 		Y.Cookie.remove("saved-game");
-		alert("yay");
 	},
 
 	endTurn: function () {

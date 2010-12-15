@@ -97,6 +97,8 @@ var Solitaire = Y.Solitaire,
 				target.moveTo(foundation);
 				active.moveTo(foundation);
 			});
+
+			Solitaire.endTurn();
 		}
 	}),
 

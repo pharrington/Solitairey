@@ -36,7 +36,7 @@ YUI.add("statistics", function (Y) {
 	});
 
 	Y.on("beforeSetup", function () {
-		var winDisplay = Y.one("win_display");
+		var winDisplay = Y.one("#win_display");
 
 		winDisplay && winDisplay.remove();
 	});

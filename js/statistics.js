@@ -25,10 +25,91 @@ YUI.add("statistics", function (Y) {
 	});
 
 	Y.on("win", function () {
+		var winDisplayDelay = 1000;
 		loaded = null;
 
 		recordWin();
+
+		setTimeout(function () {
+			Y.one("body").append(winDisplay());
+		}, winDisplayDelay);
 	});
+
+	Y.on("beforeSetup", function () {
+		var winDisplay = Y.one("win_display");
+
+		winDisplay && winDisplay.remove();
+	});
+
+	/*
+	 * TODO: a templating system might make this less grody
+	 */
+	function winDisplay() {
+		var nameMap = {
+			Klondike: "Klondike",
+			FlowerGarden: "Flower Garden",
+			FortyThieves: "Forty Thieves",
+			Freecell: "Freecell",
+			GClock: "Grandfather's Clock",
+			MonteCarlo: "Monte Carlo",
+			Pyramid: "Pyramid",
+			Scorpion: "Scorpion",
+			Spider: "Spider",
+			Spider1S: "Spider (1 Suit)",
+			Spider2S: "Spider (2 Suit)",
+			Yukon: "Yukon"},
+		    
+		    stats = Record(localStorage[Solitaire.game.name() + "record"]),
+
+		    streakCount, winCount, loseCount,
+
+		    output = "<div id='win_display'>";
+
+		streakCount = stats.streaks().last().length;
+		winCount = stats.wins().length;
+		loseCount = stats.loses().length;
+
+
+		output += "<p>You win! You're awesome.</p>";
+		output += "<h2>" + nameMap[Solitaire.game.name()] + " stats:</h2>";
+		output += "<ul>";
+		output += "<li>Current win streak: <span class='streak'>" + streakCount + "</li>";
+		output += "<li>Total wins: <span class='wins'>" + winCount + "</li>";
+		output += "<li>Total loses: <span class='loses'>" + loseCount + "</li>";
+
+		output += "</ul></div>";
+
+		return output;
+	}
+
+	function record(value) {
+		var key = localStorage["currentGame"] + "record",
+		    record = localStorage[key] || "";
+
+		record += new Date().getTime() + "_" + value + "|";
+
+		localStorage[key] = record;
+	}
+
+	function recordLose() {
+		record(0);
+
+		clearProgress();
+	}
+
+	function recordWin() {
+		record(1);
+
+		clearProgress();
+	}
+
+	function clearProgress() {
+		localStorage.removeItem("currentGame");
+	}
+
+	function saveProgress() {
+		localStorage["currentGame"] = Solitaire.game.name();
+	}
 
 	function Record(raw) {
 		function parse() {
@@ -77,35 +158,6 @@ YUI.add("statistics", function (Y) {
 				return Y.Array.reject(record, won);
 			}
 		};
-	}
-
-	function record(value) {
-		var key = localStorage["currentGame"] + "record",
-		    record = localStorage[key] || "";
-
-		record += new Date().getTime() + "_" + value + "|";
-
-		localStorage[key] = record;
-	}
-
-	function recordLose() {
-		record(0);
-
-		clearProgress();
-	}
-
-	function recordWin() {
-		record(1);
-
-		clearProgress();
-	}
-
-	function clearProgress() {
-		localStorage.removeItem("currentGame");
-	}
-
-	function saveProgress() {
-		localStorage["currentGame"] = Solitaire.game.name();
 	}
 
 }, "0.0.1", {requires: ["solitaire", "array-extras"]});

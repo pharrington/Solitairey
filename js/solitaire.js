@@ -251,6 +251,8 @@ Y.mix(Solitaire, {
 	},
 
 	setup: function (callback) {
+		Y.fire("beforeSetup");
+
 		Solitaire.moves = null;
 		Undo.clear();
 

@@ -538,9 +538,7 @@ Y.Solitaire.Events = {
 			proxyStack.top = dragXY[1] - containerXY[1];
 
 			Game.unanimated(function() {
-				proxyStack.setCards(cards.length, function (i) {
-					return cards[i];
-				});
+				proxyStack.updateCardsPosition();
 			});
 
 			Y.Array.each(cards, function (card) {
@@ -554,9 +552,7 @@ Y.Solitaire.Events = {
 
 
 			cards = stack.cards;
-			stack.setCards(cards.length, function (i) {
-				return cards[i];
-			});
+			stack.updateCardsPosition();
 		},
 
 		drop: function (e) {
@@ -851,9 +847,6 @@ Y.Solitaire.Card = {
 
 			Solitaire.pushMove({
 				card: this,
-				left: this.left,
-				top: this.top,
-				zIndex: this.zIndex,
 				index: index,
 				from: this.stack
 			});
@@ -1195,6 +1188,7 @@ var Undo = {
 		origins = Y.Array.unique(Y.Array.map(this.pop(), this.act));
 
 		Y.Array.each(origins, function (stack) {
+			stack.updateCardsPosition();
 			stack.update(true);
 		});
 	},
@@ -1206,10 +1200,6 @@ var Undo = {
 		    cards = to.cards;
 
 		if (from) {
-			card.left = move.left;
-			card.top = move.top;
-			card.zIndex = move.zIndex;
-
 			if (from === card.stack) {
 				cards[cards.indexOf(card)] = null;
 			} else {
@@ -1221,8 +1211,6 @@ var Undo = {
 			card.stack = from;
 
 			Solitaire.container().append(card.node);
-
-			from.updateCardsPosition();
 		}
 
 		if ("faceDown" in move) {

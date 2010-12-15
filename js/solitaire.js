@@ -934,6 +934,14 @@ Y.Solitaire.Stack = {
 			}
 		},
 
+		updateCardsPosition: function () {
+			var cards = this.cards;
+
+			this.setCards(cards.length, function (i) {
+				return cards[i];
+			});
+		},
+
 		unserialize: function (serialized) {
 			var deck = Game.deck,
 			    Card = Game.Card;
@@ -1213,7 +1221,8 @@ var Undo = {
 			card.stack = from;
 
 			Solitaire.container().append(card.node);
-			card.updatePosition();
+
+			from.updateCardsPosition();
 		}
 
 		if ("faceDown" in move) {

@@ -901,7 +901,9 @@ Y.Solitaire.Stack = {
 			    cards = this.cards;
 
 			for (i = 0, len = cards.length; i < len; i++) {
-				cards[i] && callback(cards[i]);
+				if (cards[i]) {
+					if (callback(cards[i]) === false) { return; }
+				}
 			}
 		},
 

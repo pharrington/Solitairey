@@ -414,29 +414,12 @@ Y.mix(Solitaire, {
 		e.preventDefault();
 	},
 
-	autoPlay: function (e) {
+	autoPlay: function () {
 		var card = typeof this.getCard === "function"
 			? this.getCard()
-			: this.getData("target"),
-		    origin = card.stack,
-		    last = origin.last(),
-		    stacks,
-		    foundation,
-		    i, len;
+			: this.getData("target");
 
-		if (card.isFaceDown || card.stack.field === "foundation") { return; }
-
-		stacks = Game.foundation.stacks;
-		for (i = 0, len = stacks.length; i < len; i++) {
-			foundation = stacks[i];
-			if (card.isFree() && card.validTarget(foundation)) {
-				card.moveTo(foundation);
-				origin.update();
-
-				Solitaire.endTurn();
-				return true;
-			}
-		}
+		card.autoPlay();
 	},
 
 	isWon: function () {
@@ -732,6 +715,30 @@ Y.Solitaire.Card = {
 			}
 
 			e.stopPropagation();
+		},
+
+		autoPlay: function () {
+			var origin = this.stack,
+			    last = origin.last(),
+			    stacks,
+			    foundation,
+			    i, len;
+
+			if (this.isFaceDown || origin.field === "foundation") { return; }
+
+			stacks = Game.foundation.stacks;
+			for (i = 0, len = stacks.length; i < len; i++) {
+				foundation = stacks[i];
+				if (this.isFree() && this.validTarget(foundation)) {
+					this.moveTo(foundation);
+					origin.update();
+
+					Solitaire.endTurn();
+					return true;
+				}
+			}
+
+			return false;
 		},
 
 		ensureDOM: function () {

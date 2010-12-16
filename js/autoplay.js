@@ -41,7 +41,7 @@ YUI.add("solitaire-autoplay", function (Y) {
 			if (stop || field !== "tableau" && field !== "waste") { return; }
 
 			decending = stack.eachCard(function (card) {
-				if (card.rank >= prevRank) {
+				if (card.rank >= prevRank || card.isFaceDown) {
 					stop = true;
 					return false;
 				} else {

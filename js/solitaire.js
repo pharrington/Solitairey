@@ -235,11 +235,12 @@ Y.mix(Solitaire, {
 		});
 	},
 
-	save: function () {
+	save: function (name) {
 		var data = this.serialize(),
+		    name = name || "saved-game",
 		    twoWeeks = 1206900000;
 
-		Y.Cookie.set("saved-game", data, {expires: new Date(new Date().getTime() + twoWeeks)});
+		Y.Cookie.set(name, data, {expires: new Date(new Date().getTime() + twoWeeks)});
 	},
 
 	loadGame: function (data) {
@@ -253,6 +254,8 @@ Y.mix(Solitaire, {
 	newGame: function () {
 		Y.Cookie.remove("saved-game");
 		this.setup(this.deal);
+
+		Game.save("initial-game");
 
 		Y.fire("newGame");
 	},

@@ -1175,7 +1175,7 @@ Y.Solitaire.Animation = {
 				duration = speeds.mid;
 			}
 
-			node.setStyle("z-index", 500);
+			node.setStyle("z-index", 500 + to.zIndex);
 
 			anim = new Y.Anim({
 				node: node,

@@ -209,11 +209,7 @@ Y.mix(Pyramid.Tableau.Stack, {
 
 		card.left = left;
 		card.top = top;
-	},
-
-	push: function (card, temp) {
-		Pyramid.Card.zIndex = this.index();
-		Pyramid.Stack.push.call(this, card, temp);
+		card.zIndex = this.index() * 10;
 	},
 
 	index: function () {

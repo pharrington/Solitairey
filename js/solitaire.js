@@ -18,6 +18,24 @@ if (!Array.prototype.indexOf) {
   };  
 }
 
+Array.prototype.flatten = function () {
+	var result = [],
+	    i,
+	    len,
+	    item,
+	    proto = Array.prototype;
+
+	for (i = 0, len = this.length; i < len; i++) {
+		item = this[i];
+		if (Object.prototype.toString.call(item) === "[object Array]") {
+			proto.push.apply(result, proto.flatten.call(item));
+		} else {
+			result.push(item);
+		}
+	}
+	return result;
+};
+
 function argsArray(args) {
 	return Array.prototype.slice.call(args);
 }
@@ -1194,12 +1212,15 @@ var Undo = {
 	},
 
 	undo: function () {
-		var origins;
+		var stacks;
 
-		origins = Y.Array.unique(Y.Array.map(this.pop(), this.act));
+		stacks = Y.Array.unique(Y.Array.map(this.pop(), this.act).flatten());
 
-		Y.Array.each(origins, function (stack) {
-			stack.update(true);
+		Y.Array.each(stacks, function (stack) {
+			if (stack) {
+				stack.updateCardsPosition();
+				stack.update(true);
+			}
 		});
 	},
 
@@ -1221,15 +1242,13 @@ var Undo = {
 			card.stack = from;
 
 			Solitaire.container().append(card.node);
-
-			from.updateCardsPosition();
 		}
 
 		if ("faceDown" in move) {
 			move.faceDown ? card.faceUp(true) : card.faceDown(true);
 		}
 
-		return to;
+		return [to, from];
 	},
 };
 

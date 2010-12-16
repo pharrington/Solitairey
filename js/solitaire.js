@@ -902,9 +902,11 @@ Y.Solitaire.Stack = {
 
 			for (i = 0, len = cards.length; i < len; i++) {
 				if (cards[i]) {
-					if (callback(cards[i]) === false) { return; }
+					if (callback(cards[i]) === false) { return false; }
 				}
 			}
+
+			return true;
 		},
 
 		setCards: function (count, cardGen) {

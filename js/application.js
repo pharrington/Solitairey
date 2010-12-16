@@ -20,7 +20,8 @@
 
 	    extensions = [
 		"auto-turnover",
-	        "statistics"],
+	        "statistics",
+		"solitaire-autoplay"],
 
 	Fade = (function() {
 		var el = null,

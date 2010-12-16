@@ -1199,7 +1199,6 @@ var Undo = {
 		origins = Y.Array.unique(Y.Array.map(this.pop(), this.act));
 
 		Y.Array.each(origins, function (stack) {
-			stack.updateCardsPosition();
 			stack.update(true);
 		});
 	},
@@ -1222,6 +1221,8 @@ var Undo = {
 			card.stack = from;
 
 			Solitaire.container().append(card.node);
+
+			from.updateCardsPosition();
 		}
 
 		if ("faceDown" in move) {

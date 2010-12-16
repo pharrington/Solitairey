@@ -139,6 +139,7 @@
 	}
 
 	function attachEvents() {
+		Y.on("click", restart, Y.one("#restart"));
 		Y.on("click", function () { GameChooser.show(); }, Y.one("#choose_game"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
@@ -212,6 +213,18 @@
 	function clearDOM() {
 		Y.all(".stack, .card").remove();
 		active.game.scale(sizeRatio());
+	}
+
+	function restart() {
+		var init = Y.Cookie.get("initial-game"),
+		    game = active.game;
+
+		if (init) {
+			clearDOM();
+			game.cleanup();
+			game.loadGame(init);
+			game.save();
+		}
 	}
 
 	function newGame() {

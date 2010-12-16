@@ -860,7 +860,6 @@ Y.Solitaire.Card = {
 			var to = {left: this.left, top: this.top, zIndex: this.zIndex},
 			    origin = this.origin;
 
-			//this.node.setStyle("zIndex", this.zIndex);
 			if (!this.positioned) {
 				this.node.setStyles({left: normalize(origin.left), top: normalize(origin.top)});
 			}
@@ -1020,8 +1019,12 @@ Y.Solitaire.Stack = {
 			    to = this.field,
 			    from = card.stack ? card.stack.field : "deck";
 
+			/*
+			 * TODO: should zIndex setting up in setCardPosition?
+			 */
+
 			if (last) { card.zIndex = last.zIndex + 1; }
-			else if (to === "deck") { card.zIndex = 200; }
+			else if (to === "deck" || to === "foundation") { card.zIndex = 200; }
 			else if (from === "deck") { card.zIndex = Game.Card.zIndex; }
 
 			if (!temp) {

@@ -63,7 +63,6 @@ var Solitaire = Y.Solitaire,
 			}
 		},
 		field: "foundation",
-		draggable: false
 	},
 
 	Deck: instance(Solitaire.Deck, {
@@ -88,7 +87,6 @@ var Solitaire = Y.Solitaire,
 			}
 		},
 		field: "waste",
-		draggable: true
 	},
 
 	Tableau: {
@@ -101,7 +99,6 @@ var Solitaire = Y.Solitaire,
 			}
 		},
 		field: "tableau",
-		draggable: true
 	},
 
 	Card: instance(Solitaire.Card, {

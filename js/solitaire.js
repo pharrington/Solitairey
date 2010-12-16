@@ -857,10 +857,10 @@ Y.Solitaire.Card = {
 		updatePosition: function (fields) {
 			if (!this.node) { return; }
 
-			var to = {left: this.left, top: this.top},
+			var to = {left: this.left, top: this.top, zIndex: this.zIndex},
 			    origin = this.origin;
 
-			this.node.setStyle("zIndex", this.zIndex);
+			//this.node.setStyle("zIndex", this.zIndex);
 			if (!this.positioned) {
 				this.node.setStyles({left: normalize(origin.left), top: normalize(origin.top)});
 			}
@@ -1175,6 +1175,8 @@ Y.Solitaire.Animation = {
 				duration = speeds.mid;
 			}
 
+			node.setStyle("z-index", 500);
+
 			anim = new Y.Anim({
 				node: node,
 				from: from,
@@ -1186,6 +1188,7 @@ Y.Solitaire.Animation = {
 			anim.on("end", function () {
 				card.positioned = true;
 				card.animDuration = 0.2;
+				node.setStyle("z-index", to.zIndex);
 				fields && typeof fields.callback === "function" && fields.callback();
 			});
 			q.add(function () { anim.run(); });

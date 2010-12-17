@@ -5,6 +5,10 @@ html, body, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
 	padding: 0;
 }
 
+html {
+	z-index: -100;
+}
+
 body {
 	background-attachment: fixed;
 	background-image: url(green.jpg);
@@ -13,7 +17,7 @@ body {
 	-moz-background-size: 100% 100%;
 	overflow: hidden;
 	font-family: helvetica, verdana, sans;
-	z-index: -100;
+	z-index: -99;
 }
 
 ul {

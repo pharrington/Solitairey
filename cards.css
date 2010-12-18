@@ -201,7 +201,7 @@ p {
 }
 
 #background-image {
-	position: static:
+	position: static;
 	left: 0;
 	top: 0;
 }

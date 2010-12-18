@@ -120,7 +120,7 @@ YUI.add("statistics", function (Y) {
 			return Y.Array.map(entries, function (entry) {
 				entry = entry.split("_");
 
-				return {date: new Date(entry[0]), won: !!entry[1]};
+				return {date: new Date(entry[0]), won: !!parseInt(entry[1], 10)};
 			});
 		}
 

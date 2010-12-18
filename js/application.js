@@ -21,7 +21,8 @@
 	    extensions = [
 		"auto-turnover",
 	        "statistics",
-		"solitaire-autoplay"],
+		"solitaire-autoplay",
+		"solitaire-background-fix"],
 
 	Fade = (function() {
 		var el = null,
@@ -167,6 +168,7 @@
 
 	function resize() {
 		active.game.resize(sizeRatio());
+		Y.fire("afterResize");
 	}
 
 	function sizeRatio() {
@@ -208,6 +210,7 @@
 		}
 
 		GameChooser.init();
+		resize();
 	}
 
 	function clearDOM() {

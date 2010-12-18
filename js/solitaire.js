@@ -1161,6 +1161,7 @@ Y.Solitaire.Animation = {
 			    q = this.queue,
 			    speeds = card.animSpeeds,
 			    from = mapToFloat({top: node.getStyle("top"), left: node.getStyle("left")}),
+			    zIndex = to.zIndex,
 			    duration,
 			    callback,
 			    anim;
@@ -1178,7 +1179,8 @@ Y.Solitaire.Animation = {
 				duration = speeds.mid;
 			}
 
-			node.setStyle("z-index", 500 + to.zIndex);
+			node.setStyle("zIndex", 500 + zIndex);
+			delete to.zIndex;
 
 			anim = new Y.Anim({
 				node: node,
@@ -1191,9 +1193,10 @@ Y.Solitaire.Animation = {
 			anim.on("end", function () {
 				card.positioned = true;
 				card.animDuration = 0.2;
-				node.setStyle("z-index", to.zIndex);
+				node.setStyle("zIndex", zIndex);
 				fields && typeof fields.callback === "function" && fields.callback();
 			});
+
 			q.add(function () { anim.run(); });
 			q.run();
 		},

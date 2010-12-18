@@ -199,3 +199,9 @@ p {
 #win_display li {
 	margin-bottom: 0.2em;
 }
+
+#background-image {
+	position: fixed:
+	left: 0;
+	top: 0;
+}

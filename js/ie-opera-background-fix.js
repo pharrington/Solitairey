@@ -1,7 +1,10 @@
 YUI.add("solitaire-background-fix", function (Y) {
 	var _body;
 
-	Y.on("afterResize", function () {
+	Y.on("load", resize);
+	Y.on("resize", resize);
+
+	function resize() {
 		var width = body().get("winWidth"),
 		    height = body().get("winHeight"),
 		    style = document.body.style;
@@ -23,7 +26,7 @@ YUI.add("solitaire-background-fix", function (Y) {
 		if (style.backgroundSize === undefined && style.MozBackgroundSize === undefined) {
 			backgroundImage().setStyles({width: width, height: height});
 		}
-	});
+	}
 
 	function backgroundImage() {
 		var image,

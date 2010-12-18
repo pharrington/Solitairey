@@ -6,6 +6,8 @@ YUI.add("statistics", function (Y) {
 	    localStorage = window.localStorage;
 	    Solitaire = Y.Solitaire;
 
+	if (!localStorage) { return; }
+
 	Y.on("newGame", function () {
 		if (loaded) { recordLose(); }
 

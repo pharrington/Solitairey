@@ -3,7 +3,7 @@
 		name: "klondike",
 		game: null
 	    },
-	    yui = YUI({filter: "raw"}), Y,
+	    yui = YUI(), Y,
 	    games = {
 		"klondike": "Klondike",
 		"flower-garden": "FlowerGarden",

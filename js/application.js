@@ -168,6 +168,7 @@
 
 	function resize() {
 		active.game.resize(sizeRatio());
+		Y.fire("afterResize");
 	}
 
 	function sizeRatio() {

@@ -419,7 +419,13 @@ Y.mix(Solitaire, {
 
 		Y.on("selectstart", cancel, document);
 		Y.on("mousedown", cancel, document);
-		Y.on("contextmenu", cancel, document);
+		Y.on("contextmenu", function (e) {
+			var target = e.target;
+
+			if (target.hasClass("stack") || target.hasClass("card")) {
+				e.preventDefault();
+			}
+		}, document);
 
 		Y.Array.each(Game.fields, function (field) {
 			Game[field.toLowerCase()] = Game.createField(Game[field]);

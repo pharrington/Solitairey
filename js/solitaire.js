@@ -646,7 +646,7 @@ Y.Solitaire.Card = {
 			hiddenRankHeight: 10,
 			rankHeight: 32,
 			width: 79,
-			height: 123,
+			height: 123
 		},
 
 		origin: {
@@ -659,7 +659,7 @@ Y.Solitaire.Card = {
 				var offset = Solitaire.container().getXY()[1];
 
 				return -offset - Y.Solitaire.Card.height;
-			},
+			}
 		},
 
 		animSpeeds: {slow: 0.5, mid: 0.2, fast: 0.1},
@@ -1267,7 +1267,7 @@ var Undo = {
 		}
 
 		return [to, from];
-	},
+	}
 };
 
 }, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "async-queue", "cookie", "array-extras"]});

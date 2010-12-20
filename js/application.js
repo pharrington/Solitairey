@@ -26,6 +26,7 @@
 
 	Fade = (function() {
 		var el = null,
+		    body,
 		    css = {
 		    position: "absolute",
 		    display: "none",
@@ -42,7 +43,7 @@
 			if (el === null) {
 				el = Y.Node.create("<div>");
 				el.setStyles(css);
-				Y.one("body").append(el);
+				body = Y.one("body").append(el);
 			}
 			return el;
 		};
@@ -56,11 +57,15 @@
 				css.height = el.get("winHeight");
 
 				el.setStyles(css);
+
+				body.addClass("scrollable");
 			},
 
 			hide: function() {
 				css.display = "none";
 				element().setStyles(css);
+
+				body.removeClass("scrollable");
 			}
 		};
 	}()),

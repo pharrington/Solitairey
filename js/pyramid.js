@@ -210,10 +210,6 @@ Y.mix(Pyramid.Tableau.Stack, {
 		card.left = left;
 		card.top = top;
 		card.zIndex = this.index() * 10;
-	},
-
-	index: function () {
-		return Solitaire.game.tableau.stacks.indexOf(this);
 	}
 }, true);
 

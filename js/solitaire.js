@@ -737,7 +737,7 @@ Y.Solitaire.Card = {
 
 			if (stack.field === "deck") {
 				Game.turnOver();
-			} else if (this === stack.last()) {
+			} else if (this.isFree()) {
 				this.faceUp();
 			}
 
@@ -1073,6 +1073,10 @@ Y.Solitaire.Stack = {
 
 		last: function () {
 			return this.cards.last();
+		},
+
+		index: function () {
+			return Game[this.field].stacks.indexOf(this);
 		},
 
 		setCardPosition: function (card) {

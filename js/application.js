@@ -16,7 +16,7 @@
 		"spider": "Spider",
 		"spider1s": "Spider1S",
 		"spider2s": "Spider2S",
-		"tritowers": "TriTowers",
+		"tri-towers": "TriTowers",
 		"yukon": "Yukon"},
 
 	    extensions = [

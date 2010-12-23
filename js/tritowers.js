@@ -9,7 +9,7 @@ YUI.add("tri-towers", function (Y) {
 				    i;
 
 				for (i = 0; i < 3; i++) {
-					Y.fire("tableau:afterPop", tableaus[i]);
+					//Y.fire("tableau:afterPop", tableaus[i]);
 				}
 			});
 			Solitaire.createEvents.call(this);
@@ -76,7 +76,7 @@ YUI.add("tri-towers", function (Y) {
 					vspacing: 0.6,
 					hspacing: -0.625,
 					top: 0,
-					left: function () { return Solitaire.Card.width * 3; }
+					left: function () { return Solitaire.Card.width * 1.875; }
 				}
 			}
 		},
@@ -94,16 +94,17 @@ YUI.add("tri-towers", function (Y) {
 		},
 
 		Events: instance(Solitaire.Events, {
-			dragCheck: function () {
-				Solitaire.game.autoPlay.call(this);
-				this.dd.end();
+			dragCheck: function (e) {
+				this.getCard().autoPlay();
+				e.halt();
 			}
 		}),
-		/*
-		 * return true if the target is 1 rank away from the this card
-		 * Aces and Kings are valid targets for each other
-		 */
+
 		Card: instance(Solitaire.Card, {
+			/*
+			 * return true if the target is 1 rank away from the this card
+			 * Aces and Kings are valid targets for each other
+			 */
 			validTarget: function (stack) {
 				if (stack.field !== "foundation") { return false; }
 

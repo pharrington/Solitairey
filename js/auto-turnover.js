@@ -3,8 +3,10 @@
  */
 YUI.add("auto-turnover", function (Y) {
 	Y.on("tableau:afterPop", function (stack) {
-		var card = stack.cards.last();
-
-		card && card.isFaceDown && card.faceUp();
+		Y.Array.each(stack.cards, function (card) {
+			if (card && card.isFaceDown && card.isFree()) {
+				card.faceUp();
+			}
+		});
 	});
 }, "0.0.1", {requires: ["solitaire"]});

@@ -364,10 +364,14 @@ Y.mix(Solitaire, {
 		});
 	},
 
-	eachStack: function (callback) {
+	eachStack: function (callback, fieldName) {
 		Game && Y.Array.each(Game.fields, function (name) {
-			var field = Game[name.toLowerCase()];
-			field.stacks && Y.Array.each(field.stacks, callback);
+			var currentName = name.toLowerCase(),
+			    field = Game[currentName];
+
+			fieldName = fieldName || currentName;
+
+			fieldName === currentName && field.stacks && Y.Array.each(field.stacks, callback);
 		});
 	},
 

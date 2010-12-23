@@ -49,6 +49,20 @@ YUI.add("tri-towers", function (Y) {
 			last && last.faceUp().moveTo(foundation);
 		},
 
+		isWon: function () {
+			var won = true;
+
+			this.eachStack(function (stack) {
+				stack.eachCard(function (card) {
+					if (card) { won = false; }
+
+					return won;
+				});
+			}, "tableau");
+
+			return won;
+		},
+
 		Deck: instance(Solitaire.Deck, {
 			field: "deck",
 			stackConfig: {

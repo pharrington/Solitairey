@@ -59,6 +59,7 @@ YUI.add("statistics", function (Y) {
 			Spider: "Spider",
 			Spider1S: "Spider (1 Suit)",
 			Spider2S: "Spider (2 Suit)",
+			TriTowers: "Tri Towers",
 			Yukon: "Yukon"},
 		    
 		    stats = Record(localStorage[Solitaire.game.name() + "record"]),

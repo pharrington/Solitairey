@@ -9,7 +9,7 @@ YUI.add("tri-towers", function (Y) {
 				    i;
 
 				for (i = 0; i < 3; i++) {
-					//Y.fire("tableau:afterPop", tableaus[i]);
+					Y.fire("tableau:afterPop", tableaus[i]);
 				}
 			});
 
@@ -172,7 +172,7 @@ YUI.add("tri-towers", function (Y) {
 
 			if (last) {
 				left = last.left + card.width * 1.25;
-				index = this.cards.indexOf(last) + 1;
+				index = this.cards.length;
 				stackIndex = this.index() + 1;
 
 				if (!(index % stackIndex)) { left += rowGaps[stackIndex - 1] * card.width; }

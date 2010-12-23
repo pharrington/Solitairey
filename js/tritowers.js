@@ -3,6 +3,8 @@ YUI.add("tri-towers", function (Y) {
 	TriTowers = Y.Solitaire.TriTowers = instance(Solitaire, {
 		fields: ["Deck", "Foundation", "Tableau"],
 
+		width: function () { return this.Card.base.width * 16.65; },
+		height: function () { return this.Card.base.height * 6.65; },
 		createEvents: function () {
 			Y.on("solitaire|endTurn", function () {
 				var tableaus = Solitaire.game.tableau.stacks,

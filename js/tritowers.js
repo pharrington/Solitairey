@@ -160,7 +160,11 @@ YUI.add("tri-towers", function (Y) {
 
 				return Math.floor(index / stackIndex);
 			}
-		}, true)
+		}),
+		     
+		Stack: instance(Solitaire.Stack, {
+			images: {}
+		})
 	}, true);
 
 	Y.Array.each(TriTowers.fields, function (field) {

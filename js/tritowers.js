@@ -8,6 +8,7 @@ YUI.add("tri-towers", function (Y) {
 			    stack,
 			    stacks = this.tableau.stacks,
 			    deck = this.deck,
+			    foundation = this.foundation.stacks[0],
 
 			    i, stackLength;
 
@@ -20,19 +21,40 @@ YUI.add("tri-towers", function (Y) {
 					stack === 3 && card.faceUp();
 				}
 			}
+
+			card = deck.pop().faceUp();
+			foundation.push(card);
+
+			deck.createStack();
 		},
 
-		Deck: {
+		turnOver: function () {
+			var deck = this.deck.stacks[0],
+			    foundation = this.foundation.stacks[0],
+			    last = deck.last();
+
+			last && last.faceUp().moveTo(foundation);
+		},
+
+		Deck: instance(Solitaire.Deck, {
 			field: "deck",
 			stackConfig: {
 				total: 1,
 				layout: {
 					hspacing: 0,
-					top: function () { Solitaire.Card.height * 4; },
+					top: function () { return Solitaire.Card.height * 4; },
 					left: 0
 				}
+			},
+
+			createStack: function () {
+				var i, len;
+
+				for (i = 0, len = this.cards.length; i < len; i++) {
+					this.stacks[0].push(this.cards[i]);
+				}
 			}
-		},
+		}),
 
 		Tableau: {
 			field: "tableau",
@@ -59,6 +81,12 @@ YUI.add("tri-towers", function (Y) {
 			}
 		},
 
+		Events: instance(Solitaire.Events, {
+			dragCheck: function () {
+				Solitaire.game.autoPlay.call(this);
+				this.dd.end();
+			}
+		}),
 		/*
 		 * return true if the target is 1 rank away from the this card
 		 * Aces and Kings are valid targets for each other
@@ -71,6 +99,35 @@ YUI.add("tri-towers", function (Y) {
 				    diff = Math.abs(this.rank - card.rank);
 
 				return diff === 1 || diff === 12;
+			},
+
+			isFree: function () {
+				var stack = this.stack,
+				    next = stack.next(),
+				    tower = this.tower(),
+				    index = stack.cards.indexOf(this),
+				    covering,
+				    i;
+
+				if (stack.field !== "tableau") { return false; }
+
+				if (!next) { return true; }
+
+				for (i = 0; i < 2; i++) {
+					covering = next.cards[index + tower + i];
+
+					if (covering && covering.tower() === tower) { return false; }
+				}
+
+				return true;
+			},
+
+			tower: function () {
+				var stack = this.stack,
+				    index = stack.cards.indexOf(this),
+				    stackIndex = stack.index() + 1;
+
+				return Math.floor(index / stackIndex);
 			}
 		}, true)
 	}, true);
@@ -91,17 +148,17 @@ YUI.add("tri-towers", function (Y) {
 			var last = this.last(),
 			    top = this.top,
 			    left,
-			    tower,
 			    index,
+			    stackIndex,
 			    
-			    towerGaps = [3, 2, 1, 0];
+			    rowGaps = [3.75, 2.5, 1.25, 0];
 
 			if (last) {
 				left = last.left + card.width * 1.25;
-				tower = last.tower();
-				index = last.index();
+				index = this.cards.indexOf(last) + 1;
+				stackIndex = this.index() + 1;
 
-				if (index === tower) { left += towerGaps[tower] * card.width; }
+				if (!(index % stackIndex)) { left += rowGaps[stackIndex - 1] * card.width; }
 			} else {
 				left = this.left;
 			}
@@ -114,11 +171,23 @@ YUI.add("tri-towers", function (Y) {
 
 	Y.mix(TriTowers.Deck.Stack, {
 		setCardPosition: function (card) {
-			var last = this.last();
+			var last = this.last(),
+			    top,
+			    left,
+			    zIndex;
 
-			card.top = this.top,
-			card.left = last ? last.left + card.width * 0.2 : this.left;
-			card.zIndex = last ? last.zIndex + 1: this.zIndex + 1;
+			top = this.top;
+			if (last) {
+				left = last.left + card.width * 0.1;
+				zIndex = last.zIndex + 1;
+			} else {
+				left = this.left;
+				zIndex = 0;
+			}
+
+			card.top = top;
+			card.left = left;
+			card.zIndex = zIndex;
 		}
 	}, true);
 }, "0.0.1", {requires: ["solitaire"]});

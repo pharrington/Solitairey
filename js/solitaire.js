@@ -367,11 +367,10 @@ Y.mix(Solitaire, {
 	eachStack: function (callback, fieldName) {
 		Game && Y.Array.each(Game.fields, function (name) {
 			var currentName = name.toLowerCase(),
-			    field = Game[currentName];
+			    field = Game[currentName],
+			    fname = fieldName || currentName;
 
-			fieldName = fieldName || currentName;
-
-			fieldName === currentName && field.stacks && Y.Array.each(field.stacks, callback);
+			fname === currentName && field.stacks && Y.Array.each(field.stacks, callback);
 		});
 	},
 

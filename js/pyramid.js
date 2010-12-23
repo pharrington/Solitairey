@@ -47,9 +47,7 @@ var Solitaire = Y.Solitaire,
 				} else
 					c.node.drop.removeFromGroup("open");
 			});
-		},
-
-		index: function () { return 0; }
+		}
 	}),
 
 	Events: instance(Solitaire.Events, {
@@ -173,7 +171,7 @@ var Solitaire = Y.Solitaire,
 			    stackIndex = stack.index(),
 			    index = stack.cards.indexOf(this),
 			    game = Solitaire.game,
-			    next = game.tableau.stacks[stackIndex + 1];
+			    next = stack.next();
 
 			if (stack.field === "deck" || stack.field === "waste" && !this.isFaceDown) {
 				return true;

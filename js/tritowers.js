@@ -137,7 +137,6 @@ YUI.add("tri-towers", function (Y) {
 				    next = stack.next(),
 				    tower = this.tower(),
 				    index = stack.cards.indexOf(this),
-				    covering,
 				    i;
 
 				if (stack.field !== "tableau") { return false; }
@@ -145,9 +144,7 @@ YUI.add("tri-towers", function (Y) {
 				if (!next) { return true; }
 
 				for (i = 0; i < 2; i++) {
-					covering = next.cards[index + tower + i];
-
-					if (covering && covering.tower() === tower) { return false; }
+					if (next.cards[index + tower + i]) { return false; }
 				}
 
 				return true;

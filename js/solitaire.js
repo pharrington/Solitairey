@@ -1079,6 +1079,10 @@ Y.Solitaire.Stack = {
 			return Game[this.field].stacks.indexOf(this);
 		},
 
+		next: function () {
+			return Game[this.field].stacks[this.index() + 1];
+		},
+
 		setCardPosition: function (card) {
 			card.top = this.top;
 			card.left = isNaN(this.left) ? null : this.left;

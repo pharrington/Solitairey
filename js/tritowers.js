@@ -12,6 +12,7 @@ YUI.add("tri-towers", function (Y) {
 					//Y.fire("tableau:afterPop", tableaus[i]);
 				}
 			});
+
 			Solitaire.createEvents.call(this);
 		},
 
@@ -96,6 +97,9 @@ YUI.add("tri-towers", function (Y) {
 		Events: instance(Solitaire.Events, {
 			dragCheck: function (e) {
 				this.getCard().autoPlay();
+
+				/* workaround because YUI retains stale drag information if we halt the event :\ */
+				this._afterDragEnd();
 				e.halt();
 			}
 		}),

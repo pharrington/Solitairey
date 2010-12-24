@@ -7,9 +7,12 @@ YUI.add("agnes", function (Y) {
 		height: function () { return this.Card.base.height * 7.2; },
 
 		deal: function () {
+			var deck = this.deck.stacks[0],
+			    foundation = this.foundation.stacks[0];
+
 			Klondike.deal.call(this);
 
-			this.deck.stacks[0].last().faceUp().moveTo(this.foundation.stacks[0]);
+			deck.last().faceUp().moveTo(foundation);
 			this.turnOver();
 		},
 

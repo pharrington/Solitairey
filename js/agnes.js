@@ -6,7 +6,8 @@ YUI.add("agnes", function (Y) {
 
 		deal: function () {
 			Klondike.deal.call(this);
-			this.deck.stacks[0].last().moveTo(this.foundation.stacks[0]);
+
+			this.deck.stacks[0].last().faceUp().moveTo(this.foundation.stacks[0]);
 			this.turnOver();
 		},
 
@@ -67,6 +68,19 @@ YUI.add("agnes", function (Y) {
 			},
 
 			Stack: instance(Klondike.Stack)
-		}
+		},
+
+	        Card: instance(Klondike.Card, {
+			validFoundationTarget: function (target) {
+				var seed = Agnes.foundation.stacks[0].first();
+
+				if (!target) {
+					return this.rank === seed.rank;
+				} else {
+					return this.suit === target.suit &&
+					       this.rank === (target.rank + 1) % 13;
+				}
+			}
+		})
 	    });
 }, "0.0.1", {requires: ["klondike"]});

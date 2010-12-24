@@ -72,7 +72,18 @@ YUI.add("agnes", function (Y) {
 				}
 			},
 
-			Stack: instance(Klondike.Stack)
+			Stack: instance(Klondike.Stack, {
+				images: {},
+				
+				setCardPosition: function (card) {
+					var last = this.last(),
+					    top = last ? last.top + last.rankHeight : this.top,
+					    left = this.left;
+					    
+					card.top = top;
+					card.left = left;
+				}
+			})
 		},
 
 	        Card: instance(Klondike.Card, {
@@ -83,7 +94,7 @@ YUI.add("agnes", function (Y) {
 					return this.rank === seed.rank;
 				} else {
 					return this.suit === target.suit &&
-					       this.rank === (target.rank + 1) % 13;
+					       this.rank % 13 === (target.rank + 1) % 13;
 				}
 			}
 		})

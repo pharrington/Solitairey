@@ -4,6 +4,8 @@ YUI.add("agnes", function (Y) {
 	    Agnes = Solitaire.Agnes = instance(Klondike, {
 		fields: ["Foundation", "Deck", "Waste", "Tableau", "Reserve"],
 
+		height: function () { return this.Card.base.height * 7.2; },
+
 		deal: function () {
 			Klondike.deal.call(this);
 
@@ -61,9 +63,9 @@ YUI.add("agnes", function (Y) {
 			stackConfig: {
 				total: 7,
 				layout: {
-					vspacing: 1.05,
-					top: 0,
-					left: function () { return Solitaire.Card.width * 9; }
+					hspacing: 1.25,
+					left: 0,
+					top: function () { return Solitaire.Card.height * 5; }
 				}
 			},
 

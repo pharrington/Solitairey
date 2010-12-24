@@ -5,6 +5,7 @@
 	    },
 	    yui = YUI(), Y,
 	    games = {
+	        "agnes": "Agnes",
 		"klondike": "Klondike",
 		"flower-garden": "FlowerGarden",
 		"forty-thieves": "FortyThieves",

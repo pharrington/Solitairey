@@ -14,7 +14,7 @@ YUI.add("agnes", function (Y) {
 		turnOver: function () {
 			var deck = this.deck.stacks[0],
 			    reserves = this.reserve.stacks,
-			    waste = this.waste.stacks[0],
+			    waste = this.waste.stacks,
 			    count,
 			    target,
 			    i;
@@ -46,15 +46,16 @@ YUI.add("agnes", function (Y) {
 			stackConfig: {
 				total: 7,
 				layout: {
-					vspacing: 1.25,
+					vspacing: 1.05,
 					top: 0,
 					left: function () { return Solitaire.Card.width * 9; }
 				}
-			}
+			},
+
+			Stack: instance(Klondike.Stack)
 		}
 	    });
 
-	
 	Y.mix(Agnes.Waste.Stack, {
 		update: Solitaire.noop,
 
@@ -67,5 +68,4 @@ YUI.add("agnes", function (Y) {
 			card.left = left;
 		}
 	}, true);
-
-}, "0.0.1", {requires: ["agnes"]});
+}, "0.0.1", {requires: ["klondike"]});

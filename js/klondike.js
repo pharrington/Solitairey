@@ -102,6 +102,14 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Card: instance(Solitaire.Card, {
+		validFoundationTarget: function (target) {
+			if (!target) {
+				return this.rank === 1;
+			} else {
+				return target.suit === this.suit && target.rank === this.rank - 1;
+			}
+		},
+
 		validTarget: function (stack) {
 			var target = stack.last();
 
@@ -114,12 +122,7 @@ var Solitaire = Y.Solitaire,
 				}
 				break;
 			case "foundation":
-				if (!target) {
-					return this.rank === 1;
-				} else {
-					return target.suit === this.suit && target.rank === this.rank - 1;
-				}
-				break;
+				return this.validFoundationTarget(target);
 			default:
 				return false;
 			}

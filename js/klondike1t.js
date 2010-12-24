@@ -10,10 +10,10 @@ YUI.add("klondike1t", function (Y) {
 			    card = deck.last();
 
 			card && card.faceUp().moveTo(waste);
-		}
-	    });
+		},
 
-	Klondike1T.Waste.Stack = instance(Klondike.Waste.Stack, {
-		update: Solitaire.noop
-	});
+		Waste: instance(Klondike.Waste, {
+			Stack: instance(Solitaire.Stack)
+		})
+	    });
 }, "0.0.1", {requires: ["klondike"]});

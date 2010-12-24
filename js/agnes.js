@@ -6,6 +6,7 @@ YUI.add("agnes", function (Y) {
 
 		deal: function () {
 			Klondike.deal.call(this);
+			this.deck.stacks[0].last().moveTo(this.foundation.stacks[0]);
 			this.turnOver();
 		},
 
@@ -33,12 +34,25 @@ YUI.add("agnes", function (Y) {
 		},
 
 		Waste: instance(Klondike.Waste, {
-			total: 2,
-			layout: {
-				hspacing: 1.5,
-				top: 0,
-				left: 0
-			}
+			stackConfig: {
+				total: 2,
+				layout: {
+					hspacing: 1.5,
+					top: 0,
+					left: 0
+				}
+			},
+
+			Stack: instance(Solitaire.Stack, {
+				setCardPosition: function (card) {
+					var last = this.last(),
+					    top = this.top,
+					    left = last ? last.left + Solitaire.Card.width * 1.5 : this.left;
+
+					card.top = top;
+					card.left = left;
+				}
+			})
 		}),
 
 		Reserve: {
@@ -55,17 +69,4 @@ YUI.add("agnes", function (Y) {
 			Stack: instance(Klondike.Stack)
 		}
 	    });
-
-	Y.mix(Agnes.Waste.Stack, {
-		update: Solitaire.noop,
-
-		setCardPosition: function (card) {
-			var last = this.last(),
-			    top = this.top,
-			    left = last ? last.left + Solitaire.Card.width * 1.5 : this.left;
-
-			card.top = top;
-			card.left = left;
-		}
-	}, true);
 }, "0.0.1", {requires: ["klondike"]});

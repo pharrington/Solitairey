@@ -3,6 +3,7 @@
  */
 YUI.add("statistics", function (Y) {
 	var loaded,
+	    won,
 	    localStorage = window.localStorage;
 	    Solitaire = Y.Solitaire;
 
@@ -11,12 +12,14 @@ YUI.add("statistics", function (Y) {
 	Y.on("newGame", function () {
 		if (loaded) { recordLose(); }
 
+		won = false;
 		loaded = null;
 	});
 
 	Y.on("loadGame", function () {
 		loaded = Solitaire.game.name();
 		saveProgress();
+		won = false;
 	});
 
 	Y.on("endTurn", function () {
@@ -27,8 +30,11 @@ YUI.add("statistics", function (Y) {
 	});
 
 	Y.on("win", function () {
+		if (won) { return; }
+
 		var winDisplayDelay = 1000;
 		loaded = null;
+		won = true;
 
 		recordWin();
 

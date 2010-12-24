@@ -7,6 +7,7 @@
 	    games = {
 	        "agnes": "Agnes",
 		"klondike": "Klondike",
+		"klondike1t": "Klondike1T",
 		"flower-garden": "FlowerGarden",
 		"forty-thieves": "FortyThieves",
 		"freecell": "Freecell",

@@ -106,6 +106,7 @@ p {
 	top: 2.5em;
 	left: 18em;
 	width: 37em;
+	overflow-y: scroll;
 }
 
 #game-chooser-contents {

@@ -2,6 +2,7 @@ Solitairey is an Javascript Solitaire collection using YUI 3.
 
 Current games include:
 
+- Agnes
 - Flower Garden
 - Forty Thieves
 - Freecell

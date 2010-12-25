@@ -56,7 +56,7 @@ YUI.add("statistics", function (Y) {
 		var nameMap = {
 			Agnes: "Agnes",
 			Klondike: "Klondike",
-			Klondike1T: "Klondike (Turn 1)",
+			Klondike1T: "Klondike (Vegas style)",
 			FlowerGarden: "Flower Garden",
 			FortyThieves: "Forty Thieves",
 			Freecell: "Freecell",

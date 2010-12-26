@@ -106,7 +106,6 @@ p {
 	top: 2.5em;
 	left: 18em;
 	width: 37em;
-	overflow-y: scroll;
 }
 
 #game-chooser-contents {
@@ -119,6 +118,7 @@ p {
 	padding-top: 2em;
 	margin-top: -2em;
 	height: 100%;
+	overflow-y: scroll;
 }
 
 #descriptions div {

@@ -30,12 +30,12 @@ var Solitaire = Y.Solitaire,
 	},
 
 	turnOver: function () {
-		var deck = this.deck,
+		var deck = this.deck.stacks[0],
 		    stacks = this.tableau.stacks,
 		    i, len;
 
 		for (i = 0; i < 3; i++) {
-			deck.pop().faceUp().moveTo(stacks[i]);
+			deck.last().faceUp().moveTo(stacks[i]);
 		}
 	},
 

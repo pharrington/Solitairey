@@ -144,7 +144,9 @@ Y.extend(CardDelegate, Y.DD.Delegate, {
 Y.mix(Solitaire, {
 	activeCard: null,
 	moves: null,
-	selector: "#game",
+	selector: "body",
+	offset: {left: 50, top: 70},
+
 	noop: function () {},
 
 	name: function () {
@@ -1017,14 +1019,15 @@ Y.Solitaire.Stack = {
 		layout: function (layout) {
 			var hoffset = layout.hoffset * Y.Solitaire.Card.width,
 			    voffset = layout.voffset * Y.Solitaire.Card.height,
+			    gameOffset = Solitaire.offset,
 			    self = this;
 
 			Y.Array.each(["top", "left"], function (p) {
 				self[p] = normalize(layout[p]);
 			});
 
-			this.left += hoffset;
-			this.top += voffset;
+			this.left += hoffset + gameOffset.left;
+			this.top += voffset + gameOffset.top;
 		},
 
 		deleteItem: function (card) {

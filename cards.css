@@ -38,13 +38,6 @@ a {
 	z-index: -10;
 }
 
-#game {
-	margin: 50px;
-	width: 902px;
-	position: absolute;
-	top: 2em;
-}
-
 #menu {
 	position: absolute;
 	list-style: none;

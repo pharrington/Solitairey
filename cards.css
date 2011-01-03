@@ -41,15 +41,19 @@ a {
 #game {
 	margin: 50px;
 	width: 902px;
+	position: absolute;
+	top: 2em;
 }
 
 #menu {
+	position: absolute;
 	list-style: none;
 	background-color: #fff;
 	color: #000;
 	font-weight: bold;
 	font-size: 1.25em;
 	height: 2em;
+	width: 100%;
 }
 
 #menu li {

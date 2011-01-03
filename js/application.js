@@ -25,6 +25,7 @@
 		"auto-turnover",
 	        "statistics",
 		"solitaire-autoplay",
+	        "solitaire-ios",
 		"solitaire-background-fix"],
 
 	Fade = (function() {

@@ -526,6 +526,7 @@ Y.Solitaire.Events = {
 		dragEnd: function () {
 			var target = this.getCard(),
 			    root = Solitaire.container(),
+			    fragment = new Y.Node(document.createDocumentFragment()),
 			    dragNode,
 			    node,
 
@@ -557,12 +558,11 @@ Y.Solitaire.Events = {
 			Y.Array.each(cards, function (card) {
 				if (!card) { return; }
 
-				var node = card.node;
-
 				card.proxyStack = null;
-				root.append(node);
+				fragment.append(card.node);
 			});
 
+			root.append(fragment);
 
 			cards = stack.cards;
 			stack.updateCardsPosition();
@@ -646,10 +646,17 @@ Y.Solitaire.Card = {
 		node: null,
 
 		base: {
+			theme: "dondorf",
 			hiddenRankHeight: 10,
 			rankHeight: 32,
 			width: 79,
 			height: 123
+			/*
+			hiddenRankHeight: 7,
+			rankHeight: 21,
+			width: 52,
+			height: 72
+			*/
 		},
 
 		origin: {
@@ -700,7 +707,7 @@ Y.Solitaire.Card = {
 		},
 
 		imageSrc: function () {
-			var src = "dondorf/";
+			var src = this.base.theme + "/";
 
 			src += this.isFaceDown ?
 				"facedown" :
@@ -836,13 +843,14 @@ Y.Solitaire.Card = {
 		},
 
 		createProxyNode: (function () {
-			var node = new Y.Node.create("<div>");
+			var node = Y.Node.create("<div>"),
+			    empty = document.createDocumentFragment();
 
 			return function () {
 				var stack = this.proxyStack,
 				    child;
 
-				node.setContent("");
+				node.setContent(empty);
 				// if the card isn't playable, create ghost copy
 				if (!stack) {
 					node.setStyles({
@@ -903,10 +911,10 @@ Y.Solitaire.Stack = {
 		cards: null,
 		node: null,
 		images: {
-			tableau: "dondorf/freeslot.png",
-			deck: "dondorf/freeslot.png",
-			reserve: "dondorf/freeslot.png",
-			foundation: "dondorf/freeslot.png"
+			tableau: "freeslot.png",
+			deck: "freeslot.png",
+			reserve: "freeslot.png",
+			foundation: "freeslot.png"
 		},
 
 		serialize: function () {
@@ -1003,7 +1011,7 @@ Y.Solitaire.Stack = {
 		},
 
 		imageSrc: function () {
-			return this.images[this.field] || "trans.gif";
+			return Solitaire.Card.base.theme + "/" + this.images[this.field] || "trans.gif";
 		},
 
 		layout: function (layout) {

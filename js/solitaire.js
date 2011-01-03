@@ -1207,7 +1207,7 @@ Y.Solitaire.Animation = {
 			node.setStyle("zIndex", 500 + zIndex);
 			delete to.zIndex;
 
-			anim = new Y.Anim({
+			anim = new Y.AnimAccel({
 				node: node,
 				from: from,
 				to: to,
@@ -1289,4 +1289,4 @@ var Undo = {
 	}
 };
 
-}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "async-queue", "cookie", "array-extras"]});
+}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim-accel", "async-queue", "cookie", "array-extras"]});

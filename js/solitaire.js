@@ -646,6 +646,7 @@ Y.Solitaire.Card = {
 		positioned: false,
 		scale: 1,
 		stack: null,
+		proxyStack: null,
 		node: null,
 		left: 0,
 		top: 0,

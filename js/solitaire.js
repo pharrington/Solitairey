@@ -646,6 +646,8 @@ Y.Solitaire.Card = {
 		scale: 1,
 		stack: null,
 		node: null,
+		left: 0,
+		top: 0,
 
 		base: {
 			theme: "dondorf",
@@ -653,12 +655,6 @@ Y.Solitaire.Card = {
 			rankHeight: 32,
 			width: 79,
 			height: 123
-			/*
-			hiddenRankHeight: 7,
-			rankHeight: 21,
-			width: 52,
-			height: 72
-			*/
 		},
 
 		origin: {
@@ -680,6 +676,11 @@ Y.Solitaire.Card = {
 			var colors = {c: 0, s: 0, h: 1, d: 1};
 
 			return instance(this, {rank: rank, suit: suit, color: colors[suit]});
+		},
+
+		truncatePosition: function () {
+			this.left = Math.floor(this.left);
+			this.top = Math.floor(this.top);
 		},
 
 		faceDown: function (undo) {
@@ -730,8 +731,8 @@ Y.Solitaire.Card = {
 			return {
 				left: this.left,
 				top: this.top,
-				width: this.width,
-				height: this.height
+				width: Math.floor(this.width),
+				height: Math.floor(this.height)
 			};
 		},
 
@@ -1050,6 +1051,7 @@ Y.Solitaire.Stack = {
 			if (!temp) {
 				card.stack = this;
 				this.setCardPosition(card);
+				card.truncatePosition();
 				card.ensureDOM();
 			}
 
@@ -1104,10 +1106,10 @@ Y.Solitaire.Stack = {
 
 		wrapperStyle: function () {
 			return {
-				left: this.left,
-				top: this.top,
-				width: Y.Solitaire.Card.width,
-				height: Y.Solitaire.Card.height
+				left: Math.floor(this.left),
+				top: Math.floor(this.top),
+				width: Math.floor(Y.Solitaire.Card.width),
+				height: Math.floor(Y.Solitaire.Card.height)
 			};
 		},
 

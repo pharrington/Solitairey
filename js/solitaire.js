@@ -296,11 +296,8 @@ Y.mix(Solitaire, {
 		container.delegate("dblclick", Game.autoPlay, ".card");
 		container.delegate("contextmenu", Game.autoPlay, ".card");
 
-		container.delegate("click", function (e) {
-			e.target.getData("target").turnOver(e);
-			Solitaire.moves.reverse();
-			Solitaire.endTurn();
-		}, ".card");
+		container.delegate("touchend", Game.Events.click, ".card");
+		container.delegate("click", Game.Events.click, ".card");
 	},
 
 
@@ -491,6 +488,12 @@ Y.mix(Solitaire, {
 });
 
 Y.Solitaire.Events = {
+		click: function (e) {
+			e.target.getData("target").turnOver(e);
+			Solitaire.moves.reverse();
+			Solitaire.endTurn();
+		},
+
 		clickEmptyDeck: function () {
 			Game.redeal();
 			Solitaire.moves.reverse();
@@ -512,11 +515,13 @@ Y.Solitaire.Events = {
 
 		dragStart: function () {
 			var card = this.getCard(),
-			    node = this.get("dragNode");
+			    node = this.get("dragNode"),
+			    proxy = card.createProxyNode();
 
-			node.setContent(card.createProxyNode());
-
-			!card.proxyStack && Y.one(".yui3-dd-shim").setStyle("cursor", "not-allowed");
+			if (proxy) {
+				node.setContent(proxy);
+				!card.proxyStack && Y.one(".yui3-dd-shim").setStyle("cursor", "not-allowed");
+			}
 		},
 
 		dragMiss: function () {
@@ -859,6 +864,8 @@ Y.Solitaire.Card = {
 				node.setContent(empty);
 				// if the card isn't playable, create ghost copy
 				if (!stack) {
+					if (!this.ghost) { return null; }
+
 					node.setStyles({
 						opacity: 0.6,
 						top: -this.top,

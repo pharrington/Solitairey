@@ -287,6 +287,7 @@ Y.mix(Solitaire, {
 		callback.call(this);
 
 		Solitaire.moves = [];
+		Y.fire("afterSetup");
 	},
 
 	createEvents: function () {
@@ -1014,7 +1015,9 @@ Y.Solitaire.Stack = {
 		},
 
 		imageSrc: function () {
-			return Solitaire.Card.base.theme + "/" + this.images[this.field] || "trans.gif";
+			var basename = this.images[this.field];
+
+			return basename ? Solitaire.Card.base.theme + "/" + basename : "trans.gif";
 		},
 
 		layout: function (layout) {

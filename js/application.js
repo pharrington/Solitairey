@@ -141,7 +141,7 @@
 	function main(YUI) {
 		Y = YUI;
 
-		Y.on("load", load, window);
+		Y.on("domready", load);
 	}
 
 	function showDescription() {

@@ -307,6 +307,7 @@ Y.mix(Solitaire, {
 	createDraggables: function () {
 		var del = new CardDelegate({
 			dragConfig: {
+				useShim: false,
 				dragMode: "intersect",
 				groups: ["open"],
 				clickPixelThresh: 0

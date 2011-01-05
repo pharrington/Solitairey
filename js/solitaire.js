@@ -635,7 +635,7 @@ Y.Solitaire.Deck = {
 		},
 
 		createStack: function () {
-			var i, len;
+			var i;
 
 			for (i = this.cards.length - 1; i >= 0; i--) {
 				this.stacks[0].push(this.cards[i]);

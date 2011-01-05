@@ -296,8 +296,8 @@ Y.mix(Solitaire, {
 		container.delegate("dblclick", Game.autoPlay, ".card");
 		container.delegate("contextmenu", Game.autoPlay, ".card");
 
-		container.delegate("touchend", Game.Events.click, ".card");
 		container.delegate("click", Game.Events.click, ".card");
+		container.delegate("touchend", Game.Events.click, ".card");
 	},
 
 
@@ -318,6 +318,7 @@ Y.mix(Solitaire, {
 			moveOnEnd: false
 		});
 
+		del.on("drag:drag", Game.Events.drag);
 		del.on("drag:mouseDown", Game.Events.dragCheck);
 		del.on("drag:start", Game.Events.dragStart);
 		del.on("drag:dropmiss", Game.Events.dragMiss);
@@ -489,7 +490,11 @@ Y.mix(Solitaire, {
 
 Y.Solitaire.Events = {
 		click: function (e) {
-			e.target.getData("target").turnOver(e);
+			var card = e.target.getData("target");
+
+			if (card.dragging) { return; }
+
+			card.turnOver(e);
 			Solitaire.moves.reverse();
 			Solitaire.endTurn();
 		},
@@ -498,6 +503,10 @@ Y.Solitaire.Events = {
 			Game.redeal();
 			Solitaire.moves.reverse();
 			Solitaire.endTurn();
+		},
+
+		drag: function () {
+			this.getCard().dragging = true;
 		},
 
 		dragCheck: function () {
@@ -547,6 +556,7 @@ Y.Solitaire.Events = {
 			    stack,
 			    proxyStack = target.proxyStack;
 
+			target.dragging = false;
 			dragNode = this.get("dragNode");
 			node = dragNode.get("firstChild");
 
@@ -653,6 +663,8 @@ Y.Solitaire.Card = {
 		scale: 1,
 		stack: null,
 		proxyStack: null,
+		ghost: true,
+		dragging: false,
 		node: null,
 		left: 0,
 		top: 0,
@@ -1234,7 +1246,6 @@ Y.Solitaire.Animation = {
 
 			anim.on("end", function () {
 				card.positioned = true;
-				card.animDuration = 0.2;
 				node.setStyle("zIndex", zIndex);
 				fields && typeof fields.callback === "function" && fields.callback();
 			});

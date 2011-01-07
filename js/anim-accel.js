@@ -1,6 +1,5 @@
 YUI.add("anim-accel", function (Y) {
-	var property,
-	    onEnd;
+	var properties;
 
 	/* test if we have CSS3 transition support
 	 * if not, just use ye olde times Y.Anim
@@ -13,7 +12,7 @@ YUI.add("anim-accel", function (Y) {
 			"MozTransition": {onEnd: "transitionend"},
 			"OTransition": {onEnd: "oTransitionEnd"},
 		     */
-			"WebkitTransition": {onEnd: "webkitTransitionEnd"},
+			"WebkitTransform": {transition: "WebkitTransition", onEnd: "webkitTransitionEnd"},
 		    },
 		    test;
 
@@ -21,13 +20,13 @@ YUI.add("anim-accel", function (Y) {
 			if (!tests.hasOwnProperty(test)) { continue; }
 
 			if (testNode.style[test] !== undefined) {
-				property = test;
-				onEnd = tests[test].onEnd;
+				properties = tests[test];
+				properties.transform = test;
 				break;
 			}
 		}
 
-		if (!property) { Y.AnimAccel = Y.Anim; }
+		if (!properties) { Y.AnimAccel = Y.Anim; }
 	})();
 
 	if (Y.AnimAccel) { return; }
@@ -78,10 +77,65 @@ YUI.add("anim-accel", function (Y) {
 		},
 
 		to: {
-			getter: function (value) {
-				value[property + "TimingFunction"] = this.get("easing");
-				value[property + "Duration"] = this.get("duration") + "s";
-				return value;
+			setter: function (value) {
+				var transition = properties.transition,
+				    transform = properties.transform,
+				    property = "",
+
+				    node = this.get("node"),
+
+				    width = parseFloat(value.width),
+				    height = parseFloat(value.height),
+
+				    left = parseFloat(value.left),
+				    top = parseFloat(value.top),
+
+				    scaleY, scaleY,
+				    result = value;
+
+				this._unaccelTo = Y.merge({}, value);
+
+				result[transition + "TimingFunction"] = this.get("easing");
+				result[transition + "Duration"] = this.get("duration") + "s";
+				result[transform + "Style"] = "flat";
+
+				/*
+				if (!isNaN(width)) {
+					scaleX = width / parseFloat(node.getStyle("width"));
+					property += "scaleX(" + scaleX + ") ";
+				}
+
+				if (!isNaN(height)) {
+					scaleY = height / parseFloat(node.getStyle("height"));
+					property += "scaleY(" + scaleY + ") ";
+				}
+				*/
+
+				if (!isNaN(left)) {
+					delete result.left;
+					left -= parseFloat(node.getStyle("left"));
+
+					if (isNaN(top)) {
+						property += "translate3d(" + left + "px,0,0) ";
+					}
+				}
+
+				if (!isNaN(top)) {
+					delete result.top;
+					top -= parseFloat(node.getStyle("top"));
+
+					if (isNaN(left)) {
+						property += "translate3d(0," + top + "px,0) ";
+					}
+				}
+
+				if (!(isNaN(top) || isNaN(left))) {
+					property += "translate3d(" + left + "px," + top + "px, 0) ";
+				}
+
+				result[transform] = property;
+
+				return result;
 			}
 		}
 	};
@@ -89,21 +143,26 @@ YUI.add("anim-accel", function (Y) {
 	Y.extend(AnimAccel, Y.Anim, {
 		_start: function () {
 			var node = this.get("node"),
+			    _node = node._node,
+			    style = _node.style,
 			    anim = this;
 
 			node.setStyles(this.get("from"));
 			node.setStyles(this.get("to"));
 
-			/*
-			node.once(onEnd, function () {
-				anim._beforeEnd();
-			});
-			*/
+			if (!this._beforeEnd) {
+				this._beforeEnd = Y.bind(function () {
+					style[properties.transform] = "";
+					style[properties.transition + "TimingFunction"] = "";
+					style[properties.transition + "Duration"] = "";
+					style[properties.transform + "Style"] = "";
+					node.setStyles(this._unaccelTo);
+					_node.removeEventListener(properties.onEnd, this._beforeEnd, false);
+					this._end();
+				}, this);
+			}
 
-			// pretty sure this leaks memory. Unfortunately the above doesn't work :\
-			node._node.addEventListener(onEnd, function () {
-				anim._end();
-			}, false);
+			_node.addEventListener(properties.onEnd, this._beforeEnd, false);
 
 			this.fire("start");
 		},

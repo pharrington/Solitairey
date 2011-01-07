@@ -1301,7 +1301,7 @@ Y.Solitaire.Animation = {
 			node.setStyle("zIndex", 500 + zIndex);
 			delete to.zIndex;
 
-			anim = new Y.AnimAccel({
+			anim = new Y.Anim({
 				node: node,
 				from: from,
 				to: to,

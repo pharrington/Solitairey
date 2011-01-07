@@ -163,6 +163,7 @@ Y.mix(Solitaire, {
 
 	width: function () { return this.Card.base.width * 10; },
 	height: function () { return this.Card.base.height * 6; },
+	maxStackHeight: function () { return 300; },
 
 	undo: function () {
 		Undo.undo();
@@ -219,6 +220,7 @@ Y.mix(Solitaire, {
 			    data,
 			    fields = this.fields, fieldIndex = -1,
 			    stacks = [], stackIndex,
+			    stack,
 			    i,
 			    length;
 
@@ -232,7 +234,9 @@ Y.mix(Solitaire, {
 					stackIndex = 0;
 				}
 
-				stacks[stackIndex].unserialize(data);
+				stack = stacks[stackIndex];
+				stack.unserialize(data);
+				stack.updateCardsPosition();
 			}
 		});
 	},
@@ -583,7 +587,6 @@ Y.Solitaire.Events = {
 
 			root.append(fragment);
 
-			cards = stack.cards;
 			stack.updateCardsPosition();
 		},
 
@@ -724,9 +727,18 @@ Y.Solitaire.Card = {
 		},
 
 		setRankHeight: function () {
-			this.rankHeight = this.isFaceDown ?
-				Y.Solitaire.Card.hiddenRankHeight :
-				Y.Solitaire.Card.rankHeight;
+			var stack = this.stack,
+			    rh, hh;
+
+			if (stack && stack.rankHeight) {
+				rh = stack.rankHeight;
+				hh = stack.hiddenRankHeight;
+			} else {
+				rh = Solitaire.Card.rankHeight;
+				hh = Solitaire.Card.hiddenRankHeight;
+			}
+
+			this.rankHeight = this.isFaceDown ? hh : rh;
 		},
 
 		imageSrc: function () {
@@ -839,7 +851,7 @@ Y.Solitaire.Card = {
 				return null;
 			}
 
-			var stack = instance(this.stack),
+			var stack = instance(this.stack, {proxy: true}),
 			    cards = stack.cards,
 			    card,
 			    i, len;
@@ -989,7 +1001,7 @@ Y.Solitaire.Stack = {
 			cards = this.cards = [];
 
 			for (i = 0; i < count; i++) {
-				card = cardGen(i) || empty;
+				card = cardGen.call(this, i) || empty;
 				this.push(card);
 			}
 
@@ -1003,8 +1015,13 @@ Y.Solitaire.Stack = {
 		updateCardsPosition: function () {
 			var cards = this.cards;
 
+			this.proxy || this.adjustRankHeight();
 			this.setCards(cards.length, function (i) {
-				return cards[i];
+				var card = cards[i];
+
+				card.stack = this;
+				card.setRankHeight();
+				return card;
 			});
 		},
 
@@ -1103,8 +1120,56 @@ Y.Solitaire.Stack = {
 				});
 			});
 
+			origin.updateCardsPosition();
 			origin.update();
+
 			Y.fire(stack.field + ":afterPush", stack);
+		},
+
+		adjustRankHeight: function () {
+			var cards = this.cards,
+			    card,
+			    last = this.last(),
+			    max = Solitaire.maxStackHeight(),
+
+			    sumHidden = 0,
+			    sumVisible = 0,
+			    sumRankHeights,
+
+			    height = 0,
+			    Card = Solitaire.Card,
+			    countHidden = 0, countVisible = 0,
+			    rhHidden, rhVisible,
+			    i, len;
+
+			if (cards.length <= 1) { return; }
+
+			for (i = 0, len = cards.length - 1; i < len; i++) {
+				if (cards[i].isFaceDown) {
+					sumHidden += Card.hiddenRankHeight;
+					countHidden++;
+					height += Card.hiddenRankHeight;
+				} else {
+					sumVisible += Card.rankHeight;
+					countVisible++;
+					height += Card.rankHeight;
+				}
+			}
+
+			height += last.height;
+			if (height <= max) {
+				this.rankHeight = 0;
+				this.hiddenRankHeight = 0;
+				return;
+			}
+
+			sumRankHeights = max - last.height;
+			
+			rhHidden = sumRankHeights * (sumHidden / (sumHidden + sumVisible)) / countHidden;
+			rhVisible = sumRankHeights * (sumVisible / (sumHidden + sumVisible)) / countVisible;
+
+			this.hiddenRankHeight = Math.floor(rhHidden);
+			this.rankHeight = Math.floor(rhVisible);
 		},
 
 		first: function () { 

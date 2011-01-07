@@ -1130,7 +1130,7 @@ Y.Solitaire.Stack = {
 			var cards = this.cards,
 			    card,
 			    last = this.last(),
-			    max = Solitaire.maxStackHeight(),
+			    max = Game.maxStackHeight(),
 
 			    sumHidden = 0,
 			    sumVisible = 0,

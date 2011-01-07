@@ -50,6 +50,9 @@ YUI.add("auto-stack-clear", function (Y) {
 				cards.last().moveTo(foundation);
 				count--;
 			}
+
 		});
+
+		stack.updateCardsPosition();
 	}
 }, "0.0.1", {requires: ["solitaire"]});

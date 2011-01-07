@@ -163,7 +163,7 @@ Y.mix(Solitaire, {
 
 	width: function () { return this.Card.base.width * 10; },
 	height: function () { return this.Card.base.height * 6; },
-	maxStackHeight: function () { return 300; },
+	maxStackHeight: function () { return this.Card.base.height * 4; },
 
 	undo: function () {
 		Undo.undo();

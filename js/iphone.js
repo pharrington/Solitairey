@@ -28,9 +28,38 @@ YUI.add("solitaire-ios", function (Y) {
 		e.preventDefault();
 	}
 
+	function disableStyles() {
+		function stylesheet(index) {
+			return {
+				deleteSelector: function (selector) {
+					var ss = document.styleSheets[index],
+					    rules,
+					    idx;
+
+					if (!ss) { return; }
+
+					rules = Array.prototype.splice.call(ss.rules, 0);
+					idx = rules.indexOf(rules.filter(function (rule) {
+						return rule.selectorText === selector;
+					})[0]);
+
+					if (idx !== -1) { ss.deleteRule(idx); }
+				}
+			};
+		}
+
+		stylesheet(0).deleteSelector("#menu li:hover");
+	}
+
+	function cancelIfBody(e) {
+		if (e.target._node === document.body) { e.preventDefault(); }
+	}
+
+	disableStyles();
+
 	Y.on("afterSetup", function () { scrollTo(0, 0);});
 	Y.on("afterResize", function () { scrollTo(0, 0);});
 
-	Y.on("touchstart", Solitaire.preventDefault, document);
+	Y.on("touchstart", cancelIfBody, document);
 	Y.on("touchmove", Solitaire.preventDefault, document);
 }, "0.0.1", {requires: ["solitaire"]});

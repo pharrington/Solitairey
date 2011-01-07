@@ -6,7 +6,7 @@ YUI.add("solitaire-ios", function (Y) {
 
 	Solitaire.Animation.animate = false;
 	Solitaire.offset = {left: 60, top: 10};
-	Solitaire.maxStackHeight = function () { return 180; };
+	Solitaire.maxStackHeight = function () { return 160; };
 	Solitaire.scale = function () {
 		return _scale.call(this, 1);
 	};

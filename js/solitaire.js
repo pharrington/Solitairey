@@ -877,8 +877,7 @@ Y.Solitaire.Card = {
 
 		createProxyNode: function () {
 			var node = Y.Node.create("<div>"),
-			    stack = this.proxyStack,
-			    child;
+			    stack = this.proxyStack;
 
 			// if the card isn't playable, create ghost copy
 			if (!stack) {

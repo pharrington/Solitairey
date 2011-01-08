@@ -301,7 +301,7 @@ Y.mix(Solitaire, {
 		container.delegate("contextmenu", Game.autoPlay, ".card");
 
 		container.delegate("click", Game.Events.click, ".card");
-		container.delegate("touchend", Game.Events.click, ".card");
+		//container.delegate("touchend", Game.Events.click, ".card");
 	},
 
 
@@ -313,6 +313,7 @@ Y.mix(Solitaire, {
 				groups: ["open"],
 				clickPixelThresh: 0
 			},
+			target: true,
 			container: Solitaire.selector,
 			nodes: ".card"
 		});
@@ -828,10 +829,7 @@ Y.Solitaire.Card = {
 
 			node = this.node = Y.Node.create("<img class='card'>")
 				.setData("target", this)
-				.setAttribute("src", this.imageSrc())
-				.plug(Y.Plugin.Drop, {
-					useShim: false
-				});
+				.setAttribute("src", this.imageSrc());
 
 			this.updateStyle();
 			this.setRankHeight();

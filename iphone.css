@@ -1,8 +1,29 @@
-#menu {
-	display: none;
-}
-
 body {
 	background: url(green480.jpg);
-	height: 320px;
+	height: 268px;
+}
+
+#menu {
+	bottom: 2px;
+	background: none;
+	height: auto;
+}
+
+#menu li {
+	height: auto;
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(74, 74, 74, 0.85)), color-stop(0.5, rgba(20,20,20,0.75)), color-stop(0.5, rgba(2,2,2,0.75)), to(rgba(14,14,14,0.75)));
+	border: #aaa 3px solid;
+	-webkit-border-radius: 10px;
+	margin-right: 5px;
+	padding: 4px 6px;
+}
+
+#menu a {
+	font-family: helvetica;
+	font-size: 12px;
+	text-shadow: #000 0 1px 0;
+	color: #fff;
+	margin: 0;
+	padding: 0;
+	height: auto;
 }

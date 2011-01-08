@@ -1,10 +1,39 @@
 YUI.add("solitaire-ios", function (Y) {
 	if (!Y.UA.ios) { return; }
 
+	Y.mix(Y.DD.DDM, {
+		_pg_size: function () {
+			if (this.activeDrag) {
+				this._pg.setStyles({width: "480px", height: "268px"});
+			}
+		}
+	}, true);
+
+	Y.mix(Y.DD.Drop.prototype, {
+		_activateShim: function () {
+			var DDM = Y.DD.DDM;
+
+			if (!DDM.activeDrag) { return false; }
+			if (this.get("node") === DDM.activeDrag.get("node")) { return false; }
+			if (this.get("lock")) { return false; }
+
+			if (this.inGroup(DDM.activeDrag.get("groups"))) {
+				DDM._addValid(this);
+				this.overTarget = false;
+				if (!this.get("useShim")) {
+					this.shim = this.get("node");
+				}
+				this.sizeShim();
+			} else {
+				DDM._removeValid(this);
+			}
+		}
+	}, true);
+
 	var Solitaire = Y.Solitaire,
 	    _scale = Solitaire.scale,
 	    gameOptions = {
-	    	"tri-towers": {scale: 0.78, offset: 10}
+	    	"tri-towers": {scale: 0.90, offset: 10}
 	    };
 
 	Solitaire.Card.ghost = false;

@@ -2,16 +2,23 @@ YUI.add("solitaire-ios", function (Y) {
 	if (!Y.UA.ios) { return; }
 
 	var Solitaire = Y.Solitaire,
-	    _scale = Solitaire.scale;
-
-	Solitaire.Animation.animate = false;
-	Solitaire.offset = {left: 60, top: 10};
-	Solitaire.maxStackHeight = function () { return 160; };
-	Solitaire.scale = function () {
-		return _scale.call(this, 1);
-	};
+	    _scale = Solitaire.scale,
+	    gameOptions = {
+	    	"tri-towers": {scale: 0.78, offset: 10}
+	    };
 
 	Solitaire.Card.ghost = false;
+	Solitaire.Animation.animate = false;
+
+	Solitaire.offset = {left: offsetLeft(), top: 10};
+	Solitaire.maxStackHeight = function () { return 160; };
+
+	Solitaire.scale = function () {
+		var options = gameOptions[Y.Cookie.get("options")],
+		    scale = options ? options.scale : 1;
+
+		return _scale.call(this, scale);
+	};
 
 	Solitaire.Card.base = {
 		theme: "mobile",
@@ -20,6 +27,12 @@ YUI.add("solitaire-ios", function (Y) {
 		width: 40,
 		height: 50
 	};
+
+	function offsetLeft() {
+		var options = gameOptions[Y.Cookie.get("options")];
+
+		return options ? options.offset : 60;
+	}
 
 	function disableScroll(e) {
 		var target = e.target;

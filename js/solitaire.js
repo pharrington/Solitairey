@@ -875,36 +875,31 @@ Y.Solitaire.Card = {
 			return this.proxyStack.cards;
 		},
 
-		createProxyNode: (function () {
+		createProxyNode: function () {
 			var node = Y.Node.create("<div>"),
-			    empty = document.createDocumentFragment();
+			    stack = this.proxyStack,
+			    child;
 
-			return function () {
-				var stack = this.proxyStack,
-				    child;
+			// if the card isn't playable, create ghost copy
+			if (!stack) {
+				if (!this.ghost) { return null; }
 
-				node.setContent(empty);
-				// if the card isn't playable, create ghost copy
-				if (!stack) {
-					if (!this.ghost) { return null; }
+				node.setStyles({
+					opacity: 0.6,
+					top: -this.top,
+					left: -this.left
+				}).append(this.node.cloneNode(true));
+			} else {
+				node.setStyles({opacity: 1, top: -this.top, left: -this.left});
 
-					node.setStyles({
-						opacity: 0.6,
-						top: -this.top,
-						left: -this.left
-					}).append(this.node.cloneNode(true));
-				} else {
-					node.setStyles({opacity: 1, top: -this.top, left: -this.left});
+				Y.Array.each(this.proxyCards(), function (c) {
+					c.proxyStack = stack;
+					node.append(c.node);
+				});
+			}
 
-					Y.Array.each(this.proxyCards(), function (c) {
-						c.proxyStack = stack;
-						node.append(c.node);
-					});
-				}
-
-				return node;
-			};
-		})(),
+			return node;
+		},
 
 		updatePosition: function (fields) {
 			if (!this.node) { return; }

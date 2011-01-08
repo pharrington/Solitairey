@@ -894,7 +894,7 @@ Y.Solitaire.Card = {
 						left: -this.left
 					}).append(this.node.cloneNode(true));
 				} else {
-					node.setStyles({opacity: "", top: -this.top, left: -this.left});
+					node.setStyles({opacity: 1, top: -this.top, left: -this.left});
 
 					Y.Array.each(this.proxyCards(), function (c) {
 						c.proxyStack = stack;

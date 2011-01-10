@@ -9,15 +9,7 @@ YUI.add("solitaire-background-fix", function (Y) {
 		    height = body().get("winHeight"),
 		    style = document.body.style;
 
-		/*
-		 * with background-size 100% on the body element,
-		 * Opera sizes the background to either the body's calculated size or the viewport size if the body's larger than the viewport.
-		 * is there a way to detect this behaviour without sniffing the UA string?
-		 */
-
-		if (Y.UA.opera) {
-			body().setStyles({width: width, height: height});
-		}
+		body().setStyles({width: width, height: height});
 
 		/*
 		 * if we don't support the background-size property, use the tiled background instead

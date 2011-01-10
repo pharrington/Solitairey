@@ -90,6 +90,8 @@ YUI.add("tri-towers", function (Y) {
 			stackConfig: {
 				total: 4,
 				layout: {
+					rowGaps: [3.75, 2.5, 1.25, 0],
+					cardGap: 1.25,
 					vspacing: 0.6,
 					hspacing: -0.625,
 					top: 0,
@@ -184,11 +186,13 @@ YUI.add("tri-towers", function (Y) {
 			    left,
 			    index,
 			    stackIndex,
-			    
-			    rowGaps = [3.75, 2.5, 1.25, 0];
+
+			    layout = TriTowers.Tableau.stackConfig.layout,
+			    rowGaps = layout.rowGaps,
+			    cardGap = layout.cardGap;
 
 			if (last) {
-				left = last.left + card.width * 1.25;
+				left = last.left + card.width * cardGap;
 				index = this.cards.length;
 				stackIndex = this.index() + 1;
 

@@ -153,8 +153,12 @@ YUI.add("solitaire-ios", function (Y) {
 	Y.on("afterSetup", function () { scrollTo(0, 0);});
 	Y.on("afterResize", function () { scrollTo(0, 0);});
 
+	/*
 	Y.on("touchstart", cancelIfBody, document);
 	Y.on("touchmove", cancelIfBody, document);
+	*/
+	Y.on("touchstart", cancelIfBody, document);
+	Y.on("touchmove", Solitaire.preventDefault, document);
 
 	Y.on("domready", setupUI);
 }, "0.0.1", {requires: ["solitaire"]});

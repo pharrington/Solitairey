@@ -76,22 +76,36 @@
 
 	GameChooser = {
 		selected: null,
+		fade: false,
+		draggable: true,
 
 		init: function () {
-			new Y.DD.Drag({
-				node: Y.one("#game-chooser"),
-				handles: [Y.one("#game-chooser > .titlebar")]
-			});
+			if (this.draggable) {
+				new Y.DD.Drag({
+					node: Y.one("#game-chooser"),
+					handles: [Y.one("#game-chooser > .titlebar")]
+				});
+			}
 		},
 
-		show: function () {
-			!this.selected && this.select(active.name);
-			Fade.show();
+		show: function (fade) {
+			if (!this.selected) {
+				this.select(active.name);
+			}
+
+			if (fade) {
+				Fade.show();
+				this.fade = true;
+			}
+
 			Y.one("#game-chooser").addClass("show");
 		},
 
 		hide: function () {
-			Fade.hide();
+			if (this.fade) {
+				Fade.hide();
+			}
+
 			Y.one("#game-chooser").removeClass("show");
 		},
 
@@ -141,6 +155,7 @@
 	function main(YUI) {
 		Y = YUI;
 
+		exportAPI();
 		Y.on("domready", load);
 	}
 
@@ -150,7 +165,7 @@
 
 	function attachEvents() {
 		Y.on("click", restart, Y.one("#restart"));
-		Y.on("click", function () { GameChooser.show(); }, Y.one("#choose_game"));
+		Y.on("click", function () { GameChooser.show(true); }, Y.one("#choose_game"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
 		Y.on("click", function () { GameChooser.hide(); }, Y.one("#game-chooser .close"));
@@ -246,6 +261,11 @@
 		game.newGame();
 	}
 
+	function exportAPI() {
+		Y.Solitaire.Application = {};
+
+		Y.Solitaire.Application.GameChooser = GameChooser;
+	}
 
 	yui.use.apply(yui, modules().concat(main));
 }());

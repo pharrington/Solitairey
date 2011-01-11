@@ -9,7 +9,9 @@ YUI.add("solitaire-background-fix", function (Y) {
 		    height = body().get("winHeight"),
 		    style = document.body.style;
 
-		body().setStyles({width: width, height: height});
+		if (body().getStyle("height") === "") {
+			body().setStyles({width: width, height: height});
+		}
 
 		/*
 		 * if we don't support the background-size property, use the tiled background instead

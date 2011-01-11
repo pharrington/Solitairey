@@ -1,29 +1,125 @@
 body {
 	background: url(green480.jpg);
 	height: 268px;
+	font-family: helvetica;
+}
+
+#menu.show {
+	display: block;
 }
 
 #menu {
-	bottom: 2px;
-	background: none;
-	height: auto;
+	background: rgba(40, 40, 40, 0.8);
+	height: 100%;
+	padding-top: 40px;
+	display: none;
+	z-index: 1000;
 }
 
 #menu li {
+	display: list-item;
+	width: 85%;
+	float: none;
 	height: auto;
-	background: -webkit-gradient(linear, left top, left bottom, from(rgba(74, 74, 74, 0.85)), color-stop(0.5, rgba(20,20,20,0.75)), color-stop(0.5, rgba(2,2,2,0.75)), to(rgba(14,14,14,0.75)));
+}
+
+#menu li, .button {
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(20,140,40,0.85)), color-stop(0.5, rgba(15,105,30,0.75)), color-stop(0.5, rgba(15,105,30,0.75)), to(rgba(10,71,20,0.75)));
 	border: #aaa 3px solid;
 	-webkit-border-radius: 10px;
-	margin-right: 5px;
-	padding: 4px 6px;
+	margin: 0 auto 8px;
+	padding: 8px 6px;
+	text-align: center;
+	font-size: 18px;
+	text-shadow: #000 0 1px 0;
+	color: #fff;
+}
+
+#menu li.cancel {
+	margin-top: 24px;
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(74, 74, 74, 0.85)), color-stop(0.5, rgba(20,20,20,0.75)), color-stop(0.5, rgba(2,2,2,0.75)), to(rgba(14,14,14,0.75)));
 }
 
 #menu a {
-	font-family: helvetica;
-	font-size: 12px;
 	text-shadow: #000 0 1px 0;
 	color: #fff;
 	margin: 0;
 	padding: 0;
 	height: auto;
+}
+
+#navbar {
+	width: 88%;
+	margin-left: 5%;
+	bottom: 29px;
+	position: absolute;
+}
+
+#navbar .button {
+	position: absolute;
+	font-size: 12px;
+	padding: 4px 8px;
+	border: 2px #aaa solid;
+}
+
+#undo {
+	right: 0;
+}
+
+#game-chooser {
+	width: 480px;
+	height: auto;
+	padding: 0;
+	margin: 0;
+	left: 0;
+	top: 0;
+	border: none;
+	-webkit-box-shadow: none;
+	padding: 0;
+}
+
+#game-chooser-contents {
+	width: 100%;
+}
+
+#descriptions {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	background: #fff;
+}
+
+#descriptions > li {
+	border-bottom: 1px solid #ccc;
+}
+
+#game-chooser h2 {
+	padding-left: 40px;
+	font-size: 24px;
+}
+
+.titlebar {
+	position: relative;
+	background: -webkit-gradient(linear, left top, left bottom, from(#81f094), color-stop(0.15, #20e541), color-stop(0.5, #19b533), to(#148c28));
+	height: 36px;
+	padding-top: 8px;
+	text-align: center;
+	font-size: 24px;
+	color: #fff;
+	text-shadow: 0 -1px 0 #000;
+	font-family: helvetica;
+	font-weight: bold;
+}
+
+.close {
+	display: none;
+}
+
+.description {
+	display: none;
+}
+
+#fb {
+	top: 3px;
+	left: 100px;
 }

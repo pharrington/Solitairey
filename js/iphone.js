@@ -112,7 +112,7 @@ YUI.add("solitaire-ios", function (Y) {
 	}
 
 	function cancelIfBody(e) {
-		if (e.target._node === document.body) { e.preventDefault(); }
+		if (!e.target.test("#descriptions h2")) { e.preventDefault(); }
 	}
 
 	function setupUI() {
@@ -145,20 +145,30 @@ YUI.add("solitaire-ios", function (Y) {
 		menu.append(cancel);
 
 		nav.append(showMenu);
+		nav.append(Y.one("#fb"));
 		nav.append(undo.addClass("button"));
 
 		body.append(nav);
+
+		var gameChooser = Solitaire.Application.GameChooser;
+
+		gameChooser.draggable = false;
+		Y.one("#game-chooser .titlebar").append(document.createTextNode("Games"));
+		Y.delegate("click", function (e) {
+			gameChooser.select(this._node.parentNode.id);
+			gameChooser.choose();
+			e.halt();
+		}, "#descriptions", "h2");
 	}
 
 	Y.on("afterSetup", function () { scrollTo(0, 0);});
 	Y.on("afterResize", function () { scrollTo(0, 0);});
 
-	/*
-	Y.on("touchstart", cancelIfBody, document);
+	Y.on("touchstart", function (e) {
+		if (e.target._node === document.body) { e.preventDefault(); }
+	}, document);
+
 	Y.on("touchmove", cancelIfBody, document);
-	*/
-	Y.on("touchstart", cancelIfBody, document);
-	Y.on("touchmove", Solitaire.preventDefault, document);
 
 	Y.on("domready", setupUI);
 }, "0.0.1", {requires: ["solitaire"]});

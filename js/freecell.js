@@ -129,7 +129,7 @@ Y.mix(Freecell.Stack, {
 Y.mix(Freecell.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
-		    top = last ? last.top + Solitaire.Card.rankHeight : this.top,
+		    top = last ? last.top + last.rankHeight : this.top,
 		    left = this.left;
 
 		card.left = left;

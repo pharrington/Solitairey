@@ -301,7 +301,14 @@ Y.mix(Solitaire, {
 		container.delegate("contextmenu", Game.autoPlay, ".card");
 
 		container.delegate("click", Game.Events.click, ".card");
-		//container.delegate("touchend", Game.Events.click, ".card");
+		container.delegate("touchend", Game.Events.click, ".card");
+		/*
+		container.delegate("touchend", function (e) {
+			Game.Events.click(e);
+			e.stopPropagation();
+			e.preventDefault();
+		}, ".card");
+		*/
 	},
 
 
@@ -502,6 +509,7 @@ Y.Solitaire.Events = {
 			card.turnOver(e);
 			Solitaire.moves.reverse();
 			Solitaire.endTurn();
+			e.preventDefault();
 		},
 
 		clickEmptyDeck: function () {
@@ -1213,7 +1221,7 @@ Y.Solitaire.Stack = {
 				.setAttribute("src", this.imageSrc())
 				.setData("target", this)
 				.plug(Y.Plugin.Drop, {
-					useShim: false
+					useShim: true
 				});
 
 			this.updateStyle();

@@ -2,6 +2,7 @@ YUI.add("solitaire-ios", function (Y) {
 	if (!Y.UA.ios) { return; }
 
 	Y.mix(Y.DD.DDM, {
+		_pg_activate: function () {},
 		_pg_size: function () {
 			if (this.activeDrag) {
 				this._pg.setStyles({width: "480px", height: "268px"});
@@ -48,11 +49,12 @@ YUI.add("solitaire-ios", function (Y) {
 		}
 	    };
 
-	for (game in gameOverrides) {
-		if (gameOverrides.hasOwnProperty(game) && game in Solitaire) {
+	Y.on("beforeSetup", function () {
+		var game = Solitaire.name();
+		if (gameOverrides.hasOwnProperty(game)) {
 			gameOverrides[game].call(Solitaire[game]);
 		}
-	}
+	});
 
 	Solitaire.Card.ghost = false;
 	Solitaire.Animation.animate = false;
@@ -112,7 +114,8 @@ YUI.add("solitaire-ios", function (Y) {
 	}
 
 	function cancelIfBody(e) {
-		if (!e.target.test("#descriptions h2")) { e.preventDefault(); }
+		if (e.target.test("#descriptions *")) { return; }
+		e.preventDefault();
 	}
 
 	function setupUI() {

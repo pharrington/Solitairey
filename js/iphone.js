@@ -160,6 +160,7 @@ YUI.add("solitaire-ios", function (Y) {
 		Solitaire.Application.GameChooser.draggable = false;
 
 		Y.one("#game-chooser .titlebar").append(document.createTextNode("Games"));
+		Y.one("#game-chooser .close").append(document.createTextNode("Back"));
 
 		Y.on("gamechooser:select", function (chooser) {
 			chooser.choose();

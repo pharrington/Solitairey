@@ -13,7 +13,8 @@ YUI.add("solitaire-ios", function (Y) {
 		"Scorpion": {offset: 40},
 		"Spider": {scale: 0.95, offset: 10},
 		"Spider1S": {scale: 0.95, offset: 10},
-		"Spider2S": {scale: 0.95, offset: 10}
+		"Spider2S": {scale: 0.95, offset: 10},
+		"Yukon": {scale: 0.95, offset: 50}
 	    },
 
 	    gameOverrides = {

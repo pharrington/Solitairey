@@ -130,7 +130,7 @@
 				Y.one("#game-chooser-contents").append(node);
 			}
 
-			if (previous !== game) {
+			if (previous && previous !== game) {
 				Y.fire("gamechooser:select", this);
 			}
 		},

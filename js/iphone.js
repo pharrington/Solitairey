@@ -1,8 +1,28 @@
 YUI.add("solitaire-ios", function (Y) {
 	if (!Y.UA.ios) { return; }
 
+	var Solitaire = Y.Solitaire,
+	    _scale = Solitaire.scale,
+	    game,
+
+	    gameOptions = {
+	    	"tri-towers": {scale: 0.90, offset: 10},
+		"freecell": {offset: 35}
+	    },
+
+	    gameOverrides = {
+		TriTowers: function () {
+			Y.mix(this.Tableau.stackConfig.layout, {
+				hspacing: -0.5,
+				rowGaps: [3, 2, 1, 0],
+				cardGap: 1
+			}, true);
+		}
+	    };
+
 	Y.mix(Y.DD.DDM, {
-		_pg_activate: function () {},
+		useHash: false, // :\
+		_pg_activate: Solitaire.noop,
 		_pg_size: function () {
 			if (this.activeDrag) {
 				this._pg.setStyles({width: "480px", height: "268px"});
@@ -30,25 +50,6 @@ YUI.add("solitaire-ios", function (Y) {
 			}
 		}
 	}, true);
-
-	var Solitaire = Y.Solitaire,
-	    _scale = Solitaire.scale,
-	    game,
-
-	    gameOptions = {
-	    	"tri-towers": {scale: 0.90, offset: 10},
-		"freecell": {offset: 35}
-	    },
-
-	    gameOverrides = {
-		TriTowers: function () {
-			Y.mix(this.Tableau.stackConfig.layout, {
-				hspacing: -0.5,
-				rowGaps: [3, 2, 1, 0],
-				cardGap: 1
-			}, true);
-		}
-	    };
 
 	Y.on("beforeSetup", function () {
 		var game = Solitaire.name();

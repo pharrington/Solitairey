@@ -129,7 +129,8 @@ YUI.add("solitaire-ios", function (Y) {
 		    showMenu,
 		    menu,
 		    body,
-		    nav;
+		    nav,
+		    closeMenu = function () { menu.removeClass("show"); };
 
 		disableStyles();
 
@@ -146,10 +147,6 @@ YUI.add("solitaire-ios", function (Y) {
 			menu.addClass("show");
 		});
 
-		cancel.on("click", function () {
-			menu.removeClass("show");
-		});
-
 		menu.append(cancel);
 
 		nav.append(showMenu);
@@ -157,6 +154,7 @@ YUI.add("solitaire-ios", function (Y) {
 		nav.append(undo.addClass("button"));
 
 		body.append(nav);
+		Y.on("click", closeMenu, ["#cancel", "#new_deal", "#restart"]);
 
 		// GameChooser customizations
 		Solitaire.Application.GameChooser.draggable = false;

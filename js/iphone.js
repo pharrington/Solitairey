@@ -7,7 +7,10 @@ YUI.add("solitaire-ios", function (Y) {
 
 	    gameOptions = {
 	    	"tri-towers": {scale: 0.90, offset: 10},
-		"freecell": {offset: 35}
+		"freecell": {offset: 35},
+		"spider": {scale: 0.95, offset: 10},
+		"spider1s": {scale: 0.95, offset: 10},
+		"spider2s": {scale: 0.95, offset: 10}
 	    },
 
 	    gameOverrides = {

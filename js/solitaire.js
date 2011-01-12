@@ -278,6 +278,8 @@ Y.mix(Solitaire, {
 	},
 
 	setup: function (callback) {
+		Game = Solitaire.game = this;
+
 		Y.fire("beforeSetup");
 
 		Solitaire.moves = null;
@@ -431,8 +433,6 @@ Y.mix(Solitaire, {
 
 	init: function () {
 		var cancel = Solitaire.preventDefault;
-
-		Game = Solitaire.game = this;
 
 		Y.on("selectstart", cancel, document);
 		Y.on("mousedown", cancel, document);
@@ -911,7 +911,7 @@ Y.Solitaire.Card = {
 		updatePosition: function (fields) {
 			if (!this.node) { return; }
 
-			var to = {left: this.left, top: this.top, zIndex: this.zIndex},
+			var to = {left: this.left + "px", top: this.top + "px", zIndex: this.zIndex},
 			    origin = this.origin;
 
 			if (!this.positioned) {
@@ -1388,4 +1388,4 @@ var Undo = {
 	}
 };
 
-}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "async-queue", "cookie", "array-extras"]});
+}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "async-queue", "cookie", "array-extras", "transition"]});

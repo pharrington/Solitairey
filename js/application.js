@@ -117,14 +117,21 @@
 		},
 
 		select: function (game) {
-			var node = Y.one("#" + game + "> div");
+			var node = Y.one("#" + game + "> div"),
+			    previous = this.selected;
 			
-			this.selected !== game && this.unSelect();
+			if (previous !== game) {
+				this.unSelect();
+			}
 
 			if (node) {
 				this.selected = game;
 				new Y.Node(document.getElementById(game)).addClass("selected");
 				Y.one("#game-chooser-contents").append(node);
+			}
+
+			if (previous !== game) {
+				Y.fire("gamechooser:select", this);
 			}
 		},
 

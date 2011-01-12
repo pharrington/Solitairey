@@ -10,6 +10,7 @@ YUI.add("solitaire-ios", function (Y) {
 		"FortyThieves": {offset: 10, scale: 0.9},
 		"MonteCarlo": {scale: 0.78, offset: 80},
 		"Pyramid": {offset: 20},
+		"Scorpion": {offset: 40},
 		"Spider": {scale: 0.95, offset: 10},
 		"Spider1S": {scale: 0.95, offset: 10},
 		"Spider2S": {scale: 0.95, offset: 10}

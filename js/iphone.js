@@ -6,6 +6,7 @@ YUI.add("solitaire-ios", function (Y) {
 
 	    gameOptions = {
 	    	"TriTowers": {scale: 0.90, offset: 10},
+		"FlowerGarden": {offset: -60},
 		"Freecell": {offset: 35},
 		"FortyThieves": {offset: 10, scale: 0.9},
 		"MonteCarlo": {scale: 0.78, offset: 80},
@@ -18,6 +19,24 @@ YUI.add("solitaire-ios", function (Y) {
 	    },
 
 	    gameOverrides = {
+		FlowerGarden: function () {
+			this.Card.rankHeight = 15;
+
+			Y.mix(this.Reserve.stackConfig.layout, {
+				top: function () { return 0; },
+				left: function () { return 440; }
+			}, true);
+
+			this.Reserve.Stack.setCardPosition = function (card) {
+				var last = this.cards.last(),
+				    top = last ? last.top + 12 : this.top,
+				    left = this.left;
+
+				card.left = left;
+				card.top = top;
+			};
+		},
+
 		TriTowers: function () {
 			Y.mix(this.Tableau.stackConfig.layout, {
 				hspacing: -0.5,
@@ -37,6 +56,7 @@ YUI.add("solitaire-ios", function (Y) {
 		}
 	}, true);
 
+	Y.DD.DDM.set("throttleTime", 40);
 	Y.mix(Y.DD.Drop.prototype, {
 		_activateShim: function () {
 			var DDM = Y.DD.DDM;

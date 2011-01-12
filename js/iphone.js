@@ -162,11 +162,10 @@ YUI.add("solitaire-ios", function (Y) {
 
 		gameChooser.draggable = false;
 		Y.one("#game-chooser .titlebar").append(document.createTextNode("Games"));
-		Y.delegate("click", function (e) {
-			gameChooser.select(this._node.parentNode.id);
-			gameChooser.choose();
-			e.halt();
-		}, "#descriptions", "h2");
+
+		Y.on("gamechooser:select", function (gc) {
+			gc.choose();
+		});
 	}
 
 	Y.on("afterSetup", function () { scrollTo(0, 0);});

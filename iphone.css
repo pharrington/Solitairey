@@ -76,6 +76,7 @@ body {
 	border: none;
 	-webkit-box-shadow: none;
 	padding: 0;
+	display: block;
 }
 
 #game-chooser-contents {
@@ -112,7 +113,14 @@ body {
 }
 
 .close {
-	display: none;
+	-webkit-border-image: url(backButtongreen.png) 0 8 0 14;
+	border-width: 0 8px 0 14px;
+	background: none;
+	height: 30px;
+	width: 45px;
+	right: auto;
+	left: 5px;
+	top: 7px;
 }
 
 .description {

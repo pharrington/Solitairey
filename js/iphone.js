@@ -36,7 +36,8 @@ YUI.add("solitaire-ios", function (Y) {
 	    game,
 
 	    gameOptions = {
-	    	"tri-towers": {scale: 0.90, offset: 10}
+	    	"tri-towers": {scale: 0.90, offset: 10},
+		"freecell": {offset: 35}
 	    },
 
 	    gameOverrides = {
@@ -66,7 +67,7 @@ YUI.add("solitaire-ios", function (Y) {
 		var options = gameOptions[Y.Cookie.get("options")],
 		    scale = options ? options.scale : 1;
 
-		return _scale.call(this, scale);
+		return _scale.call(this, scale || 1);
 	};
 
 	Solitaire.Card.base = {

@@ -75,6 +75,10 @@ YUI.add("solitaire-ios", function (Y) {
 			} else {
 				DDM._removeValid(this);
 			}
+		},
+
+		_deactivateShim: function () {
+			this.overTarget = false;
 		}
 	}, true);
 

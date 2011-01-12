@@ -158,13 +158,13 @@ YUI.add("solitaire-ios", function (Y) {
 
 		body.append(nav);
 
-		var gameChooser = Solitaire.Application.GameChooser;
+		// GameChooser customizations
+		Solitaire.Application.GameChooser.draggable = false;
 
-		gameChooser.draggable = false;
 		Y.one("#game-chooser .titlebar").append(document.createTextNode("Games"));
 
-		Y.on("gamechooser:select", function (gc) {
-			gc.choose();
+		Y.on("gamechooser:select", function (chooser) {
+			chooser.choose();
 		});
 	}
 

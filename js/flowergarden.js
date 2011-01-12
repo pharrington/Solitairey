@@ -147,8 +147,8 @@ Y.Array.each(FlowerGarden.fields, function (field) {
 }, true);
 
 Y.mix(FlowerGarden.Stack, {
-	images: { foundation: "dondorf/freeslot.png",
-		  tableau: "dondorf/freeslot.png" },
+	images: { foundation: "freeslot.png",
+		  tableau: "freeslot.png" },
 
 	validTarget: function (stack) {
 		return stack.field === "tableau" && this.first().validTarget(stack);

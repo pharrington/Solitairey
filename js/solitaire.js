@@ -304,13 +304,6 @@ Y.mix(Solitaire, {
 
 		container.delegate("click", Game.Events.click, ".card");
 		container.delegate("touchend", Game.Events.click, ".card");
-		/*
-		container.delegate("touchend", function (e) {
-			Game.Events.click(e);
-			e.stopPropagation();
-			e.preventDefault();
-		}, ".card");
-		*/
 	},
 
 
@@ -506,6 +499,7 @@ Y.Solitaire.Events = {
 
 			if (card.dragging) { return; }
 
+			card.dragging = false;
 			card.turnOver(e);
 			Solitaire.moves.reverse();
 			Solitaire.endTurn();

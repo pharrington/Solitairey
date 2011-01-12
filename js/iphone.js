@@ -3,14 +3,13 @@ YUI.add("solitaire-ios", function (Y) {
 
 	var Solitaire = Y.Solitaire,
 	    _scale = Solitaire.scale,
-	    game,
 
 	    gameOptions = {
-	    	"tri-towers": {scale: 0.90, offset: 10},
-		"freecell": {offset: 35},
-		"spider": {scale: 0.95, offset: 10},
-		"spider1s": {scale: 0.95, offset: 10},
-		"spider2s": {scale: 0.95, offset: 10}
+	    	"TriTowers": {scale: 0.90, offset: 10},
+		"Freecell": {offset: 35},
+		"Spider": {scale: 0.95, offset: 10},
+		"Spider1S": {scale: 0.95, offset: 10},
+		"Spider2S": {scale: 0.95, offset: 10}
 	    },
 
 	    gameOverrides = {
@@ -59,20 +58,16 @@ YUI.add("solitaire-ios", function (Y) {
 		if (gameOverrides.hasOwnProperty(game)) {
 			gameOverrides[game].call(Solitaire[game]);
 		}
+
+		Solitaire.offset = {left: offsetLeft(game), top: 10};
+		scale(game);
 	});
 
+	Solitaire.scale = Solitaire.noop;
 	Solitaire.Card.ghost = false;
 	Solitaire.Animation.animate = false;
 
-	Solitaire.offset = {left: offsetLeft(), top: 10};
 	Solitaire.maxStackHeight = function () { return 155; };
-
-	Solitaire.scale = function () {
-		var options = gameOptions[Y.Cookie.get("options")],
-		    scale = options ? options.scale : 1;
-
-		return _scale.call(this, scale || 1);
-	};
 
 	Solitaire.Card.base = {
 		theme: "mobile",
@@ -82,8 +77,15 @@ YUI.add("solitaire-ios", function (Y) {
 		height: 50
 	};
 
-	function offsetLeft() {
-		var options = gameOptions[Y.Cookie.get("options")];
+	function scale(game) {
+		var options = gameOptions[game],
+		    scale = options ? options.scale : 1;
+
+		_scale.call(Solitaire.game, scale || 1);
+	}
+
+	function offsetLeft(game) {
+		var options = gameOptions[game];
 
 		return options ? options.offset : 60;
 	}

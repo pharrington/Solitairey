@@ -164,6 +164,7 @@ YUI.add("solitaire-ios", function (Y) {
 
 		Y.on("gamechooser:select", function (chooser) {
 			chooser.choose();
+			closeMenu();
 		});
 	}
 

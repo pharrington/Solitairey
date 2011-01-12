@@ -61,7 +61,7 @@ YUI.add("solitaire-ios", function (Y) {
 	Solitaire.Animation.animate = false;
 
 	Solitaire.offset = {left: offsetLeft(), top: 10};
-	Solitaire.maxStackHeight = function () { return 160; };
+	Solitaire.maxStackHeight = function () { return 155; };
 
 	Solitaire.scale = function () {
 		var options = gameOptions[Y.Cookie.get("options")],

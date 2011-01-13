@@ -27,14 +27,32 @@ YUI.add("solitaire-ios", function (Y) {
 				left: function () { return 440; }
 			}, true);
 
-			this.Reserve.Stack.setCardPosition = function (card) {
-				var last = this.cards.last(),
-				    top = last ? last.top + 12 : this.top,
-				    left = this.left;
+			Y.mix(this.Reserve.Stack, {
+				setCardPosition: function (card) {
+					var last = this.cards.last(),
+					    top = last ? last.top + 12 : this.top,
+					    left = this.left;
 
-				card.left = left;
-				card.top = top;
-			};
+					card.left = left;
+					card.top = top;
+				},
+
+				update: function (undo) {
+					if (undo) { return; }
+
+					var stack = this,
+					    top;
+
+					Y.Array.each(this.cards, function (card, i) {
+						left = stack.left + i * 12;
+
+						if (top !== card.top) {
+							card.top = top;
+							card.updatePosition();
+						}
+					});
+				}
+			}, true);
 		},
 
 		MonteCarlo: function () {

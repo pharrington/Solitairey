@@ -210,19 +210,6 @@ Y.mix(MonteCarlo.Tableau.Stack, {
 		if (i !== -1) { cards[i] = null; }
 	},
 
-	layout: function (layout) {
-		var hoffset = layout.hoffset * Solitaire.Card.width,
-		    voffset = layout.voffset * Solitaire.Card.height,
-		    self = this;
-
-		Y.Array.each(["top", "left"], function (p) {
-			self[p] = normalize(layout[p]);
-		});
-
-		this.left += hoffset;
-		this.top += voffset;
-	},
-
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
 		    top = this.top,

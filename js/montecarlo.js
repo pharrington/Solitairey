@@ -138,6 +138,7 @@ var Solitaire = Y.Solitaire,
 		stackConfig: {
 			total: 5,
 			layout: {
+				cardGap: 1.25,
 				vspacing: 1.25,
 				hspacing: 0,
 				top: 0,
@@ -212,8 +213,9 @@ Y.mix(MonteCarlo.Tableau.Stack, {
 
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
+		    layout = MonteCarlo.Tableau.stackConfig.layout,
 		    top = this.top,
-		    left = last ? last.left + card.width * 1.25 : this.left;
+		    left = last ? last.left + card.width * layout.cardGap : this.left;
 
 		card.left = left;
 		card.top = top;

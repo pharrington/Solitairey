@@ -1143,7 +1143,7 @@ Y.Solitaire.Stack = {
 
 			for (i = 0, len = cards.length - 1; i < len; i++) {
 				// if gaps in the stack are allowed, the stack's layed out horizontally
-				if (cards[i] === null) { return; }
+				if (!cards[i]) { return; }
 
 				if (cards[i].isFaceDown) {
 					sumHidden += Card.hiddenRankHeight;

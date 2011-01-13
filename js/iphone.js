@@ -44,6 +44,13 @@ YUI.add("solitaire-ios", function (Y) {
 			}, true);
 		},
 
+		Pyramid: function () {
+			Y.mix(this.Tableau.stackConfig.layout, {
+				cardGap: 1.1,
+				hspacing: -0.55
+			}, true);
+		},
+
 		TriTowers: function () {
 			Y.mix(this.Tableau.stackConfig.layout, {
 				hspacing: -0.5,

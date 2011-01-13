@@ -124,6 +124,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				vspacing: 0.6,
 				hspacing: -0.625,
+				cardGap: 1.25,
 				top: 0,
 				left: function () { return Solitaire.Card.width * 5; }
 			}
@@ -202,9 +203,10 @@ Y.mix(Pyramid.Tableau.Stack, {
 	},
 
 	setCardPosition: function (card) {
-		var last = this.cards.last(),
+		var layout = Pyramid.Tableau.stackConfig.layout,
+		    last = this.cards.last(),
 		    top = this.top,
-		    left = last ? last.left + card.width * 1.25 : this.left;
+		    left = last ? last.left + card.width * layout.cardGap : this.left;
 
 		card.left = left;
 		card.top = top;

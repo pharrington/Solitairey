@@ -315,7 +315,6 @@ Y.mix(Solitaire, {
 				groups: ["open"],
 				clickPixelThresh: 0
 			},
-			target: true,
 			container: Solitaire.selector,
 			nodes: ".card"
 		});
@@ -831,7 +830,8 @@ Y.Solitaire.Card = {
 
 			node = this.node = Y.Node.create("<img class='card'>")
 				.setData("target", this)
-				.setAttribute("src", this.imageSrc());
+				.setAttribute("src", this.imageSrc())
+				.plug(Y.Plugin.Drop);
 
 			this.updateStyle();
 			this.setRankHeight();

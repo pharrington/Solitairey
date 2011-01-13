@@ -44,8 +44,9 @@ var Solitaire = Y.Solitaire,
 
 				if (active.validTarget(c)) {
 					c.node.drop.addToGroup("open");
-				} else
+				} else {
 					c.node.drop.removeFromGroup("open");
+				}
 			});
 		}
 	}),
@@ -132,7 +133,7 @@ var Solitaire = Y.Solitaire,
 
 	Card: instance(Solitaire.Card, {
 		validTarget: function (card) {
-			if (card.field === "foundation") {
+			if (card.field === "foundation") { // "card" is actually a stack :/
 				return this.isFree() && this.rank === 13;
 			}
 
@@ -173,8 +174,8 @@ var Solitaire = Y.Solitaire,
 			    game = Solitaire.game,
 			    next = stack.next();
 
-			if (stack.field === "deck" || stack.field === "waste" && !this.isFaceDown) {
-				return true;
+			if (stack.field === "deck" || stack.field === "waste") {
+				return !this.isFaceDown;
 			} else {
 				return !(this.stack.field === "foundation" ||
 					next &&

@@ -88,7 +88,7 @@ var Solitaire = Y.Solitaire,
 	Events: instance(Solitaire.Events, {
 		drop: function (e) {
 			var active = Solitaire.activeCard,
-			    foundation = Solitaire.game.foundation.stacks[0];
+			    foundation = Solitaire.game.foundation.stacks[0],
 			    target = e.drop.get("node").getData("target");
 
 			if (!active) { return; }

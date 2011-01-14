@@ -1300,7 +1300,9 @@ Y.Solitaire.Animation = {
 			if (!this.animate) {
 				card.node.setStyles(to);
 				card.positioned = true;
-				card.runCallback();
+				setTimeout(function () {
+					card.runCallback();
+				}, 0);
 				return;
 			}
 

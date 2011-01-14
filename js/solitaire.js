@@ -682,6 +682,7 @@ Y.Solitaire.Card = {
 		ghost: true,
 		dragging: false,
 		node: null,
+		callback: null,
 		left: 0,
 		top: 0,
 
@@ -948,6 +949,19 @@ Y.Solitaire.Card = {
 			stack.push(this);
 
 			Y.fire(origin.field + ":afterPop", origin);
+
+			return this;
+		},
+
+		after: function (callback) {
+			this.callback = callback;
+		},
+
+		runCallback: function () {
+			if (this.callback) {
+				this.callback.call(this);
+				this.callback = null;
+			}
 		}
 	};
 
@@ -1286,6 +1300,7 @@ Y.Solitaire.Animation = {
 			if (!this.animate) {
 				card.node.setStyles(to);
 				card.positioned = true;
+				card.runCallback();
 				return;
 			}
 
@@ -1295,7 +1310,6 @@ Y.Solitaire.Animation = {
 			    from = {top: node.getStyle("top"), left: node.getStyle("left")}.mapToFloat().mapAppend("px"),
 			    zIndex = to.zIndex,
 			    duration,
-			    callback,
 			    anim;
 		       
 			if (from.top === to.top && from.left === to.left) { return; }
@@ -1325,6 +1339,7 @@ Y.Solitaire.Animation = {
 			anim.on("end", function () {
 				card.positioned = true;
 				node.setStyle("zIndex", zIndex);
+				card.runCallback();
 			});
 
 			q.add(function () { anim.run(); });

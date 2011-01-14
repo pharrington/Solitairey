@@ -191,15 +191,14 @@
 		var timer,
 		    delay = 250;
 
-		Y.on("resize", function () {
+		window.addEventListener(Y.Solitaire.Application.resizeEvent, function () {
 			clearTimeout(timer);
 			timer = setTimeout(resize, delay);
-		}, window);
+		}, false);
 	}
 
 	function resize() {
 		active.game.resize(sizeRatio());
-		Y.fire("afterResize");
 	}
 
 	function sizeRatio() {
@@ -269,9 +268,10 @@
 	}
 
 	function exportAPI() {
-		Y.Solitaire.Application = {};
-
-		Y.Solitaire.Application.GameChooser = GameChooser;
+		Y.Solitaire.Application = {
+			resizeEvent: "resize",
+			GameChooser: GameChooser
+		};
 	}
 
 	yui.use.apply(yui, modules().concat(main));

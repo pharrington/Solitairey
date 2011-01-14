@@ -6,7 +6,7 @@ YUI.add("statistics", function (Y) {
 	    won,
 	    localStorage = window.localStorage,
 	    Solitaire = Y.Solitaire,
-	    Statistics = Y.namespace("Y.Solitaire.Statistics");
+	    Statistics = Y.namespace("Solitaire.Statistics");
 
 	if (!localStorage) { return; }
 

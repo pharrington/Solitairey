@@ -114,6 +114,10 @@ YUI.add("solitaire-ios", function (Y) {
 		}
 	}, true);
 
+	Solitaire.Statistics.winDisplay = function () {
+		alert("You win!");
+	};
+
 	Y.on("beforeSetup", function () {
 		var game = Solitaire.name();
 		if (gameOverrides.hasOwnProperty(game)) {
@@ -137,6 +141,7 @@ YUI.add("solitaire-ios", function (Y) {
 		height: 50
 	};
 
+	
 	function scale(game) {
 		var options = gameOptions[game],
 		    scale = options ? options.scale : 1;
@@ -151,10 +156,11 @@ YUI.add("solitaire-ios", function (Y) {
 	}
 
 	function maxStackHeight(game) {
-		var options = gameOptions[game],
-		    msh = options ? options.maxStackHeight : 155;
+		var dfault = 155,
+		    options = gameOptions[game],
+		    msh = options ? options.maxStackHeight : dfault;
 
-		return function () { return msh; };
+		return function () { return msh || dfault; };
 	}
 
 	function disableScroll(e) {
@@ -247,4 +253,4 @@ YUI.add("solitaire-ios", function (Y) {
 	Y.on("touchmove", cancelIfBody, document);
 
 	Y.on("domready", setupUI);
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire", "statistics"]});

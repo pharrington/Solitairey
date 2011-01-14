@@ -34,18 +34,23 @@ var Solitaire = Y.Solitaire,
 
 	turnOver: function () {
 		var deck = this.deck.stacks[0],
-		    stacks = this.tableau.stacks,
 		    i, len;
 
-		if (Y.Array.some(stacks, function (stack) {
+		if (Y.Array.some(this.tableau.stacks, function (stack) {
 			return !stack.cards.length;
 			})) {
 			return;
 		}
 
-		for (i = 0, len = stacks.length; i < len && deck.cards.length; i++) {
-			deck.last().faceUp().moveTo(stacks[i]);
-		}
+		this.eachStack(function (stack) {
+			var card = deck.last();
+
+			if (card) {
+				card.faceUp().moveTo(stack).after(function () {
+					this.stack.updateCardsPosition();
+				});
+			}
+		}, "tableau");
 	},
 
 	width: function () { return this.Card.base.width * 14.25; },
@@ -135,5 +140,4 @@ Y.mix(Spider.Tableau.Stack, {
 		card.top = top;
 	}
 }, true);
-
 }, "0.0.1", {requires: ["auto-stack-clear"]});

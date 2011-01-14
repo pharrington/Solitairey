@@ -4,8 +4,9 @@
 YUI.add("statistics", function (Y) {
 	var loaded,
 	    won,
-	    localStorage = window.localStorage;
-	    Solitaire = Y.Solitaire;
+	    localStorage = window.localStorage,
+	    Solitaire = Y.Solitaire,
+	    Statistics = Y.namespace("Y.Solitaire.Statistics");
 
 	if (!localStorage) { return; }
 
@@ -39,7 +40,7 @@ YUI.add("statistics", function (Y) {
 		recordWin();
 
 		setTimeout(function () {
-			Y.one("body").append(winDisplay());
+			Statistics.winDisplay();
 		}, winDisplayDelay);
 	});
 
@@ -170,5 +171,9 @@ YUI.add("statistics", function (Y) {
 			}
 		};
 	}
+
+	Statistics.winDisplay = function () {
+		Y.one("body").append(winDisplay());
+	};
 
 }, "0.0.1", {requires: ["solitaire", "array-extras"]});

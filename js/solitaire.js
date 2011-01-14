@@ -91,7 +91,6 @@ Function.prototype.partial = function () {
 
 function instance(proto, attrs) {
 	var maker = new Function(),
-	//var maker = function () {},
 	    o,
 	    p;
 
@@ -114,16 +113,28 @@ function normalize(valOrFunction) {
 	return isNaN(val) ? undefined : val;
 }
 
-function mapToFloat(obj) {
+Object.prototype.mapToFloat = function () {
 	var p;
 
-	for (p in obj) {
-		if (obj.hasOwnProperty(p)) {
-			obj[p] = parseFloat(obj[p]);
+	for (p in this) {
+		if (this.hasOwnProperty(p)) {
+			this[p] = parseFloat(this[p]);
 		}
 	}
 
-	return obj;
+	return this;
+}
+
+Object.prototype.mapAppend = function (str) {
+	var p;
+
+	for (p in this) {
+		if (this.hasOwnProperty(p)) {
+			this[p] += str;
+		}
+	}
+
+	return this;
 }
 
 YUI.add("solitaire", function (Y) {
@@ -310,7 +321,6 @@ Y.mix(Solitaire, {
 	createDraggables: function () {
 		var del = new CardDelegate({
 			dragConfig: {
-				useShim: true,
 				dragMode: "intersect",
 				groups: ["open"],
 				clickPixelThresh: 0
@@ -484,6 +494,7 @@ Y.mix(Solitaire, {
 		Solitaire.moves.length && Undo.push(Solitaire.moves);
 		Solitaire.moves = [];
 		Solitaire.activeCard = null;
+
 		if (Game.isWon()) {
 			Game.win();
 		} else {
@@ -831,7 +842,9 @@ Y.Solitaire.Card = {
 			node = this.node = Y.Node.create("<img class='card'>")
 				.setData("target", this)
 				.setAttribute("src", this.imageSrc())
-				.plug(Y.Plugin.Drop);
+				.plug(Y.Plugin.Drop, {
+					useShim: false
+				});
 
 			this.updateStyle();
 			this.setRankHeight();
@@ -1279,7 +1292,7 @@ Y.Solitaire.Animation = {
 			var node = card.node,
 			    q = this.queue,
 			    speeds = card.animSpeeds,
-			    from = mapToFloat({top: node.getStyle("top"), left: node.getStyle("left")}),
+			    from = {top: node.getStyle("top"), left: node.getStyle("left")}.mapToFloat().mapAppend("px"),
 			    zIndex = to.zIndex,
 			    duration,
 			    callback,
@@ -1312,7 +1325,6 @@ Y.Solitaire.Animation = {
 			anim.on("end", function () {
 				card.positioned = true;
 				node.setStyle("zIndex", zIndex);
-				fields && typeof fields.callback === "function" && fields.callback();
 			});
 
 			q.add(function () { anim.run(); });
@@ -1382,4 +1394,4 @@ var Undo = {
 	}
 };
 
-}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "async-queue", "cookie", "array-extras", "transition"]});
+}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "async-queue", "cookie", "array-extras"]});

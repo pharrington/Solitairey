@@ -15,7 +15,7 @@ YUI.add("solitaire-ios", function (Y) {
 		"Spider": {scale: 0.95, offset: 10},
 		"Spider1S": {scale: 0.95, offset: 10},
 		"Spider2S": {scale: 0.95, offset: 10},
-		"Yukon": {scale: 0.95, offset: 50}
+		"Yukon": {scale: 0.95, offset: 50, maxStackHeight: 235}
 	    },
 
 	    gameOverrides = {
@@ -121,14 +121,13 @@ YUI.add("solitaire-ios", function (Y) {
 		}
 
 		Solitaire.offset = {left: offsetLeft(game), top: 10};
+		Solitaire.maxStackHeight = maxStackHeight(game);
 		scale(game);
 	});
 
 	Solitaire.scale = Solitaire.noop;
 	Solitaire.Card.ghost = false;
 	Solitaire.Animation.animate = false;
-
-	Solitaire.maxStackHeight = function () { return 155; };
 
 	Solitaire.Card.base = {
 		theme: "mobile",
@@ -149,6 +148,13 @@ YUI.add("solitaire-ios", function (Y) {
 		var options = gameOptions[game];
 
 		return options ? options.offset : 60;
+	}
+
+	function maxStackHeight(game) {
+		var options = gameOptions[game],
+		    msh = options ? options.maxStackHeight : 155;
+
+		return function () { return msh; };
 	}
 
 	function disableScroll(e) {

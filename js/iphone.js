@@ -4,14 +4,20 @@ YUI.add("solitaire-ios", function (Y) {
 	var Solitaire = Y.Solitaire,
 	    _scale = Solitaire.scale,
 
-	    gameOptions = {
+	    DEFAULTS = {
+	    	"scale": 1,
+		"offset": 60,
+		"maxStackHeight": 155
+	    },
+
+	    OPTIONS = {
 	    	"TriTowers": {scale: 0.90, offset: 10},
 		"FlowerGarden": {offset: -60},
 		"Freecell": {offset: 35},
 		"FortyThieves": {offset: 10, scale: 0.9},
 		"MonteCarlo": {scale: 0.88, offset: 80},
 		"Pyramid": {offset: 20},
-		"Scorpion": {offset: 40},
+		"Scorpion": {offset: 40, maxStackHeight: 255},
 		"Spider": {scale: 0.95, offset: 10},
 		"Spider1S": {scale: 0.95, offset: 10},
 		"Spider2S": {scale: 0.95, offset: 10},
@@ -118,17 +124,6 @@ YUI.add("solitaire-ios", function (Y) {
 		alert("You win!");
 	};
 
-	Y.on("beforeSetup", function () {
-		var game = Solitaire.name();
-		if (gameOverrides.hasOwnProperty(game)) {
-			gameOverrides[game].call(Solitaire[game]);
-		}
-
-		Solitaire.offset = {left: offsetLeft(game), top: 10};
-		Solitaire.maxStackHeight = maxStackHeight(game);
-		scale(game);
-	});
-
 	Solitaire.scale = Solitaire.noop;
 	Solitaire.Card.ghost = false;
 	Solitaire.Animation.animate = false;
@@ -141,26 +136,23 @@ YUI.add("solitaire-ios", function (Y) {
 		height: 50
 	};
 
+	function getOption(game, name) {
+		var options = OPTIONS[game],
+		    option = options ? options[name] : DEFAULTS[name]; 
+
+		return option ? option : DEFAULTS[name];
+	}
 	
 	function scale(game) {
-		var options = gameOptions[game],
-		    scale = options ? options.scale : 1;
-
-		_scale.call(Solitaire.game, scale || 1);
+		_scale.call(Solitaire.game, getOption(game, "scale"));
 	}
 
 	function offsetLeft(game) {
-		var options = gameOptions[game];
-
-		return options ? options.offset : 60;
+		return getOption(game, "offset");
 	}
 
 	function maxStackHeight(game) {
-		var dfault = 155,
-		    options = gameOptions[game],
-		    msh = options ? options.maxStackHeight : dfault;
-
-		return function () { return msh || dfault; };
+		return getOption(game, "maxStackHeight");
 	}
 
 	function disableScroll(e) {
@@ -246,8 +238,47 @@ YUI.add("solitaire-ios", function (Y) {
 		Solitaire.Application.resizeEvent = "orientationchange";
 	}
 
-	Y.on("afterSetup", function () { scrollTo(0, 0);});
-	Y.on("afterResize", function () { scrollTo(0, 0);});
+	function setStyles(landscape) {
+		var body = Y.one("body"),
+		    from, to;
+
+		if (landscape) {
+			from = "portrait";
+			to = "landscape";
+		} else {
+			from = "landscape";
+			to = "portrait";
+		}
+
+		body.removeClass(from).addClass(to);
+	}
+
+	function setLayout() {
+		var game = Solitaire.name(),
+		    landscape = window.innerWidth === 480,
+		    msh = maxStackHeight(game);
+
+		setStyles(landscape);
+
+		if (gameOverrides.hasOwnProperty(game)) {
+			gameOverrides[game].call(Solitaire[game]);
+		}
+
+		Solitaire.offset = {left: offsetLeft(game), top: 10};
+		Solitaire.maxStackHeight = function () { return msh; };
+		scale(game);
+		scrollTo(0, 0);
+	}
+
+	function scrollToTop() {
+	}
+
+	Y.on("beforeSetup", setLayout);
+	Y.on("beforeResize", setLayout);
+	/*
+	Y.on("afterSetup", scrollToTop);
+	Y.on("afterResize", scrollToTop);
+	*/
 
 	Y.on("touchstart", function (e) {
 		if (e.target._node === document.body) { e.preventDefault(); }

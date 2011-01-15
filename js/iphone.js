@@ -24,7 +24,7 @@ YUI.add("solitaire-ios", function (Y) {
 		"Spider": {scale: 0.95, offset: 10},
 		"Spider1S": {scale: 0.95, offset: 10},
 		"Spider2S": {scale: 0.95, offset: 10},
-		"Yukon": {scale: 0.95, offset: 50, maxStackHeight: 235}
+		"Yukon": {scale: [0.95, 0.9], offset: [50, 8], maxStackHeight: [235, 390]}
 	    },
 
 	    gameOverrides = {
@@ -282,18 +282,16 @@ YUI.add("solitaire-ios", function (Y) {
 		Solitaire.offset = {left: offsetLeft(), top: 10};
 		Solitaire.maxStackHeight = function () { return msh; };
 		scale();
-		scrollTo(0, 0);
 	}
 
 	function scrollToTop() {
+		setTimeout(function () {scrollTo(0, 0);}, 0);
 	}
 
 	Y.on("beforeSetup", setLayout);
 	Y.on("beforeResize", setLayout);
-	/*
 	Y.on("afterSetup", scrollToTop);
 	Y.on("afterResize", scrollToTop);
-	*/
 
 	Y.on("touchstart", function (e) {
 		if (e.target._node === document.body) { e.preventDefault(); }

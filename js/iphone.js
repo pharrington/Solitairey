@@ -136,23 +136,24 @@ YUI.add("solitaire-ios", function (Y) {
 		height: 50
 	};
 
-	function getOption(game, name) {
-		var options = OPTIONS[game],
+	function getOption(name) {
+		var game = Solitaire.name(),
+		    options = OPTIONS[game],
 		    option = options ? options[name] : DEFAULTS[name]; 
 
 		return option ? option : DEFAULTS[name];
 	}
 	
-	function scale(game) {
-		_scale.call(Solitaire.game, getOption(game, "scale"));
+	function scale() {
+		_scale.call(Solitaire.game, getOption("scale"));
 	}
 
-	function offsetLeft(game) {
-		return getOption(game, "offset");
+	function offsetLeft() {
+		return getOption("offset");
 	}
 
-	function maxStackHeight(game) {
-		return getOption(game, "maxStackHeight");
+	function maxStackHeight() {
+		return getOption("maxStackHeight");
 	}
 
 	function disableScroll(e) {
@@ -256,7 +257,7 @@ YUI.add("solitaire-ios", function (Y) {
 	function setLayout() {
 		var game = Solitaire.name(),
 		    landscape = window.innerWidth === 480,
-		    msh = maxStackHeight(game);
+		    msh = maxStackHeight();
 
 		setStyles(landscape);
 
@@ -264,9 +265,9 @@ YUI.add("solitaire-ios", function (Y) {
 			gameOverrides[game].call(Solitaire[game]);
 		}
 
-		Solitaire.offset = {left: offsetLeft(game), top: 10};
+		Solitaire.offset = {left: offsetLeft(), top: 10};
 		Solitaire.maxStackHeight = function () { return msh; };
-		scale(game);
+		scale();
 		scrollTo(0, 0);
 	}
 

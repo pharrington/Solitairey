@@ -1,7 +1,16 @@
 body {
+	background: none;
+	font-family: helvetica;
+}
+
+body.landscape {
 	background: url(green480.jpg);
 	height: 268px;
-	font-family: helvetica;
+}
+
+body.portrait {
+	background: url(green320.jpg);
+	height: 416px;
 }
 
 #menu.show {

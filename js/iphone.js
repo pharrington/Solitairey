@@ -4,6 +4,9 @@ YUI.add("solitaire-ios", function (Y) {
 	var Solitaire = Y.Solitaire,
 	    _scale = Solitaire.scale,
 
+	    LANDSCAPE = 0,
+	    PORTRAIT = 1,
+
 	    DEFAULTS = {
 	    	"scale": 1,
 		"offset": 60,
@@ -136,12 +139,23 @@ YUI.add("solitaire-ios", function (Y) {
 		height: 50
 	};
 
+	function optionWithOrientation(option) {
+		var orientation = window.innerWidth === 480 ? LANDSCAPE : PORTRAIT,
+		    o;
+
+		if (!option.length) { return option; }
+
+		o = option[orientation];
+		return o ? o : option[LANDSCAPE];
+			
+	}
+
 	function getOption(name) {
 		var game = Solitaire.name(),
 		    options = OPTIONS[game],
 		    option = options ? options[name] : DEFAULTS[name]; 
 
-		return option ? option : DEFAULTS[name];
+		return optionWithOrientation(option ? option : DEFAULTS[name]);
 	}
 	
 	function scale() {

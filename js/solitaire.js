@@ -402,6 +402,7 @@ Y.mix(Solitaire, {
 				var cards = stack.cards,
 				    layout = stack.configLayout;
 
+				stack.adjustRankHeight();
 				stack.cards = [];
 				stack.layout(Y.merge(layout, {
 					hoffset: i * layout.hspacing || 0,

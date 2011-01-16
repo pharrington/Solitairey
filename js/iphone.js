@@ -177,7 +177,7 @@ YUI.add("solitaire-ios", function (Y) {
 		_pg_activate: Solitaire.noop,
 		_pg_size: function () {
 			if (this.activeDrag) {
-				this._pg.setStyles({width: "480px", height: "268px"});
+				this._pg.setStyles({width: "100%", height: "100%"});
 			}
 		}
 	}, true);

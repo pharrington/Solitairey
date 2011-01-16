@@ -74,6 +74,7 @@ YUI.add("solitaire-ios", function (Y) {
 				originalLayout("Klondike", "Foundation").call(this);
 				originalLayout("Klondike", "Tableau").call(this);
 			},
+
 			function () {
 				Y.mix(this.Foundation.stackConfig.layout, {left: 135, hspacing: 1.13}, true);
 				Y.mix(this.Tableau.stackConfig.layout, {hspacing: 1.13}, true);
@@ -87,12 +88,40 @@ YUI.add("solitaire-ios", function (Y) {
 			}, true);
 		},
 
-		Pyramid: function () {
-			Y.mix(this.Tableau.stackConfig.layout, {
-				cardGap: 1.1,
-				hspacing: -0.55
-			}, true);
-		},
+		Pyramid: [
+			function () {
+				var deck = originalLayout("Pyramid", "Deck");
+				var waste = originalLayout("Pyramid", "Waste");
+
+				return function () {
+					deck.call(this);
+					waste.call(this);
+
+					Y.mix(this.Tableau.stackConfig.layout, {
+						left: 190,
+						cardGap: 1.1,
+						hspacing: -0.55
+					}, true);
+				}
+			}(),
+
+			function () {
+				Y.mix(this.Deck.stackConfig.layout, {
+					left: -10,
+					top: 300,
+				}, true);
+
+				Y.mix(this.Waste.stackConfig.layout, {
+					top: 300,
+				}, true);
+
+				Y.mix(this.Tableau.stackConfig.layout, {
+					left: 120,
+					cardGap: 1.1,
+					hspacing: -0.55
+				}, true);
+			}
+		],
 
 		Spider: [
 			function () {

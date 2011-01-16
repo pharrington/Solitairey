@@ -25,6 +25,7 @@ YUI.add("solitaire-ios", function (Y) {
 		"FlowerGarden": {offset: -60},
 		"Freecell": {offset: 35},
 		"FortyThieves": {offset: 10, scale: 0.9},
+		"Klondike": {offset: [null, 5], maxStackHeight: [null, 340]},
 		"MonteCarlo": {scale: 0.88, offset: 80},
 		"Pyramid": {offset: 20},
 		"Spider": {scale: [1, 0.76], offset: [10, 2], maxStackHeight: [155, 340]},
@@ -67,6 +68,17 @@ YUI.add("solitaire-ios", function (Y) {
 				}
 			}, true);
 		},
+
+		Klondike: [
+			function () {
+				originalLayout("Klondike", "Foundation").call(this);
+				originalLayout("Klondike", "Tableau").call(this);
+			},
+			function () {
+				Y.mix(this.Foundation.stackConfig.layout, {left: 135, hspacing: 1.13}, true);
+				Y.mix(this.Tableau.stackConfig.layout, {hspacing: 1.13}, true);
+			}
+		],
 
 		MonteCarlo: function () {
 			Y.mix(this.Tableau.stackConfig.layout, {

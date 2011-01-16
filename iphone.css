@@ -25,6 +25,10 @@ body.portrait {
 	z-index: 1000;
 }
 
+.portrait #menu {
+	padding-top: 170px;
+}
+
 #menu li {
 	display: list-item;
 	width: 85%;

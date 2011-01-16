@@ -76,7 +76,7 @@ body.portrait {
 }
 
 #game-chooser {
-	width: 480px;
+	width: 100%;
 	height: auto;
 	padding: 0;
 	margin: 0;

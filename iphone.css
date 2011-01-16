@@ -107,6 +107,10 @@ body.portrait {
 	font-size: 24px;
 }
 
+.portrait #game-chooser h2 {
+	padding-left: 20px;
+}
+
 .titlebar {
 	position: relative;
 	background: -webkit-gradient(linear, left top, left bottom, from(#81f094), color-stop(0.15, #20e541), color-stop(0.5, #19b533), to(#148c28));

@@ -152,7 +152,7 @@
 
 		for (m in games) {
 			if (games.hasOwnProperty(m)) {
-				modules.push(m);
+				modules.unshift(m);
 			}
 		}
 

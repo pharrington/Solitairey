@@ -100,8 +100,8 @@ YUI.add("solitaire-ios", function (Y) {
 				var height = parseInt(Y.one("body").getStyle("height"), 10);
 
 				Y.mix(this.Foundation.stackConfig.layout, {
-					left: 0,
-					top: height - 60,
+					left: 55,
+					top: height - 90,
 					hspacing: 1.5,
 					vspacing: 0
 				}, true);

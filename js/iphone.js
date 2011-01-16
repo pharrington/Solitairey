@@ -123,6 +123,11 @@ YUI.add("solitaire-ios", function (Y) {
 			}
 		],
 
+		Scorpion: function () {
+			fieldLayout(this, "Deck", {left: -50});
+			fieldLayout(this, "Foundation", {top: 0});
+		},
+
 		Spider: [
 			function () {
 				Y.mix(this.Foundation.stackConfig.layout, {
@@ -223,6 +228,10 @@ YUI.add("solitaire-ios", function (Y) {
 		width: 40,
 		height: 50
 	};
+
+	function fieldLayout(game, field, layout) {
+		Y.mix(game[field].stackConfig.layout, layout, true);
+	}
 
 	function originalLayout(game, field) {
 		var layout = Y.merge(BARE_LAYOUT, Solitaire[game][field].stackConfig.layout);

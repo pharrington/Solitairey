@@ -26,7 +26,7 @@ YUI.add("solitaire-ios", function (Y) {
 		Freecell: {offset: 35},
 		FortyThieves: {offset: 10, scale: 0.9},
 		Klondike: {offset: [null, 5], maxStackHeight: [null, 340]},
-		MonteCarlo: {scale: 0.88, offset: 80},
+		MonteCarlo: {scale: [0.88, 1], offset: [80, 15]},
 		Pyramid: {offset: 20},
 		Scorpion: {offset: 5, maxStackHeight: [235, 380]},
 		Spider: {scale: [1, 0.76], offset: [10, 2], maxStackHeight: [155, 340]},
@@ -83,10 +83,10 @@ YUI.add("solitaire-ios", function (Y) {
 		],
 
 		MonteCarlo: function () {
-			Y.mix(this.Tableau.stackConfig.layout, {
+			fieldLayout(this, "Tableau", {
 				cardGap: 1.1,
 				vspacing: 1.05
-			}, true);
+			});
 		},
 
 		Pyramid: [

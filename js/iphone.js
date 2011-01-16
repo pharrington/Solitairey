@@ -27,10 +27,7 @@ YUI.add("solitaire-ios", function (Y) {
 		"FortyThieves": {offset: 10, scale: 0.9},
 		"MonteCarlo": {scale: 0.88, offset: 80},
 		"Pyramid": {offset: 20},
-		"Scorpion": {offset: 40, maxStackHeight: 255},
-		"Spider": {scale: 0.95, offset: 10},
-		"Spider1S": {scale: 0.95, offset: 10},
-		"Spider2S": {scale: 0.95, offset: 10},
+		"Spider": {scale: [1, 0.76], offset: [10, 2], maxStackHeight: [155, 340]},
 		"Yukon": {scale: [0.95, 0.9], offset: [50, 8], maxStackHeight: [235, 390]}
 	    },
 
@@ -85,6 +82,28 @@ YUI.add("solitaire-ios", function (Y) {
 			}, true);
 		},
 
+		Spider: [
+			function () {
+				Y.mix(this.Foundation.stackConfig.layout, {
+					left: 94,
+					hspacing: 1.18
+				}, true);
+
+				Y.mix(this.Tableau.stackConfig.layout, {
+					hspacing: 1.18
+				}, true);
+			},
+			function () {
+				Y.mix(this.Foundation.stackConfig.layout, {
+					hspacing: 1.05
+				}, true);
+
+				Y.mix(this.Tableau.stackConfig.layout, {
+					hspacing: 1.05
+				}, true);
+			}
+		],
+
 		TriTowers: function () {
 			Y.mix(this.Tableau.stackConfig.layout, {
 				hspacing: -0.5,
@@ -108,6 +127,9 @@ YUI.add("solitaire-ios", function (Y) {
 			}
 		]
 	    };
+
+	OPTIONS.Spider1S = OPTIONS.Spider2S = OPTIONS.Spider;
+	gameOverrides.Spider1S = gameOverrides.Spider2S = gameOverrides.Spider;
 
 	Y.mix(Y.DD.DDM, {
 		useHash: false, // :\
@@ -193,9 +215,10 @@ YUI.add("solitaire-ios", function (Y) {
 	function getOption(name) {
 		var game = Solitaire.name(),
 		    options = OPTIONS[game],
-		    option = options ? options[name] : DEFAULTS[name]; 
+		    dfault = DEFAULTS[name],
+		    option = options ? options[name] : dfault; 
 
-		return optionWithOrientation(option ? option : DEFAULTS[name]);
+		return optionWithOrientation(option ? option : dfault) || dfault;
 	}
 	
 	function scale() {

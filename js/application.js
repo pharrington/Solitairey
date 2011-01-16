@@ -107,6 +107,7 @@
 			}
 
 			Y.one("#game-chooser").removeClass("show");
+			Y.fire("gamechooser:hide", this);
 		},
 
 		choose: function () {

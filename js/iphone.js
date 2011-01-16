@@ -15,21 +15,22 @@ YUI.add("solitaire-ios", function (Y) {
 	    },
 
 	    DEFAULTS = {
-	    	"scale": 1,
-		"offset": 60,
-		"maxStackHeight": 155
+	    	scale: 1,
+		offset: 60,
+		maxStackHeight: 155
 	    },
 
 	    OPTIONS = {
-	    	"TriTowers": {scale: 0.90, offset: 10},
-		"FlowerGarden": {offset: -60},
-		"Freecell": {offset: 35},
-		"FortyThieves": {offset: 10, scale: 0.9},
-		"Klondike": {offset: [null, 5], maxStackHeight: [null, 340]},
-		"MonteCarlo": {scale: 0.88, offset: 80},
-		"Pyramid": {offset: 20},
-		"Spider": {scale: [1, 0.76], offset: [10, 2], maxStackHeight: [155, 340]},
-		"Yukon": {scale: [0.95, 0.9], offset: [50, 8], maxStackHeight: [235, 390]}
+	    	TriTowers: {scale: 0.90, offset: 10},
+		FlowerGarden: {offset: -60},
+		Freecell: {offset: 35},
+		FortyThieves: {offset: 10, scale: 0.9},
+		Klondike: {offset: [null, 5], maxStackHeight: [null, 340]},
+		MonteCarlo: {scale: 0.88, offset: 80},
+		Pyramid: {offset: 20},
+		Scorpion: {offset: 5, maxStackHeight: [235, 380]},
+		Spider: {scale: [1, 0.76], offset: [10, 2], maxStackHeight: [155, 340]},
+		Yukon: {scale: [0.95, 0.9], offset: [50, 8], maxStackHeight: [235, 390]}
 	    },
 
 	    gameOverrides = {
@@ -123,10 +124,39 @@ YUI.add("solitaire-ios", function (Y) {
 			}
 		],
 
-		Scorpion: function () {
-			fieldLayout(this, "Deck", {left: -50});
-			fieldLayout(this, "Foundation", {top: 0});
-		},
+		Scorpion: [
+			function () {
+				fieldLayout(this, "Deck", {top: 0, left: 0});
+				fieldLayout(this, "Foundation", {
+					top: 0,
+					left: 420,
+					hspacing: 0,
+					vspacing: 1.1
+				});
+				fieldLayout(this, "Tableau", {
+					left: 60,
+					hspacing: 1.13
+				});
+			},
+
+			function () {
+				var top = parseInt(Y.one("body").getStyle("height"), 10) - 95;
+
+				fieldLayout(this, "Deck", {left: 10, top: top});
+
+				fieldLayout(this, "Foundation", {
+					left: 75,
+					top: top,
+					hspacing: 1.5,
+					vspacing: 0
+				});
+
+				fieldLayout(this, "Tableau", {
+					left: 0,
+					hspacing: 1.13
+				});
+			}
+		],
 
 		Spider: [
 			function () {
@@ -164,12 +194,12 @@ YUI.add("solitaire-ios", function (Y) {
 			function () {
 				var height = parseInt(Y.one("body").getStyle("height"), 10);
 
-				Y.mix(this.Foundation.stackConfig.layout, {
+				fieldLayout(this, "Foundation", {
 					left: 55,
 					top: height - 90,
 					hspacing: 1.5,
 					vspacing: 0
-				}, true);
+				});
 			}
 		]
 	    };

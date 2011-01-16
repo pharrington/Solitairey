@@ -7,6 +7,13 @@ YUI.add("solitaire-ios", function (Y) {
 	    LANDSCAPE = 0,
 	    PORTRAIT = 1,
 
+	    BARE_LAYOUT = {
+	    	hspacing: 0,
+		vspacing: 0,
+		left: 0,
+		top: 0,
+	    },
+
 	    DEFAULTS = {
 	    	"scale": 1,
 		"offset": 60,
@@ -84,7 +91,22 @@ YUI.add("solitaire-ios", function (Y) {
 				rowGaps: [3, 2, 1, 0],
 				cardGap: 1
 			}, true);
-		}
+		},
+
+		Yukon: [
+			originalLayout("Yukon", "Foundation"),
+
+			function () {
+				var height = parseInt(Y.one("body").getStyle("height"), 10);
+
+				Y.mix(this.Foundation.stackConfig.layout, {
+					left: 0,
+					top: height - 60,
+					hspacing: 1.5,
+					vspacing: 0
+				}, true);
+			}
+		]
 	    };
 
 	Y.mix(Y.DD.DDM, {
@@ -138,6 +160,24 @@ YUI.add("solitaire-ios", function (Y) {
 		width: 40,
 		height: 50
 	};
+
+	function originalLayout(game, field) {
+		var layout = Y.merge(BARE_LAYOUT, Solitaire[game][field].stackConfig.layout);
+
+		return function () {
+			Y.mix(this[field].stackConfig.layout, layout, true);
+		}
+	}
+
+	function runOverrides() {
+		var game = Solitaire.name(),
+		    override;
+
+		if (gameOverrides.hasOwnProperty(game)) {
+			override = optionWithOrientation(gameOverrides[game]);
+			override.call(Solitaire.game);
+		}
+	}
 
 	function optionWithOrientation(option) {
 		var orientation = window.innerWidth === 480 ? LANDSCAPE : PORTRAIT,
@@ -275,9 +315,7 @@ YUI.add("solitaire-ios", function (Y) {
 
 		setStyles(landscape);
 
-		if (gameOverrides.hasOwnProperty(game)) {
-			gameOverrides[game].call(Solitaire[game]);
-		}
+		runOverrides();
 
 		Solitaire.offset = {left: offsetLeft(), top: 10};
 		Solitaire.maxStackHeight = function () { return msh; };

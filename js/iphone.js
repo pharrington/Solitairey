@@ -252,6 +252,9 @@ YUI.add("solitaire-ios", function (Y) {
 	OPTIONS.FortyThieves = OPTIONS.Spider1S = OPTIONS.Spider2S = OPTIONS.Spider;
 	gameOverrides.FortyThieves = gameOverrides.Spider1S = gameOverrides.Spider2S = gameOverrides.Spider;
 
+	OPTIONS.Klondike1T = OPTIONS.Klondike;
+	gameOverrides.Klondike1T = gameOverrides.Klondike;
+
 	Y.mix(Y.DD.DDM, {
 		useHash: false, // :\
 		_pg_activate: Solitaire.noop,

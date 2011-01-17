@@ -9,7 +9,7 @@ YUI.add("solitaire-background-fix", function (Y) {
 		    height = body().get("winHeight"),
 		    style = document.body.style;
 
-		if (!parseInt(body().getStyle("height"), 10)) {
+		if (!parseInt(body().getStyle("height"), 10) || Y.UA.opera) {
 			body().setStyles({width: width, height: height});
 		}
 

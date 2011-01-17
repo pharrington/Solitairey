@@ -159,3 +159,22 @@ body.portrait {
 	top: 3px;
 	left: 100px;
 }
+
+#loading {
+	position: absolute;
+	display: none;
+	background: rgba(0, 0, 0, 0.8);
+	width: 100%;
+	height: 100%;
+	z-index: 1005;
+}
+
+#loading.show {
+	display: block;
+}
+
+#loading > img{
+	position: absolute;
+	left: 45%;
+	top: 45%;
+}

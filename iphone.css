@@ -107,6 +107,15 @@ body.portrait {
 	border-bottom: 1px solid #ccc;
 }
 
+#descriptions > li:hover {
+	background: transparent;
+}
+
+#descriptions > li.hover {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#4286f5), to(#194fdb));
+	color: #fff;
+}
+
 #game-chooser h2 {
 	padding-left: 40px;
 	font-size: 24px;

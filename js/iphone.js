@@ -23,7 +23,7 @@ YUI.add("solitaire-ios", function (Y) {
 	    OPTIONS = {
 	    	TriTowers: {scale: 0.90, offset: 10},
 		FlowerGarden: {offset: -60},
-		Freecell: {offset: 35},
+		Freecell: {scale: [1, 0.93], offset: [35, 5]},
 		FortyThieves: {offset: 10, scale: 0.9},
 		Klondike: {offset: [null, 5], maxStackHeight: [null, 340]},
 		MonteCarlo: {scale: [0.88, 1], offset: [80, 15]},
@@ -69,6 +69,22 @@ YUI.add("solitaire-ios", function (Y) {
 				}
 			}, true);
 		},
+
+		Freecell: [
+			originalLayout("Freecell", ["Foundation", "Reserve", "Tableau"]),
+
+			function () {
+				var hspacing = {hspacing: 1.05};
+
+				fieldLayout(this, "Tableau", hspacing);
+
+				fieldLayout(this, "Reserve", hspacing);
+
+				fieldLayout(this, "Foundation", Y.merge(hspacing, {
+					left: 157
+				}));
+			}
+		],
 
 		Klondike: [
 			function () {
@@ -263,12 +279,21 @@ YUI.add("solitaire-ios", function (Y) {
 		Y.mix(game[field].stackConfig.layout, layout, true);
 	}
 
-	function originalLayout(game, field) {
-		var layout = Y.merge(BARE_LAYOUT, Solitaire[game][field].stackConfig.layout);
+	function originalLayout(game, fields) {
+		var layouts,
+		    normalizeLayout = function (field) {
+			return [field, Y.merge(BARE_LAYOUT, Solitaire[game][field].stackConfig.layout)];
+		    };
+
+		layouts = Y.Array.map(Y.Array(fields), normalizeLayout);
 
 		return function () {
-			Y.mix(this[field].stackConfig.layout, layout, true);
-		}
+			var that = this;
+
+			Y.each(layouts, function (layout) {
+				Y.mix(that[layout[0]].stackConfig.layout, layout[1], true);
+			});
+		};
 	}
 
 	function runOverrides() {

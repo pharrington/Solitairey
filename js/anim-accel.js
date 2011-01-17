@@ -1,1 +1,0 @@
-/home/xeno/projects/fightmoney/anim-accel.js

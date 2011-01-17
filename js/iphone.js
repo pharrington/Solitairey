@@ -387,6 +387,14 @@ YUI.add("solitaire-ios", function (Y) {
 		Y.one("#game-chooser .titlebar").append(document.createTextNode("Games"));
 		Y.one("#game-chooser .close").append(document.createTextNode("Back"));
 
+		Y.delegate("touchstart", function (e) {
+			e.target.ancestor("li", true).addClass("hover");
+		}, "#descriptions", "li");
+
+		Y.delegate("touchend", function (e) {
+			e.target.ancestor("li", true).removeClass("hover");
+		}, "#descriptions", "li");
+
 		Y.on("gamechooser:select", function (chooser) {
 			chooser.choose();
 			closeMenu();

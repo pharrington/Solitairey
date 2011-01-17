@@ -1,6 +1,7 @@
 body {
 	background: none;
 	font-family: helvetica;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body.landscape {

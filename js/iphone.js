@@ -392,6 +392,10 @@ YUI.add("solitaire-ios", function (Y) {
 			closeMenu();
 		});
 
+		Y.on("gamechooser:hide", function () {
+			scrollToTop();
+		});
+
 		// set resize event to orientationchange to more flexibly customize the layout
 		Solitaire.Application.resizeEvent = "orientationchange";
 	}

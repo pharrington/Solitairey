@@ -528,7 +528,7 @@ YUI.add("solitaire-ios", function (Y) {
 	}
 
 	function scrollToTop() {
-		setTimeout(function () {scrollTo(0, 0);}, 0);
+		setTimeout(function () {scrollTo(0, 0);}, 10);
 	}
 
 	Y.on("beforeSetup", setLayout);

@@ -1,7 +1,7 @@
 YUI.add("solitaire-autoplay", function (Y) {
 	var Solitaire = Y.Solitaire,
 	    autoPlayInterval = null,
-	    autoPlayable = ["Klondike", "FortyThieves", "GClock", "Freecell", "FlowerGarden", "Yukon"];
+	    autoPlayable = ["Klondike", "Klondike1T", "FortyThieves", "GClock", "Freecell", "FlowerGarden", "Yukon"];
 
 	Y.on("endTurn", function () {
 		if (autoPlayable.indexOf(Solitaire.game.name()) === -1) { return; }

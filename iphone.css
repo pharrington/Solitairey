@@ -63,8 +63,8 @@ body.portrait {
 }
 
 #navbar {
-	width: 88%;
-	margin-left: 5%;
+	width: 95%;
+	margin-left: 5px;
 	bottom: 29px;
 	position: absolute;
 }
@@ -74,6 +74,10 @@ body.portrait {
 	font-size: 12px;
 	padding: 4px 8px;
 	border: 2px #aaa solid;
+}
+
+#show_menu {
+	left: 60px;
 }
 
 #undo {
@@ -157,7 +161,7 @@ body.portrait {
 
 #fb {
 	top: 3px;
-	left: 100px;
+	left: 0;
 }
 
 #loading {

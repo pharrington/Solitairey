@@ -494,6 +494,10 @@ YUI.add("solitaire-ios", function (Y) {
 			scrollToTop();
 		});
 
+		if (navigator.standalone) {
+			body.addClass("fullscreen");
+		}
+
 		// set resize event to orientationchange to more flexibly customize the layout
 		Solitaire.Application.resizeEvent = "orientationchange";
 	}

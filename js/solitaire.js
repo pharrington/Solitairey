@@ -985,19 +985,19 @@ Y.Solitaire.Stack = {
 			    cards = this.cards,
 			    card,
 			    suits = Game.deck.suits,
-			    byte,
+			    bite,
 			    serialized = [];
 
 			for (i = 0, len = cards.length; i < len; i++) {
 				card = cards[i];
 				if (card) {
-					byte = suits.indexOf(card.suit) |
+					bite = suits.indexOf(card.suit) |
 						card.rank << 2 |
 						card.isFaceDown << 6; // type coersion!
 				} else {
-					byte = 128;
+					bite = 128;
 				}
-				serialized.push(String.fromCharCode(byte));
+				serialized.push(String.fromCharCode(bite));
 			}
 
 			return serialized.join("");

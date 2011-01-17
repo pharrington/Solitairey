@@ -10,9 +10,17 @@ body.landscape {
 	height: 268px;
 }
 
+body.fullscreen.landscape {
+	height: 300px;
+}
+
 body.portrait {
 	background: url(green320.jpg);
 	height: 416px;
+}
+
+body.fullscreen.portrait {
+	height: 460px;
 }
 
 #menu.show {

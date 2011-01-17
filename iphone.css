@@ -1,5 +1,6 @@
 body {
 	background: none;
+	height: 1px;
 	font-family: helvetica;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }

@@ -22,52 +22,80 @@ YUI.add("solitaire-ios", function (Y) {
 
 	    OPTIONS = {
 	    	TriTowers: {scale: 0.90, offset: 10},
-		FlowerGarden: {offset: -60},
+		FlowerGarden: {offset: [-60, 5], maxStackHeight: 235},
 		Freecell: {scale: [1, 0.93], offset: [35, 5]},
 		Klondike: {offset: [null, 5], maxStackHeight: [null, 340]},
 		MonteCarlo: {scale: [0.88, 1], offset: [80, 15]},
 		Pyramid: {offset: 20},
 		Scorpion: {offset: 5, maxStackHeight: [235, 380]},
-		Spider: {scale: [1, 0.76], offset: [10, 2], maxStackHeight: [155, 340]},
+		Spider: {scale: [1, 0.76], offset: [10, 2], maxStackHeight: [null, 340]},
 		Yukon: {scale: [0.95, 0.9], offset: [50, 8], maxStackHeight: [235, 390]}
 	    },
 
 	    gameOverrides = {
-		FlowerGarden: function () {
-			this.Card.rankHeight = 15;
+		FlowerGarden: [
+			function () {
+				this.Card.rankHeight = 15;
 
-			Y.mix(this.Reserve.stackConfig.layout, {
-				top: function () { return 0; },
-				left: function () { return 440; }
-			}, true);
+				fieldLayout(this, "Reserve", {
+					top: 0,
+					left: 70
+				});
 
-			Y.mix(this.Reserve.Stack, {
-				setCardPosition: function (card) {
-					var last = this.cards.last(),
-					    top = last ? last.top + 12 : this.top,
-					    left = this.left;
+				fieldLayout(this, "Foundation", {
+					top: 0,
+					left: 470,
+					hspacing: 0,
+					vspacing: 1.1
+				});
 
-					card.left = left;
-					card.top = top;
-				},
+				fieldLayout(this, "Tableau", {
+					top: 0,
+					left: 140
+				});
 
-				update: function (undo) {
-					if (undo) { return; }
+				Y.mix(this.Reserve.Stack, {
+					setCardPosition: function (card) {
+						var last = this.cards.last(),
+						    top = last ? last.top + 11 : this.top,
+						    left = this.left;
 
-					var stack = this,
-					    top;
+						card.left = left;
+						card.top = top;
+					},
 
-					Y.Array.each(this.cards, function (card, i) {
-						left = stack.left + i * 12;
+					update: Solitaire.noop
+				}, true);
+			},
 
-						if (top !== card.top) {
-							card.top = top;
-							card.updatePosition();
-						}
+			function () {
+				var setCardPosition = Solitaire.FlowerGarden.Reserve.Stack.setCardPosition;
+
+				return function () {
+					fieldLayout(this, "Tableau", {
+						left: 10,
+						top: 120
 					});
-				}
-			}, true);
-		},
+
+					fieldLayout(this, "Reserve", {
+						left: 17,
+						top: 60
+					});
+
+					fieldLayout(this, "Foundation", {
+						left: 55,
+						top: 0,
+						hspacing: 1.5,
+						vspacing: 0
+					});
+
+					Y.mix(this.Reserve.Stack, {
+						setCardPosition: setCardPosition,
+						update: Solitaire.noop
+					}, true);
+				};
+			}()
+		],
 
 		Freecell: [
 			originalLayout("Freecell", ["Foundation", "Reserve", "Tableau"]),
@@ -150,24 +178,24 @@ YUI.add("solitaire-ios", function (Y) {
 				});
 				fieldLayout(this, "Tableau", {
 					left: 60,
+					top: 0,
 					hspacing: 1.13
 				});
 			},
 
 			function () {
-				var top = parseInt(Y.one("body").getStyle("height"), 10) - 95;
-
-				fieldLayout(this, "Deck", {left: 10, top: top});
+				fieldLayout(this, "Deck", {left: 10, top: 0});
 
 				fieldLayout(this, "Foundation", {
 					left: 75,
-					top: top,
+					top: 0,
 					hspacing: 1.5,
 					vspacing: 0
 				});
 
 				fieldLayout(this, "Tableau", {
 					left: 0,
+					top: 60,
 					hspacing: 1.13
 				});
 			}
@@ -204,14 +232,16 @@ YUI.add("solitaire-ios", function (Y) {
 		},
 
 		Yukon: [
-			originalLayout("Yukon", "Foundation"),
+			originalLayout("Yukon", ["Tableau", "Foundation"]),
 
 			function () {
-				var height = parseInt(Y.one("body").getStyle("height"), 10);
+				fieldLayout(this, "Tableau", {
+					top: 60
+				});
 
 				fieldLayout(this, "Foundation", {
 					left: 55,
-					top: height - 90,
+					top: 0,
 					hspacing: 1.5,
 					vspacing: 0
 				});

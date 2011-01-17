@@ -24,7 +24,6 @@ YUI.add("solitaire-ios", function (Y) {
 	    	TriTowers: {scale: 0.90, offset: 10},
 		FlowerGarden: {offset: -60},
 		Freecell: {scale: [1, 0.93], offset: [35, 5]},
-		FortyThieves: {offset: 10, scale: 0.9},
 		Klondike: {offset: [null, 5], maxStackHeight: [null, 340]},
 		MonteCarlo: {scale: [0.88, 1], offset: [80, 15]},
 		Pyramid: {offset: 20},
@@ -220,8 +219,8 @@ YUI.add("solitaire-ios", function (Y) {
 		]
 	    };
 
-	OPTIONS.Spider1S = OPTIONS.Spider2S = OPTIONS.Spider;
-	gameOverrides.Spider1S = gameOverrides.Spider2S = gameOverrides.Spider;
+	OPTIONS.FortyThieves = OPTIONS.Spider1S = OPTIONS.Spider2S = OPTIONS.Spider;
+	gameOverrides.FortyThieves = gameOverrides.Spider1S = gameOverrides.Spider2S = gameOverrides.Spider;
 
 	Y.mix(Y.DD.DDM, {
 		useHash: false, // :\

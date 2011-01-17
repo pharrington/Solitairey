@@ -21,7 +21,7 @@ YUI.add("solitaire-ios", function (Y) {
 	    },
 
 	    OPTIONS = {
-	    	TriTowers: {scale: 0.90, offset: 10},
+		Agnes: {offset: [null, 5], maxStackHeight: 260},
 		FlowerGarden: {offset: [-60, 5], maxStackHeight: 235},
 		Freecell: {scale: [1, 0.93], offset: [35, 5]},
 		Klondike: {offset: [null, 5], maxStackHeight: [null, 340]},
@@ -29,10 +29,27 @@ YUI.add("solitaire-ios", function (Y) {
 		Pyramid: {offset: 20},
 		Scorpion: {offset: 5, maxStackHeight: [235, 380]},
 		Spider: {scale: [1, 0.76], offset: [10, 2], maxStackHeight: [null, 340]},
+	    	TriTowers: {scale: 0.90, offset: 10},
 		Yukon: {scale: [0.95, 0.9], offset: [50, 8], maxStackHeight: [235, 390]}
 	    },
 
 	    gameOverrides = {
+		Agnes: function () {
+			var hspacing = {hspacing: 1.13};
+
+			fieldLayout(this, "Reserve", Y.merge(hspacing, {
+				top: 60
+			}));
+
+			fieldLayout(this, "Tableau", Y.merge(hspacing, {
+				top: 145
+			}));
+
+			fieldLayout(this, "Foundation", Y.merge(hspacing, {
+				left: 135
+			}));
+		},
+
 		FlowerGarden: [
 			function () {
 				this.Card.rankHeight = 15;

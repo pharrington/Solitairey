@@ -28,9 +28,9 @@ YUI.add("solitaire-ios", function (Y) {
 		MonteCarlo: {scale: [0.88, 1], offset: [80, 15]},
 		Pyramid: {offset: 20},
 		Scorpion: {offset: 5, maxStackHeight: [235, 380]},
-		Spider: {scale: [1, 0.76], offset: [10, 2], maxStackHeight: [null, 340]},
+		Spider: {scale: [1.13, 0.79], offset: [5, 2], maxStackHeight: [160, 340]},
 	    	TriTowers: {scale: 0.90, offset: 10},
-		Yukon: {scale: [0.95, 0.9], offset: [50, 8], maxStackHeight: [235, 390]}
+		Yukon: {scale: [0.95, 1], offset: [50, 5], maxStackHeight: [235, 390]}
 	    },
 
 	    gameOverrides = {
@@ -220,23 +220,25 @@ YUI.add("solitaire-ios", function (Y) {
 
 		Spider: [
 			function () {
-				Y.mix(this.Foundation.stackConfig.layout, {
+				fieldLayout(this, "Foundation", {
 					left: 94,
-					hspacing: 1.18
-				}, true);
+					hspacing: 1.05
+				});
 
-				Y.mix(this.Tableau.stackConfig.layout, {
-					hspacing: 1.18
-				}, true);
+				fieldLayout(this, "Tableau", {
+					top: 65,
+					hspacing: 1.05
+				});
 			},
 			function () {
-				Y.mix(this.Foundation.stackConfig.layout, {
-					hspacing: 1.05
-				}, true);
+				fieldLayout(this, "Foundation", {
+					left: 62,
+					hspacing: 1
+				});
 
-				Y.mix(this.Tableau.stackConfig.layout, {
-					hspacing: 1.05
-				}, true);
+				fieldLayout(this, "Tableau", {
+					hspacing: 1
+				});
 			}
 		],
 
@@ -253,11 +255,12 @@ YUI.add("solitaire-ios", function (Y) {
 
 			function () {
 				fieldLayout(this, "Tableau", {
-					top: 60
+					top: 55,
+					hspacing: 1.13
 				});
 
 				fieldLayout(this, "Foundation", {
-					left: 55,
+					left: 46,
 					top: 0,
 					hspacing: 1.5,
 					vspacing: 0

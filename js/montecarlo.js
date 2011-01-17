@@ -67,7 +67,7 @@ var Solitaire = Y.Solitaire,
 	height: function () { return this.Card.base.height * 7.5; },
 
 	Stack: instance(Solitaire.Stack, {
-		images: { deck: "dondorf/freeslot.png" },
+		images: { deck: "freeslot.png" },
 
 		updateDragGroups: function () {
 			var active = Solitaire.activeCard;

@@ -136,12 +136,6 @@ p {
 	background: #fff;
 }
 
-.layout {
-	margin-left: 4em;
-	margin-top: 1em;
-	margin-bottom: 1em;
-}
-
 .titlebar {
 	height: 2em;
 	width: 100%;
@@ -207,3 +201,99 @@ p {
 	bottom: 10px;
 	left: 20px;
 }
+
+.layout {
+	background-repeat: no-repeat;
+	margin: 0 auto 10px auto;
+}
+
+.agnes .layout {
+	background-image: url(layouts/agnes.png);
+	width: 250px;
+	height: 275px;
+}
+
+.flower-garden .layout {
+	background-image: url(layouts/flower-garden.png);
+	width: 248px;
+	height: 350px;
+}
+
+.forty-thieves .layout {
+	background-image: url(layouts/forty-thieves.png);
+	width: 500px;
+	height: 203px;
+}
+
+.freecell .layout {
+	background-image: url(layouts/freecell.png);
+	width: 500px;
+	height: 293px;
+}
+
+.grandfathers-clock .layout {
+	background-image: url(layouts/gclock.png);
+	width: 575px;
+	height: 289px;
+}
+
+.klondike .layout {
+	background-image: url(layouts/klondike.png);
+	width: 500px;
+	height: 277px;
+}
+
+.klondike1t .layout {
+	background-image: url(layouts/klondike1t.png);
+	width: 500px;
+	height: 273px;
+}
+
+.monte-carlo .layout {
+	background-image: url(layouts/montecarlo.png);
+	width: 281px;
+	height: 350px;
+}
+
+.pyramid .layout {
+	background-image: url(layouts/pyramid.png);
+	width: 409px;
+	height: 300px;
+}
+
+.scorpion .layout {
+	background-image: url(layouts/scorpion.png);
+	width: 416px;
+	height: 350px;
+}
+
+.spider .layout {
+	background-image: url(layouts/spider.png);
+	width: 500px;
+	height: 185px;
+}
+
+.spider1s .layout {
+	background-image: url(layouts/spider1s.png);
+	width: 500px;
+	height: 185px;
+}
+
+.spider2s .layout {
+	background-image: url(layouts/spider2s.png);
+	width: 500px;
+	height: 185px;
+}
+
+.tri-towers .layout {
+	background-image: url(layouts/tritowers.png);
+	width: 500px;
+	height: 264px;
+}
+
+.yukon .layout {
+	background-image: url(layouts/yukon.png);
+	width: 473px;
+	height: 350px;
+}
+

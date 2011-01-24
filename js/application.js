@@ -190,9 +190,17 @@
 
 	function attachResize() {
 		var timer,
-		    delay = 250;
+		    delay = 250,
+		    attachEvent;
 
-		window.addEventListener(Y.Solitaire.Application.resizeEvent, function () {
+		if (window.addEventListener) {
+			attachEvent = "addEventListener";
+		} else if (window.attachEvent) {
+			attachEvent = "attachEvent";
+		}
+
+		window[attachEvent](Y.Solitaire.Application.resizeEvent, function () {
+		//window.addEventListener(Y.Solitaire.Application.resizeEvent, function () {
 			clearTimeout(timer);
 			timer = setTimeout(resize, delay);
 		}, false);

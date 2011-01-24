@@ -191,3 +191,8 @@ body.fullscreen.portrait {
 	left: 45%;
 	top: 45%;
 }
+
+.layout {
+	background-image: none;
+	display: none;
+}

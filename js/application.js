@@ -200,7 +200,6 @@
 		}
 
 		window[attachEvent](Y.Solitaire.Application.resizeEvent, function () {
-		//window.addEventListener(Y.Solitaire.Application.resizeEvent, function () {
 			clearTimeout(timer);
 			timer = setTimeout(resize, delay);
 		}, false);

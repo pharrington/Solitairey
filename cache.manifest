@@ -1,5 +1,5 @@
 CACHE MANIFEST
-#rev8
+#rev9
 CACHE:
 mobile/c1.png
 mobile/c2.png
@@ -61,7 +61,7 @@ green480.jpg
 green320.jpg
 cards.css
 iphone.css
-js/all-min.js
+js/combined-min.js
 
 NETWORK:
 *

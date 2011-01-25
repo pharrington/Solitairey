@@ -1,5 +1,5 @@
 PREFIX = "js"
-JS = %w[solitaire auto-stack-clear auto-turnover autoplay ie-opera-background-fix statistics agnes klondike klondike1t flowergarden fortythieves freecell grandclock montecarlo pyramid scorpion spider spider1s spider2s tritowers yukon iphone application]
+JS = %w[solitaire iphone auto-stack-clear auto-turnover autoplay ie-opera-background-fix statistics agnes klondike klondike1t flowergarden fortythieves freecell grandclock montecarlo pyramid scorpion spider spider1s spider2s tritowers yukon application]
 YUI = "#{PREFIX}/yui-all-min.js"
 ALL = "#{PREFIX}/all.js"
 MINIFIED = "#{PREFIX}/all-min.js"

@@ -1,0 +1,51 @@
+PREFIX = "js"
+JS = %w[solitaire iphone auto-stack-clear auto-turnover autoplay ie-opera-background-fix statistics agnes klondike klondike1t flowergarden fortythieves freecell grandclock montecarlo pyramid scorpion spider spider1s spider2s tritowers yukon application]
+YUI = "#{PREFIX}/yui-all-min.js"
+ALL = "#{PREFIX}/all.js"
+MINIFIED = "#{PREFIX}/all-min.js"
+COMBINED = "#{PREFIX}/combined-min.js"
+COMPRESSOR = "/home/xeno/Downloads/yuicompressor-2.4.2/build/yuicompressor-2.4.2.jar"
+TEMPLATE = "index.erb"
+
+def create_index(index, development = false)
+  require "erb"
+
+  File.open(index, "w") do |f|
+    f.write(ERB.new(File.read(TEMPLATE)).result(binding))
+  end
+end
+
+desc "concatenated solitaire sources"
+file ALL do
+  File.open(ALL, "w") do |f|
+    JS.each do |fn|
+      f.write(File.read("#{PREFIX}/#{fn}.js"))
+    end
+  end
+end
+
+desc "minified solitaire sources"
+file MINIFIED => ALL do
+  sh "java -jar #{COMPRESSOR} -o #{MINIFIED} #{ALL}"
+end
+
+desc "concatenated minified solitaire and YUI sources"
+file COMBINED => [YUI, MINIFIED] do
+  sh "cat #{YUI} #{MINIFIED} > #{COMBINED}"
+end
+
+desc "development file with seperated, unminified source files"
+file "index-dev.html" => TEMPLATE do
+  create_index "index-dev.html", true
+end
+
+desc "production file with seperated, unminified source files"
+file "index.html" => [TEMPLATE, COMBINED] do
+  create_index "index.html"
+end
+
+task :clean do
+  sh "rm -f #{[ALL, MINIFIED, COMBINED, "index.html", "index-dev.html"].join(" ")}"
+end
+
+task :default => [:clean, "index-dev.html", "index.html"]

@@ -445,6 +445,7 @@ YUI.add("solitaire-ios", function (Y) {
 		    menu,
 		    body,
 		    nav,
+                    fb,
 		    closeMenu = function () { menu.removeClass("show"); };
 
 		disableStyles();
@@ -452,6 +453,7 @@ YUI.add("solitaire-ios", function (Y) {
 		menu = Y.one("#menu");
 		body = Y.one("body");
 		undo = Y.one("#undo");
+                fb = Y.one("#fb");
 		nav = Y.Node.create("<nav id=navbar>");
 		showMenu = Y.Node.create("<a id=show_menu class='button'>New Game</a>");
 		cancel = Y.Node.create("<li class=cancel><a id='cancel'>Cancel</a></li>");
@@ -465,7 +467,8 @@ YUI.add("solitaire-ios", function (Y) {
 		menu.append(cancel);
 
 		nav.append(showMenu);
-		nav.append(Y.one("#fb"));
+		navigator.onLine ? nav.append(fb) : fb.remove();
+
 		nav.append(undo.addClass("button"));
 
 		body.append(nav);
@@ -537,8 +540,8 @@ YUI.add("solitaire-ios", function (Y) {
 
 	Y.on("beforeSetup", setLayout);
 	Y.on("beforeResize", setLayout);
-	Y.on("afterSetup", scrollToTop);
 	Y.on("afterResize", scrollToTop);
+        Y.on("load", scrollToTop);
 
 	Y.on("touchstart", function (e) {
 		if (e.target._node === document.body) { e.preventDefault(); }

@@ -1,0 +1,271 @@
+<!doctype html>
+<% if development %>
+<html>
+<% else %>
+<html manifest="cache.manifest">
+<% end %>
+<head>
+	<title>Solitairey - The Best Free Solitaire</title>
+	<meta name="description" content="The best free solitaire collection on the web. New games added daily. No downloads, no Flash, just 100% Javascript solitaire goodness.">
+	<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="stylesheet" href="cards.css">
+	<![if lt IE 9]>
+	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css">
+	<![endif]>
+<% if development %>
+	<script type="text/javascript" src="js/yui-min.js"></script>
+	<script type="text/javascript" src="js/solitaire.js"></script>
+	<script type="text/javascript" src="js/iphone.js"></script>
+	<script type="text/javascript" src="js/auto-stack-clear.js"></script>
+	<script type="text/javascript" src="js/auto-turnover.js"></script>
+	<script type="text/javascript" src="js/autoplay.js"></script>
+	<script type="text/javascript" src="js/ie-opera-background-fix.js"></script>
+	<script type="text/javascript" src="js/statistics.js"></script>
+	<script type="text/javascript" src="js/agnes.js"></script>
+	<script type="text/javascript" src="js/klondike.js"></script>
+	<script type="text/javascript" src="js/klondike1t.js"></script>
+	<script type="text/javascript" src="js/flowergarden.js"></script>
+	<script type="text/javascript" src="js/fortythieves.js"></script>
+	<script type="text/javascript" src="js/freecell.js"></script>
+	<script type="text/javascript" src="js/grandclock.js"></script>
+	<script type="text/javascript" src="js/montecarlo.js"></script>
+	<script type="text/javascript" src="js/pyramid.js"></script>
+	<script type="text/javascript" src="js/scorpion.js"></script>
+	<script type="text/javascript" src="js/spider.js"></script>
+	<script type="text/javascript" src="js/spider1s.js"></script>
+	<script type="text/javascript" src="js/spider2s.js"></script>
+	<script type="text/javascript" src="js/tritowers.js"></script>
+	<script type="text/javascript" src="js/yukon.js"></script>
+	<script type="text/javascript" src="js/application.js"></script>
+<% else %>
+	<script type="text/javascript" src="js/combined-min.js"></script>
+<% end %>
+
+	
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9447574-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+	<iframe id="fb" src="http://www.facebook.com/plugins/like.php?href=www.solitairey.com&amp;layout=button_count&amp;show_faces=false&amp;width=50&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
+	<ul id="menu">
+		<li>
+			<a id="new_deal">Deal New Cards</a>
+		</li>
+		<li>
+			<a id="restart">Restart Game</a>
+		</li>
+		<li>
+			<a id="choose_game">Choose Solitaire Game...</a>
+		</li>
+		<li>
+			<a id="undo">Undo</a>
+		</li>
+	</ul>
+	<div id="game-chooser">
+		<div class="titlebar"><div class="close"></div></div>
+		<div id="game-chooser-contents">
+		<ul id="descriptions">
+			<li id="agnes">
+				<h2>Agnes</h2>
+				<div class="description agnes">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>The first card dealt to the foundation is the rank the rest of the foundations must start with. Build 13 cards on each foundation in series and suit; play Aces on Kings.</p>
+					<h3>Tableau:</h3>
+					<p>Same as Klondike.</p>
+					<h3>Reserve:</h3>
+					<p>Click the stock to transfer a card to each of the 7 reserve piles. The top card in any reserve pile is free to play on the tableau or a foundation.</p>
+					<h3>Wastepile</h3>
+					<p>The last two cards from the stock are transfered here; Both cards are playable on the tableau or a foundation.</p>
+					<button class="choose">Play Agnes Solitaire</button>
+				</div>
+			</li>
+			<li id="flower-garden">
+				<h2>Flower Garden</h2>
+				<div class="description flower-garden">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Play:</h3>
+					<p>Any card from the bouquet (reserve) may be played on the foundation or garden (tableau). The top card of each garden pile may be played on the foundation or another garden pile. The garden may be built downwards, regardless of suit. Free garden spaces may be filled by any card.</p>
+					<button class="choose">Play Flower Garden</button>
+				</div>
+			</li>
+			<li id="forty-thieves">
+				<h2>Forty Thieves</h2>
+				<div class="description forty-thieves">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Play:</h3>
+					<p>The top card of each tableau pile may be played on the foundation or another tableau. The tableau is built downwards by suit. Piles may not be moved. Free tableau spaces may be filled by any card.
+					<h3>Wastepile:</h3>
+					<p>Click the stock to transfer 1 card to the wastepile. The top card may be played on the foundation or a tableau pile.</p>
+					<button class="choose">Play Forty Thieves</button>
+				</div>
+			</li>
+			<li id="freecell">
+				<h2>Freecell</h2>
+				<div class="description freecell">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Play:</h3>
+					<p>The top card from the tableau can be played on the foundation, another tableau pile/empty space, or a free slot in the reserve. Build the tableau downwards by alternating colors. Whole or partial runs may be moved as long as there's enough free reserve and tableau cells to move all the cards.</p>
+					<button class="choose">Play Freecell</button>
+				</div>
+			</li>
+			<li id="grandfathers-clock">
+				<h2>Grandfather's Clock</h2>
+				<div class="description grandfathers-clock">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Built in series and suit up to the pile's hour position on a clock. Jacks through Kings are 11s through 13s.</p>
+					<h3>Play:</h3>
+					<p>The top card from the tableau may be played on the foundation or another tableau pile. The tableu is built downwards, regardless of suit.</p>
+					<button class="choose">Play Grandfather's Clock</button>
+				</div>
+			</li>
+			<li id="klondike">
+				<h2>Klondike</h2>
+				<div class="description klondike">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Tableau:</h3>
+					<p>The top card of each pile may be played on another tableau pile or on the foundation. Tableau piles are built downwards by alternating color. Partial or complete face up runs may be moved. Free spaces may only be filled by a King or a pile starting with a King.</p>
+					<h3>Wastepile</h3>
+					<p>Click the stock to transfer 3 cards to the wastepile. The top card on the wastepile may be played on the foundation or tableau. When the stock is deplected, click it to start a new stock with the remaining waste cards.</p>
+					<button class="choose">Play Klondike</button>
+				</div>
+			</li>
+			<li id="klondike1t">
+				<h2>Klondike (Vegas Style)</h2>
+				<div class="description klondike1t">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Tableau:</h3>
+					<p>The top card of each pile may be played on another tableau pile or on the foundation. Tableau piles are built downwards by alternating color. Partial or complete face up runs may be moved. Free spaces may only be filled by a King or a pile starting with a King.</p>
+					<h3>Wastepile</h3>
+					<p>Click the stock to transfer 1 card to the wastepile. The top card on the wastepile may be played on the foundation or tableau.</p>
+					<button class="choose">Play Klondike (Vegas Style)</button>
+				</div>
+			</li>
+			<li id="monte-carlo">
+				<h2>Monte Carlo</h2>
+				<div class="description monte-carlo">
+					<div class="layout"></div>
+					<h3>How to win:</h3>
+					<p>Discard all cards.</p>
+					<h3>Play:</h3>
+					<p>Cards horizontally, vertically, or diagonally adjacent to each other may be discarded. When play's exahausted, click the deck to collapse all empty spaces and deal cards until all five rows are full or the deck's empty.</p>
+					<button class="choose">Play Monte Carlo</button>
+				</div>
+			</li>
+			<li id="pyramid">
+				<h2>Pyramid</h2>
+				<div class="description pyramid">
+					<div class="layout"></div>
+					<h3>How to win:</h3>
+					<p>Discard all cards.</p>
+					<h3>Play:</h3>
+					<p>Any pair of uncovered cards totaling 13 maybe be discarded.</p>
+					<h3>Wastepile</h3>
+					<p>Click the stock to move the top card to the waste and uncover the next card in the stock. The top cards of both the waste and the stock are playable.</p>
+					<button class="choose">Play Pyramid</button>
+				</div>
+			</li>
+			<li id="scorpion">
+				<h2>Scorpion</h2>
+				<div class="description scorpion">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Automatically filled when an in suit run from King to Ace is completed</p>
+					<h3>Play:</h3>
+					<p>The bottom card of each tableau pile can be built on downwards, in suit. Any face up card in the tableau can be moved; when moved, the cards above it are also moved as one stack. Free tableau spaces can only be filled with a King</p>
+					<h3>Reserve:</h3>
+					<p>Click the reserve to deal all three cards onto the first three tableau piles.</p>
+					<button class="choose">Play Scorpion</button>
+				</div>
+			</li>
+			<li id="spider">
+				<h2>Spider</h2>
+				<div class="description spider">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Automatically filled when an in suit run from King to Ace is completed</p>
+					<h3>Play:</h3>
+					<p>Tableau piles are built downwards, regardless of suit. The top card card of any tableau pile can be played on another tableau pile or empty space. Partial or complete in-suit runs may also be played.</p>
+					<h3>Deck:</h3>
+					<p>If there are no empty tableau spaces, click the deck to deal one card to each tableau pile.</p>
+					<button class="choose">Play Spider</button>
+				</div>
+			</li>
+			<li id="spider1s">
+				<h2>Spider (1 Suite)</h2>
+				<div class="description spider1s">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Automatically filled when an in suit run from King to Ace is completed</p>
+					<h3>Play:</h3>
+					<p>Tableau piles are built downwards, regardless of suit. The top card card of any tableau pile can be played on another tableau pile or empty space. Partial or complete in-suit runs may also be played.</p>
+					<h3>Deck:</h3>
+					<p>If there are no empty tableau spaces, click the deck to deal one card to each tableau pile.</p>
+					<button class="choose">Play Spider 1 Suit</button>
+				</div>
+			</li>
+			<li id="spider2s">
+				<h2>Spider (2 Suite)</h2>
+				<div class="description spider2s">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Automatically filled when an in suit run from King to Ace is completed</p>
+					<h3>Play:</h3>
+					<p>Tableau piles are built downwards, regardless of suit. The top card card of any tableau pile can be played on another tableau pile or empty space. Partial or complete in-suit runs may also be played.</p>
+					<h3>Deck:</h3>
+					<p>If there are no empty tableau spaces, click the deck to deal one card to each tableau pile.</p>
+					<button class="choose">Play Spider 2 Suit</button>
+				</div>
+			</li>
+			<li id="tri-towers">
+				<h2>Tri Towers</h2>
+				<div class="description tri-towers">
+					<div class="layout"></div>
+					<h3>How to win:</h3>
+					<p>Discard all cards from the towers</p>
+					<h3>Play:</h3>
+					<p>Any free card one rank from the top card in the waste pile may be discarded. Kings may be placed on Aces, and vice-versa.</p>
+					<h3>Deck:</h3>
+					<p>Click the deck to transfer the top card to the waste pile.</p>
+					<button class="choose">Play Tri Towers</button>
+				</div>
+			</li>
+			<li id="yukon">
+				<h2>Yukon</h2>
+				<div class="description yukon">
+					<div class="layout"></div>
+					<h3>Foundation:</h3>
+					<p>Built in series and suit from Ace to King</p>
+					<h3>Play:</h3>
+					<p>Tableau piles are built downwards by alternating color. Any face up tableau card can be played on the top of another tableau pile; the cards above it are also moved as one stack. Free tableau spaces can only be filled with a King.</p>
+					<button class="choose">Play Yukon</button>
+				</div>
+			</li>
+		</ul>
+		</div>
+	</div>
+</body>
+</html>

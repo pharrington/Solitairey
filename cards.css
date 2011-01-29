@@ -101,8 +101,9 @@ p {
 #game-chooser-contents > .description {
 	position: absolute;
 	top: 2.5em;
-	left: 18em;
+	left: 22em;
 	width: 37em;
+        font-size: 0.9em;
 }
 
 #game-chooser-contents {

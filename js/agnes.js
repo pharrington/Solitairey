@@ -1,4 +1,12 @@
 YUI.add("agnes", function (Y) {
+	function inSeries(first, second) {
+		return (first + 1) % 13 === second % 13;
+	}
+
+	function seedRank() {
+		return Agnes.foundation.stacks[0].first().rank;
+	};
+
 	var Solitaire = Y.Solitaire,
 	    Klondike = Solitaire.Klondike,
 	    Agnes = Solitaire.Agnes = instance(Klondike, {
@@ -13,6 +21,7 @@ YUI.add("agnes", function (Y) {
 			Klondike.deal.call(this);
 
 			deck.last().faceUp().moveTo(foundation);
+
 			this.turnOver();
 		},
 
@@ -87,11 +96,26 @@ YUI.add("agnes", function (Y) {
 		},
 
 	        Card: instance(Klondike.Card, {
-			validFoundationTarget: function (target) {
-				var seed = Agnes.foundation.stacks[0].first();
+			validTarget: function (stack) {
+				var target = stack.last();
 
+				switch (stack.field) {
+				case "tableau":
+					if (!target) {
+						return inSeries(this.rank, seedRank());
+					} else {
+						return !target.isFaceDown && target.color !== this.color && inSeries(this.rank, target.rank);
+					}
+				case "foundation":
+					return this.validFoundationTarget(target);
+				default:
+					return false;
+				}
+			},
+
+			validFoundationTarget: function (target) {
 				if (!target) {
-					return this.rank === seed.rank;
+					return this.rank === seedRank();
 				} else {
 					return this.suit === target.suit &&
 					       this.rank % 13 === (target.rank + 1) % 13;

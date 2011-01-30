@@ -120,7 +120,6 @@ var Solitaire = Y.Solitaire,
 				} else {
 					return !target.isFaceDown && target.color !== this.color && target.rank === this.rank + 1;
 				}
-				break;
 			case "foundation":
 				return this.validFoundationTarget(target);
 			default:

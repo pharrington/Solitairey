@@ -69,6 +69,7 @@ YUI.add("statistics", function (Y) {
 			Spider: "Spider",
 			Spider1S: "Spider (1 Suit)",
 			Spider2S: "Spider (2 Suit)",
+                        Spiderette: "Spiderette",
 			TriTowers: "Tri Towers",
 			Yukon: "Yukon"},
 		    

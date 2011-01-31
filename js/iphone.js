@@ -24,6 +24,7 @@ YUI.add("solitaire-ios", function (Y) {
 		Agnes: {offset: [null, 5], maxStackHeight: 260},
 		FlowerGarden: {offset: [-60, 5], maxStackHeight: 235},
 		Freecell: {scale: [1, 0.93], offset: [35, 5]},
+		Golf: {scale: [1.1, 1], offset: [45, 8]},
 		GClock: {scale: 0.93, offset: 5, maxStackHeight: 130},
 		Klondike: {offset: [null, 5], maxStackHeight: [null, 340]},
 		MonteCarlo: {scale: [0.88, 1], offset: [80, 15]},
@@ -130,6 +131,15 @@ YUI.add("solitaire-ios", function (Y) {
 				}));
 			}
 		],
+
+                Golf: [
+                        originalLayout("Golf", ["Tableau", "Foundation"]),
+
+                        function () {
+                                fieldLayout(this, "Tableau", {hspacing: 1.1});
+                                fieldLayout(this, "Foundation", {left: 132});
+                        }
+                ],
 
 		GClock: function () {
 			fieldLayout(this, "Foundation", {

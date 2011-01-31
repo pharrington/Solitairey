@@ -89,7 +89,7 @@ YUI.add("golf", function (Y) {
 				layout: {
 					hspacing: 0,
 					top: function () { return Solitaire.Card.height * 3; },
-					left: function () { return Solitaire.Card.width * 4; }
+					left: function () { return Solitaire.Card.width * 3.75; }
 				}
 			}
 		},

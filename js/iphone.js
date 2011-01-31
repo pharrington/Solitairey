@@ -295,8 +295,8 @@ YUI.add("solitaire-ios", function (Y) {
 	OPTIONS.FortyThieves = OPTIONS.Spider1S = OPTIONS.Spider2S = OPTIONS.Spider;
 	gameOverrides.FortyThieves = gameOverrides.Spider1S = gameOverrides.Spider2S = gameOverrides.Spider;
 
-	OPTIONS.Spiderette = OPTIONS.Klondike1T = OPTIONS.Klondike;
-	gameOverrides.Spiderette = gameOverrides.Klondike1T = gameOverrides.Klondike;
+	OPTIONS.WillOTheWisp = OPTIONS.Spiderette = OPTIONS.Klondike1T = OPTIONS.Klondike;
+	gameOverrides.WillOTheWisp = gameOverrides.Spiderette = gameOverrides.Klondike1T = gameOverrides.Klondike;
 
 	Y.mix(Y.DD.DDM, {
 		useHash: false, // :\

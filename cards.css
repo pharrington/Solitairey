@@ -292,6 +292,12 @@ p {
 	height: 185px;
 }
 
+.spiderette .layout {
+        background-image: url(layouts/spiderette.png);
+        width: 500px;
+        height: 273px;
+}
+
 .tri-towers .layout {
 	background-image: url(layouts/tritowers.png);
 	width: 500px;

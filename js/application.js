@@ -11,6 +11,7 @@
 		"flower-garden": "FlowerGarden",
 		"forty-thieves": "FortyThieves",
 		"freecell": "Freecell",
+		"golf": "Golf",
 		"grandfathers-clock": "GClock",
 		"monte-carlo": "MonteCarlo",
 		"pyramid": "Pyramid",

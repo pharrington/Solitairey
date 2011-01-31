@@ -61,6 +61,7 @@ YUI.add("statistics", function (Y) {
 			FlowerGarden: "Flower Garden",
 			FortyThieves: "Forty Thieves",
 			Freecell: "Freecell",
+                        Golf: "Golf",
 			GClock: "Grandfather's Clock",
 			MonteCarlo: "Monte Carlo",
 			Pyramid: "Pyramid",

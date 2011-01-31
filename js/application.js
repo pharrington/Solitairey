@@ -21,6 +21,7 @@
 		"spider2s": "Spider2S",
                 "spiderette": "Spiderette",
 		"tri-towers": "TriTowers",
+		"will-o-the-wisp", "WillOTheWisp",
 		"yukon": "Yukon"},
 
 	    extensions = [

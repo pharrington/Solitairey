@@ -232,6 +232,12 @@ p {
 	height: 293px;
 }
 
+.golf .layout {
+	background-image: url(layouts/golf.png);
+	width: 477px;
+	height: 350px;
+}
+
 .grandfathers-clock .layout {
 	background-image: url(layouts/gclock.png);
 	width: 575px;

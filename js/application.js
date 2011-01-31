@@ -19,6 +19,7 @@
 		"spider": "Spider",
 		"spider1s": "Spider1S",
 		"spider2s": "Spider2S",
+                "spiderette": "Spiderette",
 		"tri-towers": "TriTowers",
 		"yukon": "Yukon"},
 

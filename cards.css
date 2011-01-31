@@ -304,6 +304,12 @@ p {
 	height: 264px;
 }
 
+.will-o-the-wisp .layout {
+	background-image: url(layouts/will-o-the-wisp.png);
+	width: 500px;
+	height: 244px;
+}
+
 .yukon .layout {
 	background-image: url(layouts/yukon.png);
 	width: 473px;

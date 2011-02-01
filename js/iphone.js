@@ -273,6 +273,24 @@ YUI.add("solitaire-ios", function (Y) {
 			}, true);
 		},
 
+		RussianSolitaire: [
+			originalLayout("RussianSolitaire", ["Tableau", "Foundation"]),
+
+			function () {
+				fieldLayout(this, "Tableau", {
+					top: 55,
+					hspacing: 1.13
+				});
+
+				fieldLayout(this, "Foundation", {
+					left: 46,
+					top: 0,
+					hspacing: 1.5,
+					vspacing: 0
+				});
+			}
+		],
+
 		Yukon: [
 			originalLayout("Yukon", ["Tableau", "Foundation"]),
 
@@ -297,6 +315,8 @@ YUI.add("solitaire-ios", function (Y) {
 
 	OPTIONS.WillOTheWisp = OPTIONS.Spiderette = OPTIONS.Klondike1T = OPTIONS.Klondike;
 	gameOverrides.WillOTheWisp = gameOverrides.Spiderette = gameOverrides.Klondike1T = gameOverrides.Klondike;
+
+        OPTIONS.RussianSolitaire = OPTIONS.Yukon;
 
 	Y.mix(Y.DD.DDM, {
 		useHash: false, // :\

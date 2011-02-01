@@ -1,7 +1,10 @@
 YUI.add("russian-solitaire", function (Y) {
 
   var Solitaire = Y.Solitaire,
-    RussianSolitaire = Solitaire.RussianSolitaire = instance(Solitaire.Yukon);
+    Yukon = Solitaire.Yukon,
+    RussianSolitaire = Solitaire.RussianSolitaire = instance(Yukon, {
+      Card: instance(Yukon.Card)
+    });
 
   RussianSolitaire.Card.validTarget = function (stack) {
     var target = stack.last();

@@ -310,7 +310,7 @@ p {
 	height: 244px;
 }
 
-.yukon .layout {
+.yukon .layout, .russian-solitaire .layout {
 	background-image: url(layouts/yukon.png);
 	width: 473px;
 	height: 350px;

@@ -11,7 +11,7 @@ YUI.add("russian-solitaire", function (Y) {
       if (!target) {
          return this.rank === 13;
        } else {
-         return !target.isFaceDown && target.suit !== this.suit && target.rank === this.rank + 1;
+         return !target.isFaceDown && target.suit === this.suit && target.rank === this.rank + 1;
        }
     case "foundation":
       if (!target) {

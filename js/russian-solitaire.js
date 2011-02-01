@@ -23,4 +23,4 @@ YUI.add("russian-solitaire", function (Y) {
       return false;
     }
   };
-}, "0.0.1", {requires: ["yukon"]);
+}, "0.0.1", {requires: ["yukon"]});

@@ -15,6 +15,7 @@
 		"grandfathers-clock": "GClock",
 		"monte-carlo": "MonteCarlo",
 		"pyramid": "Pyramid",
+		"russian-solitaire": "RussianSolitaire",
 		"scorpion": "Scorpion",
 		"spider": "Spider",
 		"spider1s": "Spider1S",

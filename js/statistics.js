@@ -65,6 +65,7 @@ YUI.add("statistics", function (Y) {
 			GClock: "Grandfather's Clock",
 			MonteCarlo: "Monte Carlo",
 			Pyramid: "Pyramid",
+			RussianSolitaire: "Russian Solitaire",
 			Scorpion: "Scorpion",
 			Spider: "Spider",
 			Spider1S: "Spider (1 Suit)",

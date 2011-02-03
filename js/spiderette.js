@@ -1,16 +1,21 @@
 YUI.add("spiderette", function (Y) {
-
 	var Solitaire = Y.Solitaire,
 	    Klondike = Solitaire.Klondike,
-	    Spiderette = Y.Solitaire.Spiderette = instance(Solitaire.Spider, {
+	    Spider = Solitaire.Spider,
+	    Spiderette = Y.Solitaire.Spiderette = instance(Spider, {
 		width: Klondike.width,
 		height: Klondike.height,
-		deal: Klondike.deal
-	    });
+		deal: Klondike.deal,
 
-	Y.mix(Spiderette.Tableau.stackConfig, Klondike.Tableau.stackConfig, true);
-	Y.mix(Spiderette.Foundation.stackConfig, Klondike.Foundation.stackConfig, true);
-	Y.mix(Spiderette.Deck, {
-		count: 1,
-	}, true);
+		Tableau: instance(Spider.Tableau, {
+			stackConfig: Klondike.Tableau.stackConfig
+		}),
+		Foundation: instance(Spider.Foundation, {
+			stackConfig: Klondike.Foundation.stackConfig
+		}),
+
+		Deck: instance(Spider.Deck, {
+			count: 1
+		})
+	    });
 }, "0.0.1", {requires: ["klondike", "spider"]});

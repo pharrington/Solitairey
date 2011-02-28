@@ -42,15 +42,12 @@ a {
 	list-style: none;
 	color: #000;
 	font-weight: bold;
-	font-size: 1.1em;
-	height: 40px;
-	width: 35em;
+	font-size: 1em;
+	height: 35px;
+	width: 538px;
 	margin: 0 auto;
 	border-radius: 0 0 15px 15px;
 	border-style: solid;
-	/*
-	background: #fdfdfd;
-	*/
 	background: -webkit-linear-gradient(#fff, #ddd);
 	box-shadow: 0 1px 12px 0.5px #000;
 }
@@ -63,10 +60,15 @@ a {
 
 #menu li.end {
 	border: none;
+	border-radius: 0 0 15px 0;
+}
+
+#menu li.begin {
+	border-radius: 0 0 0 15px;
 }
 
 #menu li:hover {
-	background: #eec;
+	background: -webkit-linear-gradient(#fff, #ccc);
 }
 
 #menu a {
@@ -74,6 +76,10 @@ a {
 	margin: 7px 0 -7px;
 	padding: 0 10px;
 	height: 100%;
+}
+
+#menu li.end a {
+	padding-right: 12px;
 }
 
 #game-chooser h2 {

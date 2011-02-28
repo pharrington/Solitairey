@@ -125,7 +125,7 @@ Y.mix(Freecell.Stack, {
 		if (stack.field !== "tableau" ||
 		    !this.first().validTarget(stack)) { return false; }
 
-		return this.cards.length <= Freecell.openSlots(stack, this.last()) + 1;
+		return this.cards.length <= Freecell.openSlots(stack, this.last());
 	}
 }, true);
 

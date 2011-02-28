@@ -17,7 +17,8 @@ var Solitaire = Y.Solitaire,
 	},
 
 	openSlots: function (exclude) {
-		var total = 0,
+		var total = 1,
+		    freeTableaus = 0,
 		    i,
 		    stack,
 		    rStacks = this.reserve.stacks,
@@ -30,8 +31,10 @@ var Solitaire = Y.Solitaire,
 
 		for (i = 0; i < 8; i++) {
 			stack = tStacks[i];
-			exclude !== stack && !tStacks[i].last() && total++;
+			exclude !== stack && !tStacks[i].last() && freeTableaus++;
 		}
+
+		total *= Math.pow(2, freeTableaus);
 
 		return total;
 	},
@@ -83,7 +86,7 @@ var Solitaire = Y.Solitaire,
 		createProxyStack: function () {
 			var stack = Solitaire.Card.createProxyStack.call(this);
 
-			this.proxyStack = stack && stack.cards.length <= Freecell.openSlots(stack) + 1 ? stack : null;
+			this.proxyStack = stack && stack.cards.length <= Freecell.openSlots(stack) ? stack : null;
 			return this.proxyStack;
 		},
 

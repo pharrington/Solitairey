@@ -42,19 +42,25 @@ a {
 	list-style: none;
 	color: #000;
 	font-weight: bold;
-	font-size: 1em;
-	height: 35px;
-	width: 538px;
+	font-size: 16px;
+	/*
+	width: 605px;
+	*/
 	margin: 0 auto;
 	border-radius: 0 0 15px 15px;
 	border-style: solid;
+	background: #eee;
 	background: -webkit-linear-gradient(#fff, #ddd);
+	background: -moz-linear-gradient(#fff, #ddd);
 	box-shadow: 0 1px 12px 0.5px #000;
+	float: left;
+	left: 20%;
+	height: 35px;
 }
 
 #menu li {
-	float: left;
 	height: 100%;
+	float: left;
 	border-right: 1px solid #444;
 }
 
@@ -68,7 +74,8 @@ a {
 }
 
 #menu li:hover {
-	background: -webkit-linear-gradient(#fff, #ccc);
+	background: #bbb -webkit-linear-gradient(#fff, #bbb);
+	background: #bbb -moz-linear-gradient(#fff, #bbb);
 }
 
 #menu a {

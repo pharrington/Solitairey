@@ -615,16 +615,21 @@ Y.Solitaire.Events = {
 
 			    stack = card.proxyStack,
 			    origin = card.stack,
-			    first = stack.first();
+			    target,
+			    first;
+		       
+			if (stack) {
+				first = stack.first();
 
-			    target = e.drop.get("node").getData("target");
+				target = e.drop.get("node").getData("target");
 
-			    target = target.stack || target;
+				target = target.stack || target;
 
-			if ((stack.cards.length === 1 && first.validTarget(target)) ||
-			    stack.validTarget(target)) {
+				if ((stack.cards.length === 1 && first.validTarget(target)) ||
+				    stack.validTarget(target)) {
 
-				target.pushStack(stack);
+					target.pushStack(stack);
+				}
 			}
 
 			Solitaire.endTurn();

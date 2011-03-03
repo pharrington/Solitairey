@@ -39,13 +39,11 @@ a {
 }
 
 #menu {
+	display: inline-block;
 	list-style: none;
 	color: #000;
 	font-weight: bold;
 	font-size: 16px;
-	/*
-	width: 605px;
-	*/
 	margin: 0 auto;
 	border-radius: 0 0 15px 15px;
 	border-style: solid;
@@ -53,7 +51,6 @@ a {
 	background: -webkit-linear-gradient(#fff, #ddd);
 	background: -moz-linear-gradient(#fff, #ddd);
 	box-shadow: 0 1px 12px 0.5px #000;
-	float: left;
 	left: 20%;
 	height: 35px;
 }

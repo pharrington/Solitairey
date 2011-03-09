@@ -7,7 +7,7 @@ YUI.add("solitaire-autoplay", function (Y) {
 		if (autoPlayable.indexOf(Solitaire.game.name()) === -1) { return; }
 
 		if (autoPlayInterval === null && isWon()) {
-			autoPlayInterval = setInterval(autoPlay, 300);
+			autoPlayInterval = setInterval(autoPlay, 130);
 		}
 	});
 

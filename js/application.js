@@ -28,6 +28,7 @@
 	    extensions = [
 		"auto-turnover",
 	        "statistics",
+		"solver-freecell",
 		"solitaire-autoplay",
 	        "solitaire-ios",
 		"solitaire-background-fix"],

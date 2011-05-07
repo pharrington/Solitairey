@@ -137,10 +137,11 @@ Object.prototype.mapAppend = function (str) {
 	return this;
 }
 
+var Game;
+
 YUI.add("solitaire", function (Y) {
 
-var Game,
-    Solitaire = Y.namespace("Solitaire");
+var Solitaire = Y.namespace("Solitaire");
 
 function CardDelegate(cfg) {
 	CardDelegate.superclass.constructor.call(this, cfg);
@@ -875,7 +876,10 @@ Y.Solitaire.Card = {
 				return null;
 			}
 
-			var stack = instance(this.stack, {proxy: true}),
+			var stack = instance(this.stack, {
+				proxy: true,
+				stack: this.stack
+			    }),
 			    cards = stack.cards,
 			    card,
 			    i, len;

@@ -2,235 +2,292 @@
  * Automatically solve a game of Freecell
  */
 YUI.add("solver-freecell", function (Y) {
-	var f = new Function;
-	function instance (proto) {
-		f.prototype = proto;
-		return new f;
-	}
-
 	Y.namespace("Solitaire.Solver.Freecell");
 
 	var Solitaire = Y.Solitaire,
-	    FreecellSolver = Solitaire.Solver.Freecell;
+	    FreecellSolver = Solitaire.Solver.Freecell,
+	    suitTable = {
+		s: 0,
+		c: 1,
+		h: 2,
+		d: 3
+	    };
 
+	function flatten(ary) {
+		var result = [],
+		    i,
+		    len,
+		    item,
+		    proto = Array.prototype;
 
-	function returner(o) { return o; }
-
-	function copyStack(stack) {
-		var copy = instance(stack);
-
-		copy.cards = Y.Array.map(stack.cards, returner);
-		return copy;
+		for (i = 0, len = ary.length; i < len; i++) {
+			item = ary[i];
+			if (Object.prototype.toString.call(item) === "[object Array]") {
+				proto.push.apply(result, flatten(item));
+			} else {
+				result.push(item);
+			}
+		}
+		return result;
 	}
 
-	function copyField(field) {
-		var copy = instance(field);
+	function take(ary, count) {
+		var result = [],
+		    i;
 
-		copy.stacks = Y.Array.map(field.stacks, returner);
+		count = Math.min(ary.length, count);
+		i = count;
+		for (i = 0; i < count; i++) {
+			result.push(ary[i]);
+		}
 
-		return copy;
+		return result;
+
 	}
 
-	function replaceStack(field, stack, replacement) {
-		field.stacks[Y.Array.indexOf(field.stacks, stack)] = replacement;
+	function drop(ary, count) {
+		var result = [],
+		    i, len = ary.length;
+
+		count = Math.min(len, count);
+		for (i = count; i < len; i++) {
+			result.push(ary[i]);
+		}
+
+		return result;
 	}
 
-	function createState(game, parent) {
-		var state;
+	function cardToValue(card) {
+		return card ? card.rank << 2 | suitTable[card.suit] : 0;
+	}
+
+	function cardRank(val) {
+		return val >> 2;
+	}
+
+	function cardSuit(val) {
+		return val & 3;
+	}
+
+	function cardIsBlack(val) {
+		return val < 2;
+	}
+
+	function stackToValues(stack) {
+		if (!stack.first()) {
+			return String.fromCharCode(0);
+		}
+
+		var vals = "";
+
+		stack.eachCard(function (c) {
+			vals = String.fromCharCode(cardToValue(c)) + vals;
+		});
+
+		return vals;
+	}
+
+	function sortedStacks(field) {
+		return Y.Array.map(field.stacks, function (s) { return s; }).
+			sort(function (s1, s2) {
+				var c1 = s1.first(),
+				    c2 = s2.first();
+
+				return cardToValue(c2) - cardToValue(c1);
+			});
+	}
+
+	function gameToState(game) {
+		var values, lens;
 		
-		if (!game) {
-			throw "game is undefined or null";
-		}
+		values = flatten(Y.Array.map(["reserve", "foundation", "tableau"], function (field) {
+			return Y.Array.map(sortedStacks(game[field]),  function (s) {
+				return stackToValues(s);
+			});
+		}));
 
-		game = instance(game);
+		lens = Y.Array.map(values, function (str) {
+			return str === String.fromCharCode(0) ? 0 : str.length;
+		});
 
-		state = {
-			game: game,
-			serialized: null,
-			parent: parent,
-			rating: 0,
-			children: []
+		return new GameState(values, lens);
+	}
+
+	function GameState(stacks, lengths) {
+		this.reserve = {
+			lengths: take(lengths, 4),
+			stacks: take(stacks, 4)
 		};
-
-		return state;
+		this.foundation = {
+			lengths: take(drop(lengths, 4), 4),
+			stacks: take(drop(stacks, 4), 4)
+		};
+		this.tableau = {
+			lengths: take(drop(lengths, 8), 8),
+			stacks: take(drop(stacks, 8), 8)
+		};
 	}
 
-	function hasAncestor(child, state) {
-		var parent = child,
-		    serialized = state.serialized;
+	GameState.prototype = {
+		reserve: null,
+		foundation: null,
+		tableau: null,
 
-		while (parent = parent.parent) {
-			if (parent.serialized === serialized) { return true; }
-		}
+		equals: function (state) {
+			return deepEquals(this.reserve.stacks, state.reserve.stacks) &&
+				deepEquals(this.foundation.stacks, state.foundation.stacks) &&
+				deepEquals(this.tableau.stacks, state.tableau.stacks);
+		},
 
-		return false;
-	}
+		push: function (field, stackidx, value) {
+			var field = this[field],
+			    stacks = field.stacks;
 
-	function doMove(card, oDest, base) {
-		var newCard,
-		    newState,
-		    newGame,
-		    oSource,
-		    game,
-		    source, dest,
-		    sourceField, destField;
+			stacks[stackidx] = value + stacks[stackidx];
+			field.lengths[stackidx]++;
+		},
 
-		game = base.game;
-		oSource = card.stack;
-		newCard = instance(card);
-		source = copyStack(oSource);
-		dest = copyStack(oDest);
-		newCard.stack = source;
+		pop: function (field, stackidx, value) {
+			var field = this[field],
+			    stacks = field.stacks;
 
-		sourceField = source.field;
-		destField = dest.field;
+			stacks[stackidx] = stacks[stackidx].substr(1);
+			field.lengths[stackidx]--;
+		},
 
-		newState = createState(game, base);
-		newGame = newState.game;
-
-		if (source.field !== dest.field) {
-			newGame[destField] = copyField(game[destField]);
-		}
-
-		newGame[sourceField] = copyField(game[sourceField]);
-		replaceStack(newGame[sourceField], oSource, source);
-		replaceStack(newGame[destField], oDest, dest);
-
-		source.deleteItem(card);
-		dest.push(newCard, true);
-
-		return newState;
-	}
-
-	function tableauMoves(card, game) {
-		var destStacks = [],
-		    cardStack = card.stack;
-
-		game.eachStack(function (stack) {
-			if (stack !== cardStack &&
-			    card.validTarget(stack)) {
-				destStacks.push(stack);
-			}
-		}, "tableau");
-
-		return destStacks;
-	}
-
-	function singleDestinationMove(card, game, field) {
-		var dest;
-
-		if (card.stack.field === field) { return; }
-
-		game.eachStack(function (stack) {
-			if (!dest &&
-			    card.validTarget(stack)) {
-				dest = stack;
-			}
-		}, field);
-
-		return dest;
-	}
-
-	var foundationMove = singleDestinationMove.partial("foundation");
-	var reserveMove = singleDestinationMove.partial("reserve");
-
-	function proxyStack(stack) {
-		var i,
-		    card;
-
-		for (i = stack.cards.length - 1; i >= 1; i--) {
-			card = stack.cards[i];
-			if (!card.validTarget(stack.cards[i - 1])) {
-				break;
-			}
-		}
-
-		return stack.cards[i].createProxyStack();
-	}
-
-	function rateMove(source, destination) {
-		var head, buried,
-		    sourceField, destField,
-		    destRating = {
-			    tableau: 0,
-			    reserve: 10,
-			    freeslot: 20
-		    },
-
-		    sourceRating = {
-			    tableau: 20,
-			    reserve: 10,
-			    freeslot: 0
-		    },
-		    rating;
-
-		head = Solitaire.Stack.isPrototypeOf(source) ? source.first() : source;
-		buried = head.stack.cards[head.index - 1];
-
-		sourceField = head.stack.field;
-		destField = destination.field;
-
-		rating = destRating[destField] + sourceRating[sourceField];
-	}
-
-	function step(base, depth) {
-		var game = base.game,
-		    quit = false,
-		    solution = false,
-		    child;
-
-		game.eachStack(function (stack) {
-			if (quit) { return; }
-
-			var field = stack.field,
-			    card = stack.last(),
-			    proxyStack,
+		validTarget: function (field, value) {
+			var start = 0,
+			    stacks = this[field].stacks,
+			    lengths = this[field].lengths,
+			    rank = value >> 2,//cardRank(value),
+			    suit = value & 3,//cardSuit(value),
 			    dest,
-			    move;
+			    i, len;
+		
+			if (!value) { return -1; }
 
-			if (!card ||
-			    field === "foundation") { return; }
+			for (i = start, len = stacks.length; i < len; i++) {
+				dest = stacks[i].charCodeAt();
 
-			dest = foundationMove(card, game);
-			if (dest) {
-				move = doMove(card, dest, base);
-				base.children = [move];
-				quit = true;
-				if (move.game.isWon()) { solution = true; }
-				return;
+				switch (field) {
+				case "foundation":
+					if (!lengths[i] ||
+					    (suit === dest & 3 &&
+					    rank === (dest >> 2) + 1)) {
+						return i;
+					}
+					break;
+				case "reserve":
+					if (!lengths[i]) {
+						return i;
+					}
+					break;
+				case "tableau":
+					if (!lengths[i] ||
+					    (cardIsBlack(value) ^ cardIsBlack(dest) &&
+					    rank === (dest >> 2) - 1)) {
+						return i;
+					}
+					break;
+				}
 			}
 
-			proxyStack = proxyStack(stack);
+			return -1;
+		},
 
-			dest = tableauMoves(proxyStack, game);
-			Y.Array.each(dest, function (d) {
-				base.children.push(rateMove(proxyStack, d));
+		eachStack: function (fields, callback) {
+			Y.Array.each(fields, function (f) {
+				Y.Array.each(this[f].stacks, callback, this);
+			}, this);
+		},
+
+		_rank: null,
+		rank: function () {
+			//if (this._rank !== null) { return this._rank; }
+
+			var baseReward = {
+				foundation: 10000,
+				toFoundation: 1000,
+				openTableau: 100,
+				openReserve: 50,
+				reserveToTableau: 10,
+				tableauToTableau: 5,
+				headedByKing: 5,
+				buriedFoundationTarget: -10
+			    },
+			    foundation = this.foundation, reserve = this.reserve, tableau = this.tableau,
+			    rank = 0;
+
+			// reward each card in the foundation
+			Y.Array.each(foundation.lengths, function (len) {
+				rank += baseReward.foundation * len;
 			});
 
-			dest = reserveMove(card, game);
-			dest && base.children.push(rateMove(card, dest));
-		});
+			// reward free cards in the reserve or tableau that can be placed on the foundation
+			this.eachStack(["reserve", "tableau"], function (stack) {
+				if (this.validTarget("foundation", stack.charCodeAt()) > -1) {
+					rank += baseReward.toFoundation;
+				}
+			});
 
-		base.children.sort(function (a, b) {
-			return a.rating - b.rating;
-		});
-		
-		while (!solution && (child = base.children.shift())) {
-			solution = step(child, depth + 1);
-		};
+			// reward each open tableau slot
 
-		if (solution) {
-			base.children = [child];
+			Y.Array.each(tableau.lengths, function (len) {
+				if (!len) {
+					rank += baseReward.openTableau;
+				}
+			});
+
+			// reward each open reserve slot
+			Y.Array.each(reserve.lengths, function (len) {
+				if (!len) {
+					rank += baseReward.openReserve;
+				}
+			});
+
+			// reward reserve cards that can be placed the tableau
+			Y.Array.each(reserve.stacks, function (s) {
+				if (this.validTarget("tableau", s.charCodeAt()) > -1) {
+					rank += baseReward.reserveToTableau;
+				}
+			}, this);
+
+			// reward tableau cards that can be placed on other tableau cards
+			Y.Array.each(tableau.stacks, function (s) {
+				if (this.validTarget("tableau", s.charCodeAt()) > -1) {
+					rank += baseReward.reserveToTableau;
+				}
+			}, this);
+
+			// reward tableau stacks beginning with a king
+			Y.Array.each(tableau.stacks, function (s, i) {
+				if (s.charCodeAt(s.length - 1) === 13) {
+					rank += baseReward.headedByKing;
+				}
+			});
+
+			// punish buried cards that can be placed on the foundation
+			Y.Array.each(tableau.stacks, function (s) {
+				var i, len;
+
+				for (i = 1, len = s.length; i < len; i++) {
+					if (this.validTarget("foundation", s.charCodeAt(i)) > -1) {
+						rank += baseReward.buriedFoundationTarget * i;
+					}
+				}
+			}, this);
+
+			this._rank = rank;
+			return rank;
 		}
-
-		return solution;
-	}
+	};
 
 	Y.mix(FreecellSolver, {
-		ish: function () {
-			var base = createState(Game, null);
-			base.serialized = Game.serialize();
-			step(base, 0);
+		test: function () {
+			var a = gameToState(Game);
+			for (var i = 0; i < 10000; i++) {
+				a.rank();
+			}
 		}
 	});
 }, "0.0.1", {requires: ["solitaire"]});

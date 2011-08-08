@@ -216,14 +216,12 @@ YUI.add("solver-freecell", function (Y) {
 				buriedFoundationTarget: -10
 			    },
 			    foundation = this.foundation, reserve = this.reserve, tableau = this.tableau,
-			    rank = 0,
-			    stack,
-			    i, j, len;
+			    rank = 0;
 
 			// reward each card in the foundation
-			for (i = 0, len = 4; i < len; i++) {
-				rank += baseReward.foundation * foundation.lengths[i];
-			};
+			Y.Array.each(foundation.lengths, function (len) {
+				rank += baseReward.foundation * len;
+			});
 
 			// reward free cards in the reserve or tableau that can be placed on the foundation
 			this.eachStack(["reserve", "tableau"], function (stack) {
@@ -234,51 +232,50 @@ YUI.add("solver-freecell", function (Y) {
 
 			// reward each open tableau slot
 
-			for (i = 0, len = 8; i < len; i++) {
-				if (!tableau.lengths[i]) {
+			Y.Array.each(tableau.lengths, function (len) {
+				if (!len) {
 					rank += baseReward.openTableau;
 				}
-			};
+			});
 
 			// reward each open reserve slot
-			for (i = 0, len = 4; i < len; i++) {
-				if (!reserve.lengths[i]) {
+			Y.Array.each(reserve.lengths, function (len) {
+				if (!len) {
 					rank += baseReward.openReserve;
 				}
-			};
+			});
 
 			// reward reserve cards that can be placed the tableau
-			for (i = 0, len = 4; i < len; i++) {
-				if (this.validTarget("tableau", reserve.stacks[i].charCodeAt()) > -1) {
+			Y.Array.each(reserve.stacks, function (s) {
+				if (this.validTarget("tableau", s.charCodeAt()) > -1) {
 					rank += baseReward.reserveToTableau;
 				}
-			};
+			}, this);
 
 			// reward tableau cards that can be placed on other tableau cards
-			for (i = 0, len = 8; i < len; i++) {
-				if (this.validTarget("tableau", tableau.stacks[i].charCodeAt()) > -1) {
+			Y.Array.each(tableau.stacks, function (s) {
+				if (this.validTarget("tableau", s.charCodeAt()) > -1) {
 					rank += baseReward.reserveToTableau;
 				}
-			};
+			}, this);
 
 			// reward tableau stacks beginning with a king
-			for (i = 0, len = 8; i < len; i++) {
-				stack = tableau.stacks[i];
-				if (stack.charCodeAt(stack.length - 1) === 13) {
+			Y.Array.each(tableau.stacks, function (s, i) {
+				if (s.charCodeAt(s.length - 1) === 13) {
 					rank += baseReward.headedByKing;
 				}
-			};
+			});
 
 			// punish buried cards that can be placed on the foundation
-			for (i = 0; i < 8; i++) {
-				stack = tableau.stacks[i];
+			Y.Array.each(tableau.stacks, function (s) {
+				var i, len;
 
-				for (j = 1, len = stack.length; j < len; j++) {
-					if (this.validTarget("foundation", stack.charCodeAt(i)) > -1) {
-						rank += baseReward.buriedFoundationTarget * j;
+				for (i = 1, len = s.length; i < len; i++) {
+					if (this.validTarget("foundation", s.charCodeAt(i)) > -1) {
+						rank += baseReward.buriedFoundationTarget * i;
 					}
 				}
-			};
+			}, this);
 
 			this._rank = rank;
 			return rank;

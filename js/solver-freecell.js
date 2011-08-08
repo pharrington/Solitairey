@@ -8,8 +8,8 @@ YUI.add("solver-freecell", function (Y) {
 	    FreecellSolver = Solitaire.Solver.Freecell,
 	    suitTable = {
 		s: 0,
-		c: 1,
-		h: 2,
+		h: 1,
+		c: 2,
 		d: 3
 	    };
 
@@ -57,6 +57,8 @@ YUI.add("solver-freecell", function (Y) {
 		return result;
 	}
 
+	function identity(arg) { return arg; }
+
 	function cardToValue(card) {
 		return card ? card.rank << 2 | suitTable[card.suit] : 0;
 	}
@@ -69,8 +71,8 @@ YUI.add("solver-freecell", function (Y) {
 		return val & 3;
 	}
 
-	function cardIsBlack(val) {
-		return val < 2;
+	function cardIsRed(val) {
+		return val & 1;
 	}
 
 	function stackToValues(stack) {
@@ -114,6 +116,8 @@ YUI.add("solver-freecell", function (Y) {
 	}
 
 	function GameState(stacks, lengths) {
+		if (!stacks) { return; }
+
 		this.reserve = {
 			lengths: take(lengths, 4),
 			stacks: take(stacks, 4)
@@ -128,16 +132,22 @@ YUI.add("solver-freecell", function (Y) {
 		};
 	}
 
+	GameState.fromState = function (other) {
+		var state = new GameState();
+
+		Y.Array.each(["reserve", "foundation", "tableau"], function (field) {
+			oField = other[field];
+
+			state[field] = { lengths: oField.lengths, stacks: oField.stacks };
+		});
+
+		return state;
+	}
+
 	GameState.prototype = {
 		reserve: null,
 		foundation: null,
 		tableau: null,
-
-		equals: function (state) {
-			return deepEquals(this.reserve.stacks, state.reserve.stacks) &&
-				deepEquals(this.foundation.stacks, state.foundation.stacks) &&
-				deepEquals(this.tableau.stacks, state.tableau.stacks);
-		},
 
 		push: function (field, stackidx, value) {
 			var field = this[field],
@@ -155,12 +165,24 @@ YUI.add("solver-freecell", function (Y) {
 			field.lengths[stackidx]--;
 		},
 
+		// TODO check if rank() equals the "perfect" rank
+		solved: function () {
+			var i, len,
+			    lengths = this.foundation.lengths;
+
+			for (i = 0, len = lengths.length; i < len; i++) {
+				if (lengths[i] !== 13) { return false; }
+			}
+
+			return true;
+		},
+
 		validTarget: function (field, value) {
 			var start = 0,
 			    stacks = this[field].stacks,
 			    lengths = this[field].lengths,
-			    rank = value >> 2,//cardRank(value),
-			    suit = value & 3,//cardSuit(value),
+			    rank = value >> 2,
+			    suit = value & 3,
 			    dest,
 			    i, len;
 		
@@ -184,7 +206,7 @@ YUI.add("solver-freecell", function (Y) {
 					break;
 				case "tableau":
 					if (!lengths[i] ||
-					    (cardIsBlack(value) ^ cardIsBlack(dest) &&
+					    (cardIsRed(value) ^ cardIsRed(dest) &&
 					    rank === (dest >> 2) - 1)) {
 						return i;
 					}
@@ -195,15 +217,78 @@ YUI.add("solver-freecell", function (Y) {
 			return -1;
 		},
 
+		equals: function (other) {
+			var stacks,
+			    oStacks,
+			    i, len;
+
+			stacks = this.foundation.stacks;
+			oStacks = other.foundation.stacks;
+
+			for (i = 0, len = stacks.length; i < len; i++) {
+				if (stacks[i] !== oStacks[i]) { return false; }
+			}
+
+			stacks = this.reserve.stacks;
+			oStacks = other.reserve.stacks;
+
+			for (i = 0, len = stacks.length; i < len; i++) {
+				if (stacks[i] !== oStacks[i]) { return false; }
+			}
+
+			stacks = this.tableau.stacks;
+			oStacks = other.tableau.stacks;
+
+			for (i = 0, len = stacks.length; i < len; i++) {
+				if (stacks[i] !== oStacks[i]) { return false; }
+			}
+
+			return true;
+		},
+
 		eachStack: function (fields, callback) {
 			Y.Array.each(fields, function (f) {
 				Y.Array.each(this[f].stacks, callback, this);
 			}, this);
 		},
 
+		move: function (sourceField, sourceStack, destField, destStack) {
+			var val = this.pop(sourceField, sourceStack);
+			this.push(destField, destStack, val);
+		},
+
+		pop: function (field, stack) {
+			var field = this[field],
+			    stackStr,
+			    val;
+
+			if (!field.lengths[stack]) { return null; }
+
+			field.stacks = Y.Array.map(identity);
+			field.lengths = Y.Array.map(identity);
+
+			stackStr = field.stacks[stack];
+			field.stacks[stack] = stackStr.subStr(1) || String.fromCharCode(0);
+			field.lengths[stack]--;
+
+			return stackStr.charAt();
+		},
+
+		push: function (field, stack, val) {
+			if (val === String.fromCharCode(0)) { return; }
+
+			var field = this[field];
+
+			field.stacks = Y.Array.map(identity);
+			field.lengths = Y.Array.map(identity);
+
+			field.lengths[stack]++;
+			field.stacks[stack] = val + field.stacks[stack];
+		},
+
 		_rank: null,
 		rank: function () {
-			//if (this._rank !== null) { return this._rank; }
+			if (this._rank !== null) { return this._rank; }
 
 			var baseReward = {
 				foundation: 10000,
@@ -279,15 +364,94 @@ YUI.add("solver-freecell", function (Y) {
 
 			this._rank = rank;
 			return rank;
+		},
+
+	};
+
+	function Tree(value) {
+		this.value = value;
+		this.children = [];
+	}
+
+	Tree.prototype = {
+		children: null,
+		parent: null,
+
+		addChildren: function (children) {
+			Y.Array.each(children, function (c) {
+				c.parent = this;
+				this.children.push(c);
+			}, true);
+		},
+
+		findParent: function (compare) {
+			var p = this,
+			    value = this.value;
+
+			while (p = p.parent) {
+				if (compare = value) { return p; }
+			}
+
+			return null;
 		}
 	};
 
+	function solve(tree) {
+		var state = tree.value,
+		    moves = [];
+
+		// if the state is the solved board, return
+		// for each reserve and tableau stack, find all valid moves
+		// for each valid move, create a new game state
+		// sort each state by rank, add each state as a branch, and recurse on each undiscovered state
+		// stop iterating if a child state is solved
+
+		if (state.solved()) { return true; }
+
+		state.eachStack(["reserve", "tableau"], function (field, stack, i) {
+			Y.Array.each(["foundation", "tableau", "reserve"], function (destField) {
+				var destIndex = this.validTarget(destField);
+
+				if (destIndex > -1) {
+					moves.push = {source: [field, i], dest: [destField, destIndex]};
+				}
+			}, this);
+		});
+
+		moves = Y.Array.map(moves, function (move) {
+			var next = GameState.fromState(state);
+
+			next.move(move.source[0], move.source[1], move.dest[0], move.dest[1]);
+			return next;
+		});
+
+		moves.sort(function (a, b) {
+			return b.rank() - a.rank();
+		});
+
+		moves = Y.Array.map(moves, function (state) {
+			return new Tree(state);
+		});
+
+		tree.addChildren(moves);
+
+		Y.Array.forEach(tree.children, function (branch) {
+			if (solved ||
+			    // TODO search the whole tree for the current state
+			    branch.findParent(branch.value)) { return; }
+
+			solved = solved(branch);
+		});
+
+		return false;
+	}
+
 	Y.mix(FreecellSolver, {
 		test: function () {
-			var a = gameToState(Game);
-			for (var i = 0; i < 10000; i++) {
-				a.rank();
-			}
+			var a = gameToState(Game),
+			    t = new Tree(a);
+			solve(t);
+			return t;
 		}
 	});
 }, "0.0.1", {requires: ["solitaire"]});

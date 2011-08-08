@@ -149,22 +149,6 @@ YUI.add("solver-freecell", function (Y) {
 		foundation: null,
 		tableau: null,
 
-		push: function (field, stackidx, value) {
-			var field = this[field],
-			    stacks = field.stacks;
-
-			stacks[stackidx] = value + stacks[stackidx];
-			field.lengths[stackidx]++;
-		},
-
-		pop: function (field, stackidx, value) {
-			var field = this[field],
-			    stacks = field.stacks;
-
-			stacks[stackidx] = stacks[stackidx].substr(1);
-			field.lengths[stackidx]--;
-		},
-
 		// TODO check if rank() equals the "perfect" rank
 		solved: function () {
 			var i, len,
@@ -193,8 +177,8 @@ YUI.add("solver-freecell", function (Y) {
 
 				switch (field) {
 				case "foundation":
-					if (!lengths[i] ||
-					    (suit === dest & 3 &&
+					if ((!lengths[i] && rank === 1) ||
+					    (suit === (dest & 3) &&
 					    rank === (dest >> 2) + 1)) {
 						return i;
 					}
@@ -218,32 +202,21 @@ YUI.add("solver-freecell", function (Y) {
 		},
 
 		equals: function (other) {
-			var stacks,
-			    oStacks,
-			    i, len;
+			var equals;
 
-			stacks = this.foundation.stacks;
-			oStacks = other.foundation.stacks;
+			equals = Y.Array.every(["foundation", "reserve", "tableau"], function (field) {
+				var stacks = this[field].stacks,
+				    oStacks = other[field].stacks,
+				    i, len;
 
-			for (i = 0, len = stacks.length; i < len; i++) {
-				if (stacks[i] !== oStacks[i]) { return false; }
-			}
+				for (i = 0, len = stacks.length; i < len; i++) {
+					if (stacks[i] !== oStacks[i]) { return false; }
+				}
 
-			stacks = this.reserve.stacks;
-			oStacks = other.reserve.stacks;
+				return true;
+			}, this);
 
-			for (i = 0, len = stacks.length; i < len; i++) {
-				if (stacks[i] !== oStacks[i]) { return false; }
-			}
-
-			stacks = this.tableau.stacks;
-			oStacks = other.tableau.stacks;
-
-			for (i = 0, len = stacks.length; i < len; i++) {
-				if (stacks[i] !== oStacks[i]) { return false; }
-			}
-
-			return true;
+			return equals;
 		},
 
 		eachStack: function (fields, callback) {
@@ -270,19 +243,24 @@ YUI.add("solver-freecell", function (Y) {
 			stackStr = field.stacks[stack];
 			field.stacks[stack] = stackStr.substr(1) || String.fromCharCode(0);
 			field.lengths[stack]--;
-return stackStr.charAt();
+			return stackStr.charAt();
 		},
 
 		push: function (field, stack, val) {
-			if (val === String.fromCharCode(0)) { return; }
+			if (val === String.fromCharCode(0) || val === null) { return; }
 
-			var field = this[field];
+			var field = this[field],
+			    stackStr;
 
 			field.stacks = Y.Array.map(field.stacks, identity);
 			field.lengths = Y.Array.map(field.lengths, identity);
 
+			stackStr = field.stacks[stack];
+			if (stackStr !== String.fromCharCode(0)) {
+				val += stackStr;
+			}
 			field.lengths[stack]++;
-			field.stacks[stack] = val + field.stacks[stack];
+			field.stacks[stack] = val;
 		},
 
 		_rank: null,
@@ -384,11 +362,10 @@ return stackStr.charAt();
 		},
 
 		findParent: function (compare) {
-			var p = this,
-			    value = this.value;
+			var p = this;
 
 			while (p = p.parent) {
-				if (compare = value) { return p; }
+				if (compare.equals(p.value)) { return p; }
 			}
 
 			return null;
@@ -397,6 +374,7 @@ return stackStr.charAt();
 
 	function solve(tree) {
 		var state = tree.value,
+		    solved = false,
 		    moves = [];
 
 		// if the state is the solved board, return
@@ -409,6 +387,8 @@ return stackStr.charAt();
 
 		state.eachStack(["reserve", "tableau"], function (field, stack, i) {
 			Y.Array.each(["foundation", "tableau", "reserve"], function (destField) {
+				if (field === "reserve" && destField === "reserve") { return; }
+
 				var destIndex = this.validTarget(destField, stack.charCodeAt());
 
 				if (destIndex > -1) {
@@ -434,17 +414,15 @@ return stackStr.charAt();
 
 		tree.addChildren(moves);
 
-		/*
-		Y.Array.forEach(tree.children, function (branch) {
+		Y.Array.forEach(tree.children, function (branch, i) {
 			if (solved ||
 			    // TODO search the whole tree for the current state
 			    branch.findParent(branch.value)) { return; }
 
-			solved = solved(branch);
+			solved = solve(branch);
 		});
-		*/
 
-		return false;
+		return solved;
 	}
 
 	Y.mix(FreecellSolver, {

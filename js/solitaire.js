@@ -76,10 +76,10 @@ Function.prototype.bind = function (o) {
 };
 
 Function.prototype.partial = function () {
-	var f = this, args = argsArray(arguments);
+	var f = this, captured = argsArray(arguments);
 
 	return function () {
-		var i, len;
+		var i, len, args = [].concat(captured);
 
 		for (i = 0, len = arguments.length; i < len; i++) {
 			args.push(arguments[i]);

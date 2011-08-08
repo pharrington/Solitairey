@@ -248,7 +248,7 @@ YUI.add("solver-freecell", function (Y) {
 
 		eachStack: function (fields, callback) {
 			Y.Array.each(fields, function (f) {
-				Y.Array.each(this[f].stacks, callback, this);
+				Y.Array.each(this[f].stacks, callback.partial(f), this);
 			}, this);
 		},
 
@@ -264,14 +264,13 @@ YUI.add("solver-freecell", function (Y) {
 
 			if (!field.lengths[stack]) { return null; }
 
-			field.stacks = Y.Array.map(identity);
-			field.lengths = Y.Array.map(identity);
+			field.stacks = Y.Array.map(field.stacks, identity);
+			field.lengths = Y.Array.map(field.lengths, identity);
 
 			stackStr = field.stacks[stack];
-			field.stacks[stack] = stackStr.subStr(1) || String.fromCharCode(0);
+			field.stacks[stack] = stackStr.substr(1) || String.fromCharCode(0);
 			field.lengths[stack]--;
-
-			return stackStr.charAt();
+return stackStr.charAt();
 		},
 
 		push: function (field, stack, val) {
@@ -279,8 +278,8 @@ YUI.add("solver-freecell", function (Y) {
 
 			var field = this[field];
 
-			field.stacks = Y.Array.map(identity);
-			field.lengths = Y.Array.map(identity);
+			field.stacks = Y.Array.map(field.stacks, identity);
+			field.lengths = Y.Array.map(field.lengths, identity);
 
 			field.lengths[stack]++;
 			field.stacks[stack] = val + field.stacks[stack];
@@ -381,7 +380,7 @@ YUI.add("solver-freecell", function (Y) {
 			Y.Array.each(children, function (c) {
 				c.parent = this;
 				this.children.push(c);
-			}, true);
+			}, this);
 		},
 
 		findParent: function (compare) {
@@ -410,10 +409,10 @@ YUI.add("solver-freecell", function (Y) {
 
 		state.eachStack(["reserve", "tableau"], function (field, stack, i) {
 			Y.Array.each(["foundation", "tableau", "reserve"], function (destField) {
-				var destIndex = this.validTarget(destField);
+				var destIndex = this.validTarget(destField, stack.charCodeAt());
 
 				if (destIndex > -1) {
-					moves.push = {source: [field, i], dest: [destField, destIndex]};
+					moves.push({source: [field, i], dest: [destField, destIndex]});
 				}
 			}, this);
 		});
@@ -435,6 +434,7 @@ YUI.add("solver-freecell", function (Y) {
 
 		tree.addChildren(moves);
 
+		/*
 		Y.Array.forEach(tree.children, function (branch) {
 			if (solved ||
 			    // TODO search the whole tree for the current state
@@ -442,6 +442,7 @@ YUI.add("solver-freecell", function (Y) {
 
 			solved = solved(branch);
 		});
+		*/
 
 		return false;
 	}

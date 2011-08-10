@@ -136,6 +136,7 @@ YUI.add("solver-freecell", function (Y) {
 		reserve: null,
 		foundation: null,
 		tableau: null,
+		rating: null,
 
 		solved: function () {
 			var i, len,
@@ -164,7 +165,7 @@ YUI.add("solver-freecell", function (Y) {
 			    rank = value >> 2,
 			    suit = value & 3,
 			    dest,
-			    reserve, foundation, tableau,
+			    tableau,
 			    i, len;
 		
 			if (!value) { return -1; }
@@ -280,92 +281,83 @@ YUI.add("solver-freecell", function (Y) {
 		hash: function () {
 			if (this._hash !== null) { return this._hash; }
 
-			// ultimate laziness, no fucks given.
-			this._hash = Math.random();
+			var i, j, len, stack;
+
+			for (i = 0; i < 4; i++) {
+				this._hash += String.fromCharCode(this.reserve[i]);
+			}
+
+			this._hash += "-";
+
+			for (i = 0; i < 4; i++) {
+				this._hash += String.fromCharCode(this.foundation[i]);
+			}
+
+			this._hash += "-";
+
+			for (i = 0; i < 8; i++) {
+				stack = this.tableau[i];
+
+				for (j = 0; j < stack[1]; j++) {
+					this._hash += String.fromCharCode(stack[0][j]);
+				}
+			}
 
 			return this._hash;
 		},
 
-		_rank: null,
-		rank: function () {
-			if (this._rank !== null) { return this._rank; }
-
-			var baseReward = {
-				foundation: 10000,
-				toFoundation: 1000,
+		rateMove: function (sourceField, sourceIndex, destField, destIndex) {
+			var baseRating = {
+				foundation: 1000,
 				openTableau: 100,
-				headedByKing: 50,
-				openReserve: 25,
-				reserveToTableau: 10,
-				tableauToTableau: 5,
-				buriedFoundationTarget: -20
-			    },
-			    rank = 0,
-			    i, len;
+				openReserve: 20,
+				freeFoundationTarget: 15,
+				freeTableauTarget: 10,
+				tableau: 5
+			},
+			rating = 0,
+			stack,
+			i, length;
 
-			// reward each card in the foundation
-			for (i = 0, len = 4; i < len; i++) {
-				rank += baseReward.foundation * (this.foundation[i] >> 2);
-			};
+			// reward moves to the foundation
+			if (destField === "foundation") {
+				rating += baseRating.foundation;
+			}
 
-			// reserve based ranking
-			for (i = 0, len = 4; i < len; i++) {
-				val = this.reserve[i];
-				// reward reserve cards that can be placed the tableau
-				if (this.validTarget("tableau", val) > -1) {
-					rank += baseReward.reserveToTableau;
+			if (sourceField === "tableau") {
+				stack = this.tableau[sourceIndex];
+				length = stack[1];
+
+				// reward an opened tableau slot
+				if (length === 1) {
+					rating += baseRating.openTableau;
 				}
 
-				// reward cards in the reserve that can be placed on the foundation
-				if (this.validTarget("foundation", val) > -1) {
-					rank += baseReward.toFoundation;
+				// reward unburing foundation targets
+				for (i = length - 1; i >= 0 - 1; i--) {
+					if (this.validTarget("foundation", stack[0][i]) > -1) {
+						rating += baseRating.freeFoundationTarget;
+					}
 				}
 
-				// reward each open reserve slot
-				if (!val) {
-					rank += baseReward.openReserve;
+				// reward a newly discovered tableau-to-tableau move
+				if (this.validTarget("tableau", stack[0][length - 2]) > -1) {
+					rating += baseRating.freeTableauTarget;
 				}
 			}
 
-			// tableau based ranking
-			this.eachTableau(function (s, length) {
-				var i,
-				    val = s[length - 1];
+			// reward an opened reserve slot
+			if (sourceField === "reserve") {
+				rating += baseRating.openReserve;
+			}
 
-				// reward free cards in the tableau that can be placed on the foundation
-				if (this.validTarget("foundation", val) > -1) {
-					rank += baseReward.toFoundation;
-				}
+			// reward any move to the tableau
+			if (destField === "tableau") {
+				rating += baseRating.tableau;
+			}
 
-
-				// reward each open tableau slot
-				if (!length) {
-					rank += baseReward.openTableau;
-				}
-
-				// reward tableau cards that can be placed on other tableau cards
-				if (this.validTarget("tableau", val) > -1) {
-					rank += baseReward.reserveToTableau;
-				}
-
-				// reward tableau stacks beginning with a king
-				if ((val >> 2) === 13) {
-					rank += baseReward.headedByKing;
-				}
-
-				// punish buried cards that can be placed on the foundation
-				for (i = 0; i < len - 1; i++) {
-					val = s[i];
-					if (this.validTarget("foundation", val) > -1) {
-						rank += baseReward.buriedFoundationTarget;
-					}
-				}
-			}, this);
-
-			this._rank = rank;
-			return rank;
-		},
-
+			return rating;
+		}
 	};
 
 	function Tree(value) {
@@ -417,7 +409,7 @@ YUI.add("solver-freecell", function (Y) {
 	function solve(tree, depth, visited) {
 		var state = tree.value,
 		    jumpDepth,
-		    maxDepth = 200,
+		    maxDepth = 5,
 		    moves = [],
 		    i;
 
@@ -456,19 +448,22 @@ YUI.add("solver-freecell", function (Y) {
 		});
 
 		moves = Y.Array.map(moves, function (move) {
-			var next = GameState.fromState(state);
+			var next = GameState.fromState(state),
+			    sourceField = move.source[0], sourceIndex = move.source[1],
+			    destField = move.dest[0], destIndex = move.dest[1];
 
-			next.move(move.source[0], move.source[1], move.dest[0], move.dest[1]);
+			next.rating = next.rateMove(sourceField, sourceIndex, destField, destIndex);
+			next.move(sourceField, sourceIndex, destField, destIndex);
 
 			return new Tree(next);
 		});
 
 		moves.sort(function (a, b) {
-			return b.value.rank() - a.value.rank();
+			return b.value.rating - a.value.rating;
 		});
 
 		Y.Array.forEach(moves, function (branch) {
-			if (jumpDepth < depth ||
+			if (jumpDepth === 0 ||//jumpDepth < depth ||
 			    visited[branch.value.hash()]) {
 				return;
 			}

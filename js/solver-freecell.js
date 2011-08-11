@@ -71,10 +71,6 @@ YUI.add("solver-freecell", function (Y) {
 		return val & 3;
 	}
 
-	function cardIsRed(val) {
-		return val & 1;
-	}
-
 	function compareStack(a, b) {
 		return b[0] - a[0];
 	}
@@ -160,15 +156,20 @@ YUI.add("solver-freecell", function (Y) {
 			}
 		},
 
-		validTarget: function (field, value) {
-			var start = 0,
-			    rank = value >> 2,
+		validTarget: function (field, value, start) {
+			var rank = value >> 2,
 			    suit = value & 3,
 			    dest,
 			    tableau,
 			    i, len;
 		
 			if (!value) { return -1; }
+
+			if (start === undefined) {
+				start = 0;
+			} else {
+				start++;
+			}
 
 			switch (field) {
 			case "foundation":
@@ -194,12 +195,12 @@ YUI.add("solver-freecell", function (Y) {
 			case "tableau":
 				tableau = this.tableau;
 
-				for (i = 0, len = tableau.length; i < len; i++) {
+				for (i = start, len = tableau.length; i < len; i++) {
 					dest = tableau[i][0][tableau[i][1] - 1];
 
 					if (!tableau[i][1] ||
-					    (cardIsRed(value) ^ cardIsRed(dest) &&
-					    rank === (dest >> 2) - 1)) {
+					    (((suit & 1) ^ (dest & 1)) &&
+					    (rank === (dest >> 2) - 1))) {
 						return i;
 					}
 				}
@@ -234,7 +235,7 @@ YUI.add("solver-freecell", function (Y) {
 
 			if (!bufferLength) { return 0; }
 
-			val = tableau[stack][bufferLength - 1];
+			val = tableau[stack][0][bufferLength - 1];
 			this.copyTableau(stack, bufferLength - 1);
 			return val;
 		},
@@ -261,13 +262,13 @@ YUI.add("solver-freecell", function (Y) {
 			    newBuffer = new Uint8Array(new ArrayBuffer(newLength)),
 			    i, len;
 
-			for (i = 0; i < newLength; i++) {
+			for (i = 0; i < newLength; ++i) {
 				newBuffer[i] = tableau[i];
 			}
 
 			this.tableau = [];
 
-			for (i = 0, len = old.length; i < len; i++) {
+			for (i = 0, len = old.length; i < len; ++i) {
 				if (i !== stack) {
 					this.tableau[i] = old[i];
 				} else {
@@ -283,6 +284,7 @@ YUI.add("solver-freecell", function (Y) {
 
 			var i, j, len, stack;
 
+			this._hash = "";
 			for (i = 0; i < 4; i++) {
 				this._hash += String.fromCharCode(this.reserve[i]);
 			}
@@ -306,22 +308,23 @@ YUI.add("solver-freecell", function (Y) {
 			return this._hash;
 		},
 
+		// random rating performs better than these heuristics. need to work on that
+		// or not??
 		rateMove: function (sourceField, sourceIndex, destField, destIndex) {
-			var baseRating = {
-				foundation: 1000,
-				openTableau: 100,
-				openReserve: 20,
-				freeFoundationTarget: 15,
-				freeTableauTarget: 10,
-				tableau: 5
-			},
+			var RATING_FOUNDATION = 1000,
+			    RATING_OPENTABLEAU = 100,
+			    RATING_OPENRESERVE = 30,
+			    RATING_FREEFOUNDATIONTARGET = 20,
+			    RATING_FREETABLEAUTARGET = 10,
+			    RATING_TABLEAU = 5,
+			    RATING_RESERVE = 0,
 			rating = 0,
 			stack,
 			i, length;
 
 			// reward moves to the foundation
 			if (destField === "foundation") {
-				rating += baseRating.foundation;
+				rating += RATING_FOUNDATION;
 			}
 
 			if (sourceField === "tableau") {
@@ -330,32 +333,34 @@ YUI.add("solver-freecell", function (Y) {
 
 				// reward an opened tableau slot
 				if (length === 1) {
-					rating += baseRating.openTableau;
+					rating += RATING_OPENTABLEAU;
 				}
 
 				// reward unburing foundation targets
-				for (i = length - 1; i >= 0 - 1; i--) {
-					if (this.validTarget("foundation", stack[0][i]) > -1) {
-						rating += baseRating.freeFoundationTarget;
-					}
+				if (this.validTarget("foundation", stack[0][length - 2]) > -1) {
+					rating += RATING_FREEFOUNDATIONTARGET;
 				}
 
 				// reward a newly discovered tableau-to-tableau move
 				if (this.validTarget("tableau", stack[0][length - 2]) > -1) {
-					rating += baseRating.freeTableauTarget;
+					rating += RATING_FREETABLEAUTARGET;
 				}
 			}
 
 			// reward an opened reserve slot
 			if (sourceField === "reserve") {
-				rating += baseRating.openReserve;
+				rating += RATING_OPENRESERVE;
 			}
 
 			// reward any move to the tableau
 			if (destField === "tableau") {
-				rating += baseRating.tableau;
+				rating += RATING_TABLEAU;
 			}
 
+			// penalize moving to the reserve
+			if (destField === "reserve") {
+				rating += RATING_RESERVE;
+			}
 			return rating;
 		}
 	};
@@ -370,7 +375,7 @@ YUI.add("solver-freecell", function (Y) {
 		parent: null,
 
 		addChildren: function (children) {
-			Y.Array.each(children, function (c) {
+			children.forEach(function (c) {
 				c.parent = this;
 				this.children.push(c);
 			}, this);
@@ -405,12 +410,17 @@ YUI.add("solver-freecell", function (Y) {
 	};
 
 	window.states = 0;
+	window.ddd = 0;
 	// returns the depth of tree to jump up to, or 0 if the solution is found
 	function solve(tree, depth, visited) {
 		var state = tree.value,
 		    jumpDepth,
-		    maxDepth = 5,
+		    maxDepth = 150,
+		    sourceIndex, destIndex, length, val,
+		    next, sourceField, destField,
+		    tableau,
 		    moves = [],
+		    scale = 0.9,
 		    i;
 
 		// if the state is the solved board, return
@@ -419,65 +429,91 @@ YUI.add("solver-freecell", function (Y) {
 		// sort each state by rank, add for each thats undiscoverd, and it as a branch and recurse
 		// stop iterating if a child state is solved
 
-		if (depth > maxDepth) { return Math.ceil(maxDepth / 2); }
+		if (depth > maxDepth) { return Math.ceil(maxDepth * scale); }
 		if (state.solved()) { return 0; }
 
 		for (i = 0; i < 4; i++) {
 			var val = state.reserve[i];
 
 			if (!val) { break; }
-			Y.Array.each(["foundation", "tableau"], function (destField) {
-				var destIndex = this.validTarget(destField, val);
 
-				if (destIndex > -1) {
-					moves.push({source: ["reserve", i], dest: [destField, destIndex]});
-				}
-			}, state);
+			destIndex = state.validTarget("foundation", val);
+			if (destIndex > -1) {
+				moves.push({source: ["reserve", i], dest: ["foundation", destIndex]});
+			}
+
+			destIndex = 0;
+			while ((destIndex = state.validTarget("tableau", val, destIndex)) > -1) {
+				moves.push({source: ["reserve", i], dest: ["tableau", destIndex]});
+			}
 		}
 
-		state.eachTableau(function (s, length, i) {
-			var val = s[length - 1];
+		tableau = state.tableau;
+		for (i = 0; i < tableau.length; i++) {
+			s = tableau[i][0];
+			length = tableau[i][1];
+			val = s[length - 1];
 
-			val && Y.Array.each(["foundation", "tableau", "reserve"], function (destField) {
-				var destIndex = this.validTarget(destField, val);
+			if (!val) { break; }
 
-				if (destIndex > -1) {
-					moves.push({source: ["tableau", i], dest: [destField, destIndex]});
-				}
-			}, this);
-		});
+			destIndex = state.validTarget("reserve", val);
+			if (destIndex > -1) {
+				moves.push({source: ["tableau", i], dest: ["reserve", destIndex]});
+			}
 
-		moves = Y.Array.map(moves, function (move) {
-			var next = GameState.fromState(state),
-			    sourceField = move.source[0], sourceIndex = move.source[1],
-			    destField = move.dest[0], destIndex = move.dest[1];
+			destIndex = state.validTarget("foundation", val);
+			if (destIndex > -1) {
+				moves.push({source: ["tableau", i], dest: ["foundation", destIndex]});
+			}
+
+			destIndex = 0;
+			while ((destIndex = state.validTarget("tableau", val, destIndex)) > -1) {
+				moves.push({source: ["tableau", i], dest: ["tableau", destIndex]});
+			}
+		};
+
+		for (i = 0; i < moves.length; i++) {
+			move = moves[i];
+			next = GameState.fromState(state);
+
+			sourceField = move.source[0];
+			sourceIndex = move.source[1];
+
+			destField = move.dest[0];
+			destIndex = move.dest[1];
 
 			next.rating = next.rateMove(sourceField, sourceIndex, destField, destIndex);
 			next.move(sourceField, sourceIndex, destField, destIndex);
 
-			return new Tree(next);
-		});
+			moves[i] = new Tree(next);
+		};
 
 		moves.sort(function (a, b) {
 			return b.value.rating - a.value.rating;
 		});
 
-		Y.Array.forEach(moves, function (branch) {
-			if (jumpDepth === 0 ||//jumpDepth < depth ||
-			    visited[branch.value.hash()]) {
-				return;
+		for (i = 0; i < moves.length; i++) {
+			move = moves[i];
+			if (jumpDepth < depth ||
+			    visited[move.value.hash()]) {
+				break;
 			}
 
 			window.states++;
-			visited[branch.value.hash()] = true;
-			tree.addChild(branch);
-			jumpDepth = solve(branch, depth + 1, visited);
+			visited[move.value.hash()] = true;
+			tree.addChild(move);
+			jumpDepth = solve(move, depth + 1, visited);
 
-			if (jumpDepth === 0) { window.solved = true; }
-		});
-		tree.children = [];
+		};
 
-		if (jumpDepth === undefined) { jumpDepth = Math.ceil(depth / 2); }
+		if (depth > window.ddd) { window.ddd = depth; }
+		if (jumpDepth === 0) {
+			window.solved = true;
+		} else {
+			tree.children = [];
+		}
+
+		if (jumpDepth === undefined) { jumpDepth = Math.ceil(depth * scale); }
 		return jumpDepth;
 	}
 

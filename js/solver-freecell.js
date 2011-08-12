@@ -318,14 +318,14 @@ YUI.add("solver-freecell", function (Y) {
 
 		rateMove: function (sourceField, sourceIndex, destField, destIndex) {
 			var RATING_FOUNDATION = 1000,
-			    RATING_CLOSEDTABLEAUFOLLOWUP = 30,
-			    RATING_FREEFOUNDATIONTARGET = 25,
-			    RATING_OPENTABLEAU = 20,
-			    RATING_FREETABLEAUTARGET = 15,
-			    RATING_OPENRESERVE = 15,
-			    RATING_TABLEAU = 0,
+			    RATING_FREEFOUNDATIONTARGET = 15,
+			    RATING_CLOSEDTABLEAUFOLLOWUP = 20,
+			    RATING_OPENTABLEAU = 15,
+			    RATING_FREETABLEAUTARGET = 10,
+			    RATING_OPENRESERVE = 10,
+			    RATING_TABLEAU = 1,
 			    RATING_RESERVE = -1,
-			    RATING_CLOSEDTABLEAU = -10,
+			    RATING_CLOSEDTABLEAU = -5,
 			rating = 0,
 			stack,
 			card,
@@ -557,15 +557,15 @@ YUI.add("solver-freecell", function (Y) {
 		});
 
 		// if nothing's been moved to the foundation in many turns, backtrack alot of steps
-		if (movesSinceFoundation >= 9) {
-			scale = 0.6;
+		if (movesSinceFoundation >= 20) {
+			scale = 0.7;
 		}
 
 		for (i = 0; i < moves.length && scale === 1; i++) {
 			move = moves[i];
 			if (jumpDepth < depth ||
 			    visited[move.value.hash()]) {
-				continue;
+				break;
 			}
 
 			window.states++;

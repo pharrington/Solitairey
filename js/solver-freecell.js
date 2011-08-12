@@ -81,7 +81,7 @@ YUI.add("solver-freecell", function (Y) {
 				var c1 = s1.first(),
 				    c2 = s2.first();
 
-				return cardToValue(c2) - cardToValue(c1);
+				return cardToValue(c1) - cardToValue(c2);
 			});
 	}
 
@@ -277,6 +277,14 @@ YUI.add("solver-freecell", function (Y) {
 			}
 		},
 
+		sort: function () {
+			Array.prototype.sort.call(this.reserve);
+			Array.prototype.sort.call(this.foundation);
+			this.tableau.sort(function (a, b) {
+				return a[0][0] - b[0][0];
+			});
+		},
+
 		_hash: null,
 		// TODO write a hash function
 		hash: function () {
@@ -308,18 +316,21 @@ YUI.add("solver-freecell", function (Y) {
 			return this._hash;
 		},
 
-		// random rating performs better than these heuristics. need to work on that
-		// or not??
 		rateMove: function (sourceField, sourceIndex, destField, destIndex) {
 			var RATING_FOUNDATION = 1000,
-			    RATING_OPENTABLEAU = 100,
-			    RATING_OPENRESERVE = 30,
-			    RATING_FREEFOUNDATIONTARGET = 20,
-			    RATING_FREETABLEAUTARGET = 10,
-			    RATING_TABLEAU = 5,
-			    RATING_RESERVE = 0,
+			    RATING_CLOSEDTABLEAUFOLLOWUP = 30,
+			    RATING_FREEFOUNDATIONTARGET = 25,
+			    RATING_OPENTABLEAU = 20,
+			    RATING_FREETABLEAUTARGET = 15,
+			    RATING_OPENRESERVE = 15,
+			    RATING_TABLEAU = 0,
+			    RATING_RESERVE = -1,
+			    RATING_CLOSEDTABLEAU = -10,
 			rating = 0,
 			stack,
+			card,
+			nextCard,
+			followup = false,
 			i, length;
 
 			// reward moves to the foundation
@@ -330,6 +341,7 @@ YUI.add("solver-freecell", function (Y) {
 			if (sourceField === "tableau") {
 				stack = this.tableau[sourceIndex];
 				length = stack[1];
+				card = stack[0][length - 1];
 
 				// reward an opened tableau slot
 				if (length === 1) {
@@ -337,8 +349,10 @@ YUI.add("solver-freecell", function (Y) {
 				}
 
 				// reward unburing foundation targets
-				if (this.validTarget("foundation", stack[0][length - 2]) > -1) {
-					rating += RATING_FREEFOUNDATIONTARGET;
+				for (i = length - 2; i >= 0; i--) {
+					if (this.validTarget("foundation", stack[0][i]) > -1) {
+						rating += RATING_FREEFOUNDATIONTARGET;
+					}
 				}
 
 				// reward a newly discovered tableau-to-tableau move
@@ -350,11 +364,40 @@ YUI.add("solver-freecell", function (Y) {
 			// reward an opened reserve slot
 			if (sourceField === "reserve") {
 				rating += RATING_OPENRESERVE;
+				card = this.reserve[sourceIndex];
 			}
 
 			// reward any move to the tableau
 			if (destField === "tableau") {
 				rating += RATING_TABLEAU;
+
+				stack = this.tableau[destIndex];
+				if (stack[1] === 0) {
+					// reward a move to an empty stack that can be followed up be another move
+					for (i = 0; i < 4; i++) {
+						nextCard = this.reserve[i];
+						if (((nextCard >> 2) === (card >> 2) - 1) &&
+						    ((nextCard & 1) ^ (card & 1))) {
+							rating += RATING_CLOSEDTABLEAUFOLLOWUP;
+							followup = true;
+						}
+					}
+
+					for (i = 0; i < 8; i++) {
+						stack = this.tableau[i];
+						nextCard = stack[0][stack[1] - 1];
+						if (((nextCard >> 2) === (card >> 2) - 1) &&
+						    ((nextCard & 1) ^ (card & 1))) {
+							rating += RATING_CLOSEDTABLEAUFOLLOWUP;
+							followup = true;
+						}
+					}
+
+					// punish filling a tableau slot with no immediate followup
+					if (!followup) {
+						rating += RATING_CLOSEDTABLEAU;
+					}
+				}
 			}
 
 			// penalize moving to the reserve
@@ -412,7 +455,7 @@ YUI.add("solver-freecell", function (Y) {
 	window.states = 0;
 	window.ddd = 0;
 	// returns the depth of tree to jump up to, or 0 if the solution is found
-	function solve(tree, depth, visited) {
+	function solve(tree, depth, visited, movesSinceFoundation) {
 		var state = tree.value,
 		    jumpDepth,
 		    maxDepth = 150,
@@ -420,7 +463,8 @@ YUI.add("solver-freecell", function (Y) {
 		    next, sourceField, destField,
 		    tableau,
 		    moves = [],
-		    scale = 0.9,
+		    scale = 1,
+		    foundFoundation = false,
 		    i;
 
 		// if the state is the solved board, return
@@ -432,15 +476,19 @@ YUI.add("solver-freecell", function (Y) {
 		if (depth > maxDepth) { return Math.ceil(maxDepth * scale); }
 		if (state.solved()) { return 0; }
 
+		// find moves from the reserve
 		for (i = 0; i < 4; i++) {
-			var val = state.reserve[i];
+			val = state.reserve[i];
 
-			if (!val) { break; }
+			if (!val) { continue; }
 
 			destIndex = state.validTarget("foundation", val);
 			if (destIndex > -1) {
 				moves.push({source: ["reserve", i], dest: ["foundation", destIndex]});
+				foundFoundation = true;
 			}
+
+			if (foundFoundation) { break; }
 
 			destIndex = 0;
 			while ((destIndex = state.validTarget("tableau", val, destIndex)) > -1) {
@@ -448,29 +496,45 @@ YUI.add("solver-freecell", function (Y) {
 			}
 		}
 
+		// find moves from the tableau
 		tableau = state.tableau;
 		for (i = 0; i < tableau.length; i++) {
 			s = tableau[i][0];
 			length = tableau[i][1];
 			val = s[length - 1];
 
-			if (!val) { break; }
+			if (!val) { continue; }
+
+			destIndex = state.validTarget("foundation", val);
+			if (destIndex > -1) {
+				moves.push({source: ["tableau", i], dest: ["foundation", destIndex]});
+				foundFoundation = true;
+			}
+
+			if (foundFoundation) { break; }
 
 			destIndex = state.validTarget("reserve", val);
 			if (destIndex > -1) {
 				moves.push({source: ["tableau", i], dest: ["reserve", destIndex]});
 			}
 
-			destIndex = state.validTarget("foundation", val);
-			if (destIndex > -1) {
-				moves.push({source: ["tableau", i], dest: ["foundation", destIndex]});
-			}
-
 			destIndex = 0;
 			while ((destIndex = state.validTarget("tableau", val, destIndex)) > -1) {
 				moves.push({source: ["tableau", i], dest: ["tableau", destIndex]});
 			}
-		};
+		}
+
+		if (foundFoundation) {
+			/*
+			if (movesSinceFoundation <= 1) {
+				movesSinceFoundation--;
+			} else {
+			*/
+				movesSinceFoundation = 0;
+			//}
+		} else {
+			movesSinceFoundation++;
+		}
 
 		for (i = 0; i < moves.length; i++) {
 			move = moves[i];
@@ -492,25 +556,29 @@ YUI.add("solver-freecell", function (Y) {
 			return b.value.rating - a.value.rating;
 		});
 
-		for (i = 0; i < moves.length; i++) {
+		// if nothing's been moved to the foundation in many turns, backtrack alot of steps
+		if (movesSinceFoundation >= 9) {
+			scale = 0.6;
+		}
+
+		for (i = 0; i < moves.length && scale === 1; i++) {
 			move = moves[i];
 			if (jumpDepth < depth ||
 			    visited[move.value.hash()]) {
-				break;
+				continue;
 			}
 
 			window.states++;
 			visited[move.value.hash()] = true;
-			tree.addChild(move);
-			jumpDepth = solve(move, depth + 1, visited);
-
-		};
+			//tree.addChild(move);
+			jumpDepth = solve(move, depth + 1, visited, movesSinceFoundation);
+		}
 
 		if (depth > window.ddd) { window.ddd = depth; }
 		if (jumpDepth === 0) {
 			window.solved = true;
 		} else {
-			tree.children = [];
+			//tree.children = [];
 		}
 
 		if (jumpDepth === undefined) { jumpDepth = Math.ceil(depth * scale); }
@@ -522,8 +590,14 @@ YUI.add("solver-freecell", function (Y) {
 			var a = gameToState(Game),
 			    t = new Tree(a);
 
-			solve(t, 1, {});
+			solve(t, 1, {}, 0);
 			return t;
 		}
 	});
 }, "0.0.1", {requires: ["solitaire"]});
+
+function last(t, index) {
+	var s = t[index];
+
+	return s[0][s[1] - 1];
+}

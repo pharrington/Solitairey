@@ -68,7 +68,7 @@ YUI.add("solver-freecell", function (Y) {
 	}
 
 	function cardSuit(val) {
-		return val & 3;
+		return ["s", "h", "c", "d"][val & 3];
 	}
 
 	function compareStack(a, b) {
@@ -133,6 +133,9 @@ YUI.add("solver-freecell", function (Y) {
 		foundation: null,
 		tableau: null,
 		rating: null,
+		parentMove: null,
+		parent: null,
+		child: null,
 
 		solved: function () {
 			var i, len,
@@ -405,6 +408,41 @@ YUI.add("solver-freecell", function (Y) {
 				rating += RATING_RESERVE;
 			}
 			return rating;
+		},
+
+		transformParentMove: function () {
+			var move = this.parentMove,
+			    parent = this.parent;
+
+			if (!(move && parent)) { return; }
+
+			move.source[1] = parent.lastCard(move.source[0], move.source[1]);
+			move.dest[1] = parent.lastCard(move.dest[0], move.dest[1]);
+		},
+
+		lastCard: function (field, index) {
+			var stack, length;
+
+			switch (field) {
+			case "reserve":
+			case "foundation":
+				return this[field][index];
+
+			case "tableau":
+				stack = this[field][index];
+				length = stack[1];
+
+				return stack[0][length - 1];
+			}
+		},
+
+		becomeChild: function () {
+			var parent = this.parent;
+
+			if (!parent) { return; }
+
+			parent.child = this;
+			this.transformParentMove();
 		}
 	};
 
@@ -454,27 +492,38 @@ YUI.add("solver-freecell", function (Y) {
 
 	window.states = 0;
 	window.ddd = 0;
+
 	// returns the depth of tree to jump up to, or 0 if the solution is found
-	function solve(tree, depth, visited, movesSinceFoundation) {
-		var state = tree.value,
-		    jumpDepth,
+	function solve(state, depth, visited, movesSinceFoundation) {
+		var jumpDepth,
 		    maxDepth = 150,
 		    sourceIndex, destIndex, length, val,
 		    next, sourceField, destField,
 		    tableau,
-		    moves = [],
+		    move, moves = [],
 		    scale = 1,
 		    foundFoundation = false,
 		    i;
 
-		// if the state is the solved board, return
-		// for each reserve and tableau stack, find all valid moves
-		// for each valid move, create a new game state
-		// sort each state by rank, add for each thats undiscoverd, and it as a branch and recurse
-		// stop iterating if a child state is solved
+		/*
+		 * if the state is the solved board, return
+		 * for each reserve and tableau stack, find all valid moves
+		 * for each valid move, create a new game state
+		 * sort each state by rank, add for each thats undiscoverd, and it as a branch and recurse
+		 * stop iterating if a child state is solved
+		 */
 
-		if (depth > maxDepth) { return Math.ceil(maxDepth * scale); }
-		if (state.solved()) { return 0; }
+		if (depth > maxDepth) { return maxDepth; }
+
+		/* when the state is solved
+		 * replace the stack index with its associated move with the actual card that was moved
+		 * set the parent states child to this state
+		 * then jump out of the tree
+		 */
+		if (state.solved()) {
+			state.becomeChild();
+			return 0;
+		}
 
 		// find moves from the reserve
 		for (i = 0; i < 4; i++) {
@@ -525,13 +574,7 @@ YUI.add("solver-freecell", function (Y) {
 		}
 
 		if (foundFoundation) {
-			/*
-			if (movesSinceFoundation <= 1) {
-				movesSinceFoundation--;
-			} else {
-			*/
-				movesSinceFoundation = 0;
-			//}
+			movesSinceFoundation = 0;
 		} else {
 			movesSinceFoundation++;
 		}
@@ -548,12 +591,14 @@ YUI.add("solver-freecell", function (Y) {
 
 			next.rating = next.rateMove(sourceField, sourceIndex, destField, destIndex);
 			next.move(sourceField, sourceIndex, destField, destIndex);
+			next.parentMove = move;
+			next.parent = state;
 
-			moves[i] = new Tree(next);
+			moves[i] = next;
 		};
 
 		moves.sort(function (a, b) {
-			return b.value.rating - a.value.rating;
+			return b.rating - a.rating;
 		});
 
 		// if nothing's been moved to the foundation in many turns, backtrack alot of steps
@@ -564,40 +609,88 @@ YUI.add("solver-freecell", function (Y) {
 		for (i = 0; i < moves.length && scale === 1; i++) {
 			move = moves[i];
 			if (jumpDepth < depth ||
-			    visited[move.value.hash()]) {
+			    visited[move.hash()]) {
 				break;
 			}
 
 			window.states++;
-			visited[move.value.hash()] = true;
-			//tree.addChild(move);
+			visited[move.hash()] = true;
 			jumpDepth = solve(move, depth + 1, visited, movesSinceFoundation);
 		}
 
 		if (depth > window.ddd) { window.ddd = depth; }
+
 		if (jumpDepth === 0) {
+			state.becomeChild();
 			window.solved = true;
-		} else {
-			//tree.children = [];
 		}
 
 		if (jumpDepth === undefined) { jumpDepth = Math.ceil(depth * scale); }
 		return jumpDepth;
 	}
 
+	function moveToCardAndStack(game, move) {
+		var source = move.source,
+		    dest = move.dest,
+		    value,
+		    ret = {};
+
+		value = source[1];
+		game.eachStack(function (stack) {
+			if (ret.card) { return; }
+
+			var card = stack.last();
+			if (!card) { return; }
+
+			if (card.rank === cardRank(value) &&
+			    card.suit === cardSuit(value)) {
+				ret.card = card;
+			}
+		}, source[0]);
+
+		value = dest[1];
+		game.eachStack(function (stack) {
+			if (ret.stack) { return; }
+
+			var card = stack.last();
+
+			if (!(card || value)) { ret.stack = stack; }
+
+			if (card &&
+			    (card.rank === cardRank(value) &&
+			    card.suit === cardSuit(value))) {
+				ret.stack = stack;
+			}
+		}, dest[0]);
+
+		return ret;
+	}
+
+	function animateMove(game, state) {
+		var child = state.child,
+		    move;
+
+		if (!child) { return; }
+
+		if (child.parentMove) {
+			move = moveToCardAndStack(game, child.parentMove);
+			move.card.moveTo(move.stack);
+		}
+
+		window.setTimeout(animateMove.partial(game, child), 1000);
+	}
+
 	Y.mix(FreecellSolver, {
 		test: function () {
-			var a = gameToState(Game),
-			    t = new Tree(a);
+			var a = gameToState(Game);
 
-			solve(t, 1, {}, 0);
-			return t;
+			solve(a, 1, {}, 0);
+
+			animateMove(Game, a);
+			return a;
 		}
 	});
 }, "0.0.1", {requires: ["solitaire"]});
 
 function last(t, index) {
-	var s = t[index];
-
-	return s[0][s[1] - 1];
 }

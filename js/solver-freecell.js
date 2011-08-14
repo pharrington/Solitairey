@@ -288,47 +288,48 @@ YUI.add("solver-freecell", function (Y) {
 			});
 		},
 
-		_hash: null,
-		// TODO write a hash function
-		hash: function () {
-			if (this._hash !== null) { return this._hash; }
+		_serialized: null,
+		// TODO write a serialize function
+		serialize: function () {
+			if (this._serialized !== null) { return this._serialized; }
 
 			var i, j, len, stack;
 
-			this._hash = "";
+			this._serialized = "";
 			for (i = 0; i < 4; i++) {
-				this._hash += String.fromCharCode(this.reserve[i]);
+				this._serialized += String.fromCharCode(this.reserve[i]);
 			}
 
-			this._hash += "-";
+			this._serialized += "_";
 
 			for (i = 0; i < 4; i++) {
-				this._hash += String.fromCharCode(this.foundation[i]);
+				this._serialized += String.fromCharCode(this.foundation[i]);
 			}
 
-			this._hash += "-";
+			this._serialized += "_";
 
 			for (i = 0; i < 8; i++) {
 				stack = this.tableau[i];
 
 				for (j = 0; j < stack[1]; j++) {
-					this._hash += String.fromCharCode(stack[0][j]);
+					this._serialized += String.fromCharCode(stack[0][j]) + "_";
 				}
 			}
 
-			return this._hash;
+			return this._serialized;
 		},
 
 		rateMove: function (sourceField, sourceIndex, destField, destIndex) {
 			var RATING_FOUNDATION = 1000,
-			    RATING_FREEFOUNDATIONTARGET = 15,
 			    RATING_CLOSEDTABLEAUFOLLOWUP = 20,
+			    RATING_FREEFOUNDATIONTARGET = 15,
 			    RATING_OPENTABLEAU = 15,
 			    RATING_FREETABLEAUTARGET = 10,
 			    RATING_OPENRESERVE = 10,
-			    RATING_TABLEAU = 1,
+			    RATING_TABLEAU = 2,
 			    RATING_RESERVE = -1,
-			    RATING_CLOSEDTABLEAU = -5,
+			    RATING_BURYFOUNDATIONTARGET = -5,
+			    RATING_CLOSEDTABLEAU = -10,
 			rating = 0,
 			stack,
 			card,
@@ -354,7 +355,7 @@ YUI.add("solver-freecell", function (Y) {
 				// reward unburing foundation targets
 				for (i = length - 2; i >= 0; i--) {
 					if (this.validTarget("foundation", stack[0][i]) > -1) {
-						rating += RATING_FREEFOUNDATIONTARGET;
+						rating += RATING_FREEFOUNDATIONTARGET - (length - 2 - i) + (13 - (stack[0][i] >> 2));
 					}
 				}
 
@@ -369,12 +370,20 @@ YUI.add("solver-freecell", function (Y) {
 				rating += RATING_OPENRESERVE;
 				card = this.reserve[sourceIndex];
 			}
-
 			// reward any move to the tableau
 			if (destField === "tableau") {
 				rating += RATING_TABLEAU;
 
 				stack = this.tableau[destIndex];
+				length = stack[1];
+				// punish a move to the tableau that buries a foundation target
+				for (i = length - 1; i >= 0; i--) {
+					if (this.validTarget("foundation", stack[0][i]) > -1) {
+						rating += RATING_BURYFOUNDATIONTARGET * (length - i);
+					}
+				}
+	
+
 				if (stack[1] === 0) {
 					// reward a move to an empty stack that can be followed up be another move
 					for (i = 0; i < 4; i++) {
@@ -496,7 +505,7 @@ YUI.add("solver-freecell", function (Y) {
 	// returns the depth of tree to jump up to, or 0 if the solution is found
 	function solve(state, depth, visited, movesSinceFoundation) {
 		var jumpDepth,
-		    maxDepth = 150,
+		    maxDepth = 200,
 		    sourceIndex, destIndex, length, val,
 		    next, sourceField, destField,
 		    tableau,
@@ -608,17 +617,29 @@ YUI.add("solver-freecell", function (Y) {
 
 		for (i = 0; i < moves.length && scale === 1; i++) {
 			move = moves[i];
-			if (jumpDepth < depth ||
-			    visited[move.hash()]) {
-				break;
-			}
+			if (jumpDepth < depth) { break; }
+			if (visited[move.serialize()]) { continue; }
 
 			window.states++;
-			visited[move.hash()] = true;
+			visited[move.serialize()] = true;
 			jumpDepth = solve(move, depth + 1, visited, movesSinceFoundation);
 		}
 
 		if (depth > window.ddd) { window.ddd = depth; }
+
+		/*
+		// analicecube
+		if (depth === 122 && !window.thefinale) {
+			var test = state;
+
+			while (test.parent) {
+				test.becomeChild();
+				test = test.parent;
+			}
+
+			window.thefinale = true;
+		}
+		*/
 
 		if (jumpDepth === 0) {
 			state.becomeChild();
@@ -628,6 +649,7 @@ YUI.add("solver-freecell", function (Y) {
 		if (jumpDepth === undefined) { jumpDepth = Math.ceil(depth * scale); }
 		return jumpDepth;
 	}
+	window.count = 0;
 
 	function moveToCardAndStack(game, move) {
 		var source = move.source,
@@ -670,6 +692,7 @@ YUI.add("solver-freecell", function (Y) {
 		var child = state.child,
 		    move;
 
+		//game.Card.animSpeeds.fast = game.Card.animSpeeds.mid = 0.5;
 		if (!child) { return; }
 
 		if (child.parentMove) {
@@ -677,7 +700,7 @@ YUI.add("solver-freecell", function (Y) {
 			move.card.moveTo(move.stack);
 		}
 
-		window.setTimeout(animateMove.partial(game, child), 1000);
+		window.setTimeout(animateMove.partial(game, child), 500);
 	}
 
 	Y.mix(FreecellSolver, {

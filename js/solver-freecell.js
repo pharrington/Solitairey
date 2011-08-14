@@ -499,11 +499,8 @@ YUI.add("solver-freecell", function (Y) {
 		}
 	};
 
-	window.states = 0;
-	window.ddd = 0;
-
 	// returns the depth of tree to jump up to, or 0 if the solution is found
-	function solve(state, depth, visited, movesSinceFoundation) {
+	function solve(state, depth, visited, movesSinceFoundation, fastSearch) {
 		var jumpDepth,
 		    maxDepth = 200,
 		    sourceIndex, destIndex, length, val,
@@ -618,38 +615,21 @@ YUI.add("solver-freecell", function (Y) {
 		for (i = 0; i < moves.length && scale === 1; i++) {
 			move = moves[i];
 			if (jumpDepth < depth) { break; }
-			if (visited[move.serialize()]) { continue; }
-
-			window.states++;
-			visited[move.serialize()] = true;
-			jumpDepth = solve(move, depth + 1, visited, movesSinceFoundation);
-		}
-
-		if (depth > window.ddd) { window.ddd = depth; }
-
-		/*
-		// analicecube
-		if (depth === 122 && !window.thefinale) {
-			var test = state;
-
-			while (test.parent) {
-				test.becomeChild();
-				test = test.parent;
+			if (visited[move.serialize()]) {
+				if (fastSearch) { break } else { continue };
 			}
 
-			window.thefinale = true;
+			visited[move.serialize()] = true;
+			jumpDepth = solve(move, depth + 1, visited, movesSinceFoundation, fastSearch);
 		}
-		*/
 
 		if (jumpDepth === 0) {
 			state.becomeChild();
-			window.solved = true;
 		}
 
 		if (jumpDepth === undefined) { jumpDepth = Math.ceil(depth * scale); }
 		return jumpDepth;
 	}
-	window.count = 0;
 
 	function moveToCardAndStack(game, move) {
 		var source = move.source,
@@ -707,7 +687,7 @@ YUI.add("solver-freecell", function (Y) {
 		test: function () {
 			var a = gameToState(Game);
 
-			solve(a, 1, {}, 0);
+			solve(a, 1, {}, 0, true);
 
 			animateMove(Game, a);
 			return a;

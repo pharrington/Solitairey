@@ -1,3 +1,6 @@
+var attempts = 0,
+    maxFastAttempts = 150000;
+
 function GameState(obj) {
 	if (!obj) { return; }
 	var i, stack;
@@ -463,6 +466,10 @@ function solve(state, depth, visited, movesSinceFoundation, fastSearch) {
 		scale = 0.7;
 	}
 
+	if (fastSearch && (++attempts > maxFastAttempts)) {
+		scale = 0.001;
+	}
+
 	for (i = 0; i < moves.length && scale === 1; i++) {
 		move = moves[i];
 		if (jumpDepth < depth) { break; }
@@ -499,6 +506,14 @@ function mapMoves(state) {
 	return moves;
 }
 
+function attemptSolution(obj, fastSearch) {
+	var state = new GameState(obj);
+
+	attempts = 0;
+	solve(state, 1, {}, 0, fastSearch);
+	return mapMoves(state);
+}
+
 onmessage = function (e) {
 	var state,
 	    solution,
@@ -506,10 +521,11 @@ onmessage = function (e) {
 
 
 	if (data.action === "solve") {
-		state = new GameState(data.param);
-		solve(state, 1, {}, 0, true);
-		solution = mapMoves(state);
+		solution = attemptSolution(data.param, true);
 
+		if (!solution) {
+			solution = attemptSolution(data.param, false);
+		}
 		self.postMessage({solution: solution});
 	}
 };

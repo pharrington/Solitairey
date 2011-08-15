@@ -105,12 +105,20 @@ YUI.add("solver-freecell", function (Y) {
 	}
 
 	function animateMove(game, moves) {
-		var move;
+		var move,
+		    card, origin;
 
 		if (!moves) { return; }
 
 		move = moveToCardAndStack(game, moves);
-		move.card.moveTo(move.stack);
+		card = move.card;
+		origin = card.stack;
+
+		card.after(function () {
+			origin.updateCardsPosition();
+			move.stack.updateCardsPosition();
+		});
+		card.moveTo(move.stack);
 
 		window.setTimeout(animateMove.partial(game, moves.next), 500);
 	}

@@ -213,6 +213,7 @@ GameState.prototype = {
 		return this._serialized;
 	},
 
+	// the search heuristic function
 	rateMove: function (sourceField, sourceIndex, destField, destIndex) {
 		var RATING_FOUNDATION = 1000,
 		    RATING_CLOSEDTABLEAUFOLLOWUP = 20,
@@ -284,7 +285,7 @@ GameState.prototype = {
 					nextCard = this.reserve[i];
 					if (((nextCard >> 2) === (card >> 2) - 1) &&
 					    ((nextCard & 1) ^ (card & 1))) {
-						rating += RATING_CLOSEDTABLEAUFOLLOWUP;
+						rating += RATING_CLOSEDTABLEAUFOLLOWUP + (nextCard >> 2);
 						followup = true;
 					}
 				}
@@ -294,7 +295,7 @@ GameState.prototype = {
 					nextCard = stack[0][stack[1] - 1];
 					if (((nextCard >> 2) === (card >> 2) - 1) &&
 					    ((nextCard & 1) ^ (card & 1))) {
-						rating += RATING_CLOSEDTABLEAUFOLLOWUP;
+						rating += RATING_CLOSEDTABLEAUFOLLOWUP + (nextCard >> 2);
 						followup = true;
 					}
 				}
@@ -500,12 +501,15 @@ function mapMoves(state) {
 
 onmessage = function (e) {
 	var state,
+	    solution,
 	    data = e.data;
 
 
 	if (data.action === "solve") {
 		state = new GameState(data.param);
 		solve(state, 1, {}, 0, true);
-		self.postMessage({solution: mapMoves(state)});
+		solution = mapMoves(state);
+
+		self.postMessage({solution: solution});
 	}
 };

@@ -11,53 +11,8 @@ YUI.add("solver-freecell", function (Y) {
 		h: 1,
 		c: 2,
 		d: 3
-	    };
-
-	function flatten(ary) {
-		var result = [],
-		    i,
-		    len,
-		    item,
-		    proto = Array.prototype;
-
-		for (i = 0, len = ary.length; i < len; i++) {
-			item = ary[i];
-			if (Object.prototype.toString.call(item) === "[object Array]") {
-				proto.push.apply(result, flatten(item));
-			} else {
-				result.push(item);
-			}
-		}
-		return result;
-	}
-
-	function take(ary, count) {
-		var result = [],
-		    i;
-
-		count = Math.min(ary.length, count);
-		i = count;
-		for (i = 0; i < count; i++) {
-			result.push(ary[i]);
-		}
-
-		return result;
-
-	}
-
-	function drop(ary, count) {
-		var result = [],
-		    i, len = ary.length;
-
-		count = Math.min(len, count);
-		for (i = count; i < len; i++) {
-			result.push(ary[i]);
-		}
-
-		return result;
-	}
-
-	function identity(arg) { return arg; }
+	    },
+	    worker;
 
 	function cardToValue(card) {
 		return card ? card.rank << 2 | suitTable[card.suit] : 0;
@@ -160,28 +115,78 @@ YUI.add("solver-freecell", function (Y) {
 		window.setTimeout(animateMove.partial(game, moves.next), 500);
 	}
 
-	function showMenu() {
-		var bar = Y.Node.create("<div id=solver_bar>Solving</div>"),
-		    controls = Y.Node.create(
-			"<div class=controls><div class=play></div><div class=pause></div><div class=rewind></div><div class=fastforward></div></div>");
+	var Status = {
+		indicatorTimer: null,
+		indicator: null,
+		indicatorInterval: 750,
+		delay: 400,
 
-		bar.append(controls);
-		Y.one("body").append(bar);
-	}
+		updateIndicator: function (ticks) {
+			var indicator = this.indicator,
+			    i,
+			    text;
 
-	showMenu();
+			if (!indicator) { return; }
+
+			ticks = ((ticks || 0) % 4);
+			text = "Solving";
+			for (i = 0; i < ticks; i++) {
+				text += ".";
+			}
+
+			indicator.set("text", text);
+
+			this.indicatorTimer = window.setTimeout(this.updateIndicator.partial(ticks + 1).bind(this), this.indicatorInterval);
+		},
+
+		stopIndicator: function (solved) {
+			window.clearTimeout(this.indicatorTimer);
+			if (!this.indicator) { return; }
+
+			if (solved) {
+				this.indicator.set("text", "Solved");
+			} else {
+				this.indicator.set("text", "Unable to find solution");
+			}
+		},
+
+		showMenu: function () {
+			var bar = Y.Node.create("<div id=solver_bar></div>"),
+			    indicator = Y.Node.create("<span>");
+			/*
+			    controls = Y.Node.create(
+				"<div class=controls><div class=play></div><div class=pause></div><div class=rewind></div><div class=fastforward></div></div>");
+			bar.append(controls);
+				*/
+
+			bar.append(indicator);
+			this.indicator = indicator;
+			Y.one("body").append(bar);
+		}
+	};
+
+	Status.showMenu();
 
 	Y.mix(FreecellSolver, {
-		test: function () {
-			var worker = new Worker("js/solver-freecell-worker.js");
+		solve: function () {
+			if (worker) {
+				worker.terminate();
+			}
 
-			worker.postMessage({action: "solve", param: gameToState(Game)});
+			worker = new Worker("js/solver-freecell-worker.js");
 			worker.onmessage = function (e) {
 				var data = e.data
 				if (data.solution) {
+					Status.stopIndicator(true);
 					animateMove(Game, data.solution);
+				} else {
+					Status.stopIndicator(false);
 				}
 			};
+
+			worker.postMessage({action: "solve", param: gameToState(Game)});
+
+			Status.indicatorTimer = window.setTimeout(Status.updateIndicator.bind(Status), Status.delay);
 		}
 	});
 }, "0.0.1", {requires: ["solitaire"]});

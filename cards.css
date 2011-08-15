@@ -213,6 +213,91 @@ p {
 	margin-bottom: 0.2em;
 }
 
+#solver_bar {
+	width: 500px;
+	height: 15px;
+	padding: 10px;
+	background: black;
+	background-image: -webkit-linear-gradient(#000, #222);
+	background-image: -moz-linear-gradient(#000, #222);
+	position: fixed;
+	bottom: 0;
+	left: 25%;
+	border-radius: 15px 15px 0 0;
+	color: #ddd;
+	font-size: 16px;
+	font-weight: bold;
+	box-shadow: 0 1px 12px 0.5px #000;
+}
+
+.controls {
+	position: absolute;
+	height: 20px;
+	top: 6px;
+	left: 100px;
+	cursor: pointer;
+}
+
+.controls > div {
+	margin-right: 15px;
+	float: left;
+}
+
+.play {
+	height: 0px;
+	width: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 15px solid #ddd;
+}
+
+.pause {
+	top: 0;
+	width: 4px;
+	height: 20px;
+	border-color: #ddd;
+	border-left: 5px solid;
+	border-right: 5px solid;
+}
+
+.rewind {
+	top: 0;
+	height: 0px;
+	width: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 15px solid #ddd;
+}
+
+.rewind:after {
+	position: absolute;
+	top: -10px;
+	left: -3px;
+	height: 20px;
+	width: 4px;
+	background: #ddd;
+	content: "";
+}
+
+.fastforward {
+	top: 0;
+	height: 0px;
+	width: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 15px solid #ddd;
+}
+
+.fastforward:after {
+	position: absolute;
+	top: -10px;
+	right: -3px;
+	height: 20px;
+	width: 4px;
+	background: #ddd;
+	content: "";
+}
+
 .scrollable {
 	overflow: scroll;
 }
@@ -335,4 +420,3 @@ p {
 	width: 473px;
 	height: 350px;
 }
-

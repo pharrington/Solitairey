@@ -639,9 +639,9 @@ Y.Solitaire.Events = {
 
 Y.Solitaire.Deck = {
 		count: 1,
-		suits: ["c", "s", "h", "d"],
+		suits: ["c", "d", "h", "s"],
 
-		init: function () {
+		init: function (seed) {
 			var suits = this.suits,
 			    suit, s,
 			    rank,
@@ -658,7 +658,31 @@ Y.Solitaire.Deck = {
 				}
 			}
 
-			this.cards.shuffle();
+			if (seed === undefined) {
+				this.cards.shuffle();
+			} else {
+				this.msSeededShuffle(seed);
+			}
+		},
+
+		// shuffle the deck using the "Microsoft Number"
+		msSeededShuffle: function (seed) {
+			var cards = this.cards,
+			    maxInt = Math.pow(2, 31),
+			    rand,
+			    temp, temp,
+			    i;
+
+			for (i = cards.length; i > 1; i--) {
+				// simulate x86 integer overflow
+				seed = ((214013 * seed) % maxInt + 2531011) % maxInt;
+				rand = (seed >> 16) & 0x7fff;
+
+				item = cards[i - 1];
+				temp = cards[rand % i];
+				cards[i - 1] = temp;
+				cards[rand % i] = item;
+			}
 		},
 
 		createStack: function () {

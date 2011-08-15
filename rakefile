@@ -4,7 +4,7 @@ YUI = "#{PREFIX}/yui-all-min.js"
 ALL = "#{PREFIX}/all.js"
 MINIFIED = "#{PREFIX}/all-min.js"
 COMBINED = "#{PREFIX}/combined-min.js"
-COMPRESSOR = "/home/xeno/Downloads/yuicompressor-2.4.2/build/yuicompressor-2.4.2.jar"
+COMPRESSOR = "ext/yuicompressor-2.4.2/build/yuicompressor-2.4.2.jar"
 TEMPLATE = "index.erb"
 
 def create_index(index, development = false)

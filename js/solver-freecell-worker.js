@@ -281,8 +281,12 @@ GameState.prototype = {
 				}
 			}
 
-
 			if (stack[1] === 0) {
+				// try not to move a card heading a tableau to an empty tableau
+				if (sourceField === "tableau" && this.tableau[sourceIndex][1] === 1) {
+					return -1000;
+				}
+
 				// reward a move to an empty stack that can be followed up be another move
 				for (i = 0; i < 4; i++) {
 					nextCard = this.reserve[i];

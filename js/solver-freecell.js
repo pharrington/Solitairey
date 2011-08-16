@@ -235,10 +235,10 @@ YUI.add("solver-freecell", function (Y) {
 
 			solveButton = Y.one("#solve");
 			children = Y.one("#menu").get("children");
-			last = children[children.length - 1];
+			last = children.item(children.size() - 1);
 
 			if (solveButton) {
-				solveButton.remove();
+				solveButton.get("parentNode").remove();
 			}
 
 			if (last) {

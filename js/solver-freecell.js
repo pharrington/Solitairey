@@ -4,6 +4,10 @@
 YUI.add("solver-freecell", function (Y) {
 	Y.namespace("Solitaire.Solver.Freecell");
 
+	// only let this work with Web Workers
+
+	if (!Worker) { return; }
+
 	var Solitaire = Y.Solitaire,
 	    FreecellSolver = Solitaire.Solver.Freecell,
 	    suitTable = {
@@ -11,8 +15,7 @@ YUI.add("solver-freecell", function (Y) {
 		h: 1,
 		c: 2,
 		d: 3
-	    },
-	    worker;
+	    };
 
 	function cardToValue(card) {
 		return card ? card.rank << 2 | suitTable[card.suit] : 0;
@@ -104,28 +107,49 @@ YUI.add("solver-freecell", function (Y) {
 		return ret;
 	}
 
-	function animateMove(game, moves) {
-		var move,
-		    card, origin;
+	var Animation = {
+		interval: 500,
+		timer: null,
+		remainingMoves: null,
 
-		if (!moves) { return; }
+		stop: function () {
+			this.remainingMoves = null;
+			window.clearTimeout(this.timer);
+			this.timer = null;
+		},
 
-		move = moveToCardAndStack(game, moves);
-		card = move.card;
-		origin = card.stack;
+		play: function (game, moves) {
+			var move,
+			    card, origin;
 
-		card.after(function () {
-			origin.updateCardsPosition();
-			move.stack.updateCardsPosition();
-		});
-		card.moveTo(move.stack);
+			if (!this.remainingMoves) {
+				this.remainingMoves = moves || null;
+			}
 
-		window.setTimeout(animateMove.partial(game, moves.next), 500);
-	}
+			moves = this.remainingMoves;
+			if (!moves) { return; }
+
+			move = moveToCardAndStack(game, moves);
+			card = move.card;
+			origin = card.stack;
+
+			card.after(function () {
+				origin.updateCardsPosition();
+				move.stack.updateCardsPosition();
+			});
+			card.moveTo(move.stack);
+
+			this.remainingMoves = moves.next;
+			this.timer = window.setTimeout(this.play.partial(game).bind(this), this.interval);
+
+			game.endTurn();
+		}
+	};
 
 	var Status = {
-		indicatorTimer: null,
+		bar: null,
 		indicator: null,
+		indicatorTimer: null,
 		indicatorInterval: 750,
 		delay: 400,
 
@@ -152,13 +176,15 @@ YUI.add("solver-freecell", function (Y) {
 			if (!this.indicator) { return; }
 
 			if (solved) {
-				this.indicator.set("text", "Solved");
+				this.indicator.set("text", "Solution found");
 			} else {
 				this.indicator.set("text", "Unable to find solution");
 			}
+
+			this.indicatorTimer = null;
 		},
 
-		showMenu: function () {
+		show: function () {
 			var bar = Y.Node.create("<div id=solver_bar></div>"),
 			    indicator = Y.Node.create("<span>");
 			/*
@@ -170,31 +196,131 @@ YUI.add("solver-freecell", function (Y) {
 			bar.append(indicator);
 			this.indicator = indicator;
 			Y.one("body").append(bar);
+
+			this.bar = bar;
+		},
+
+		hide: function () {
+			if (this.bar) {
+				this.bar.remove();
+			}
 		}
 	};
 
-	Status.showMenu();
-
 	Y.mix(FreecellSolver, {
-		solve: function () {
-			if (worker) {
-				worker.terminate();
+		currentSolution: null,
+		worker: null,
+		attached: false,
+		supportedGames: ["Freecell"],
+
+		isSupported: function () {
+			return this.supportedGames.indexOf(Game.name()) !== -1;
+		},
+
+		enable: function () {
+			if (this.isSupported()) {
+				this.createUI();
+			}
+			this.attachEvents();
+		},
+
+		disable: function () {
+			var children,
+			    last,
+			    solveButton;
+
+			if (this.worker) {
+				this.worker.terminate();
 			}
 
-			worker = new Worker("js/solver-freecell-worker.js");
-			worker.onmessage = function (e) {
-				var data = e.data
-				if (data.solution) {
+			solveButton = Y.one("#solve");
+			children = Y.one("#menu").get("children");
+			last = children[children.length - 1];
+
+			if (solveButton) {
+				solveButton.remove();
+			}
+
+			if (last) {
+				last.addClass("end");
+			}
+
+			Status.hide();
+		},
+
+		attachEvents: function () {
+			if (this.attached) { return; }
+
+			var stop = Animation.stop.bind(Animation);
+
+			// start the solver if the current game supports it
+			Y.on("afterSetup", function () {
+				if (this.isSupported()) {
+					this.solve();
+				} else {
+					this.disable();
+				}
+			}.bind(this));
+
+			// if a solution isn't currently being played, find a new solution on every new turn
+			Y.on("endTurn", function () {
+				if (Animation.timer || !this.isSupported()) { return; }
+				this.solve();
+			}.bind(this));
+
+			// human interaction stops playing the current solution
+			document.documentElement.addEventListener("mousedown", function (e) {
+				Y.on("undo", stop);
+				if (e.target.id === "solve") { return; }
+				stop();
+			}, true);
+
+			this.attached = true;
+		},
+
+		createUI: function () {
+			if (Y.one("#solve")) { return; }
+
+			var menu = Y.one("#menu"),
+			    solveButton = Y.Node.create("<li class=end><a id=solve>Solve</a></li>");
+
+			solveButton.on("click", this.playSolution.bind(this));
+
+			menu.one(".end").removeClass("end");
+			menu.append(solveButton);
+			Status.show();
+		},
+
+		playSolution: function () {
+			var solution = this.currentSolution;
+
+			if (solution) {
+				Animation.play(Game, solution);
+			}
+		},
+
+		solve: function () {
+			if (this.worker) {
+				this.worker.terminate();
+			}
+
+			this.currentSolution = null;
+			this.worker = new Worker("js/solver-freecell-worker.js");
+			this.worker.onmessage = function (e) {
+				var solution = this.currentSolution = e.data.solution;
+				if (solution) {
 					Status.stopIndicator(true);
-					animateMove(Game, data.solution);
 				} else {
 					Status.stopIndicator(false);
 				}
-			};
+			}.bind(this);
 
-			worker.postMessage({action: "solve", param: gameToState(Game)});
+			this.worker.postMessage({action: "solve", param: gameToState(Game)});
 
+			window.clearTimeout(Status.indicatorTimer);
 			Status.indicatorTimer = window.setTimeout(Status.updateIndicator.bind(Status), Status.delay);
 		}
 	});
+
+	Y.on("beforeSetup", FreecellSolver.enable.bind(FreecellSolver));
 }, "0.0.1", {requires: ["solitaire"]});

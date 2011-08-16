@@ -178,6 +178,7 @@ Y.mix(Solitaire, {
 	maxStackHeight: function () { return this.Card.base.height * 4; },
 
 	undo: function () {
+		Y.fire("undo");
 		Undo.undo();
 		Solitaire.endTurn();
 	},

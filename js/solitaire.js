@@ -317,6 +317,8 @@ Y.mix(Solitaire, {
 
 		container.delegate("click", Game.Events.click, ".card");
 		container.delegate("touchend", Game.Events.click, ".card");
+
+		Y.on("endTurn", Game.Events.endTurn);
 	},
 
 
@@ -497,16 +499,6 @@ Y.mix(Solitaire, {
 
 	endTurn: function () {
 		Y.fire("endTurn");
-
-		Solitaire.moves.length && Undo.push(Solitaire.moves);
-		Solitaire.moves = [];
-		Solitaire.activeCard = null;
-
-		if (Game.isWon()) {
-			Game.win();
-		} else {
-			Game.save();
-		}
 	}
 });
 
@@ -635,6 +627,18 @@ Y.Solitaire.Events = {
 			}
 
 			Solitaire.endTurn();
+		},
+
+		endTurn: function () {
+			Solitaire.moves.length && Undo.push(Solitaire.moves);
+			Solitaire.moves = [];
+			Solitaire.activeCard = null;
+
+			if (Game.isWon()) {
+				Game.win();
+			} else {
+				Game.save();
+			}
 		}
 };
 

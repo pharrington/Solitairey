@@ -112,24 +112,28 @@ YUI.add("solver-freecell", function (Y) {
 		timer: null,
 		remainingMoves: null,
 
+		init: function (moves) {
+			this.remainingMoves = moves;
+		},
+
 		stop: function () {
 			this.remainingMoves = null;
 			window.clearTimeout(this.timer);
 			this.timer = null;
 		},
 
-		play: function (game, moves) {
+		pause: function () {
+			window.clearTimeout(this.timer);
+			this.timer = null;
+		},
+
+		playCurrent: function (game) {
 			var move,
 			    card, origin;
 
-			if (!this.remainingMoves) {
-				this.remainingMoves = moves || null;
-			}
+			if (!this.remainingMoves) { return; }
 
-			moves = this.remainingMoves;
-			if (!moves) { return; }
-
-			move = moveToCardAndStack(game, moves);
+			move = moveToCardAndStack(game, this.remainingMoves);
 			card = move.card;
 			origin = card.stack;
 
@@ -138,11 +142,41 @@ YUI.add("solver-freecell", function (Y) {
 				move.stack.updateCardsPosition();
 			});
 			card.moveTo(move.stack);
+		},
 
-			this.remainingMoves = moves.next;
-			this.timer = window.setTimeout(this.play.partial(game).bind(this), this.interval);
+		prev: function (game) {
+			var prev = this.remainingMoves.prev;
 
-			game.endTurn();
+			if (prev) {
+				game.undo();
+				this.remainingMoves = prev;
+			}
+		},
+
+		next: function (game) {
+			var current = this.remainingMoves,
+			    next = this.remainingMoves.next;
+
+			this.playCurrent(game);
+
+			if (next) {
+				next.prev = current;
+				this.remainingMoves = next;
+			}
+
+			Y.fire("endTurn", true);
+		},
+
+		play: function (game) {
+			var move,
+			    card, origin;
+
+			if (!this.remainingMoves) { return; }
+
+			this.next(game);
+			this.timer = window.setTimeout(function () {
+				this.play(game);
+			}.bind(this), this.interval);
 		}
 	};
 
@@ -186,16 +220,45 @@ YUI.add("solver-freecell", function (Y) {
 
 		show: function () {
 			var bar = Y.Node.create("<div id=solver_bar></div>"),
-			    indicator = Y.Node.create("<span>");
-			/*
-			    controls = Y.Node.create(
-				"<div class=controls><div class=play></div><div class=pause></div><div class=rewind></div><div class=fastforward></div></div>");
-			bar.append(controls);
-				*/
+			    indicator = Y.Node.create("<span class=indicator>"),
+			    next = Y.Node.create("<div class=fastforward>"),
+			    prev = Y.Node.create("<div class=rewind>"),
+			    playPause = Y.Node.create("<div class=play>"),
+			    controls = Y.Node.create("<div class=controls>"),
+			    playCallback;
+
+			next.on("click", function () {
+				Animation.next(Game);
+			});
+			prev.on("click", function () {
+				Animation.prev(Game);
+			});
+			playPause.on("click", function () {
+				/*
+				 * Here I tie up state with the DOM
+				 * Maybe thats alright, as its interface state being stored in the interface
+				 */
+
+				if (this.hasClass("play")) {
+					Animation.play(Game);
+					this.toggleClass("play");
+					this.toggleClass("pause");
+				} else if (this.hasClass("pause")) {
+					Animation.pause();
+					this.toggleClass("pause");
+					this.toggleClass("play");
+				}
+			});
+
+			controls.append(prev);
+			controls.append(playPause);
+			controls.append(next);
 
 			bar.append(indicator);
-			this.indicator = indicator;
+			bar.append(controls);
 			Y.one("body").append(bar);
+
+			this.indicator = indicator;
 
 			this.bar = bar;
 		},
@@ -251,7 +314,7 @@ YUI.add("solver-freecell", function (Y) {
 		attachEvents: function () {
 			if (this.attached) { return; }
 
-			var stop = Animation.stop.bind(Animation);
+			var pause = Animation.pause.bind(Animation);
 
 			// start the solver if the current game supports it
 			Y.on("afterSetup", function () {
@@ -263,16 +326,15 @@ YUI.add("solver-freecell", function (Y) {
 			}.bind(this));
 
 			// if a solution isn't currently being played, find a new solution on every new turn
-			Y.on("endTurn", function () {
-				if (Animation.timer || !this.isSupported()) { return; }
+			Y.on("endTurn", function (dontResolve) {
+				if (dontResolve || !this.isSupported()) { return; }
 				this.solve();
 			}.bind(this));
 
 			// human interaction stops playing the current solution
 			document.documentElement.addEventListener("mousedown", function (e) {
-				Y.on("undo", stop);
 				if (e.target.id === "solve") { return; }
-				stop();
+				pause();
 			}, true);
 
 			this.attached = true;
@@ -284,19 +346,13 @@ YUI.add("solver-freecell", function (Y) {
 			var menu = Y.one("#menu"),
 			    solveButton = Y.Node.create("<li class=end><a id=solve>Solve</a></li>");
 
-			solveButton.on("click", this.playSolution.bind(this));
+			solveButton.on("click", function () {
+				Animation.play(Game);
+			});
 
 			menu.one(".end").removeClass("end");
 			menu.append(solveButton);
 			Status.show();
-		},
-
-		playSolution: function () {
-			var solution = this.currentSolution;
-
-			if (solution) {
-				Animation.play(Game, solution);
-			}
 		},
 
 		solve: function () {
@@ -308,6 +364,8 @@ YUI.add("solver-freecell", function (Y) {
 			this.worker = new Worker("js/solver-freecell-worker.js");
 			this.worker.onmessage = function (e) {
 				var solution = this.currentSolution = e.data.solution;
+
+				Animation.init(solution);
 				if (solution) {
 					Status.stopIndicator(true);
 				} else {
@@ -322,5 +380,6 @@ YUI.add("solver-freecell", function (Y) {
 		}
 	});
 
+	window.Animation = Animation;
 	Y.on("beforeSetup", FreecellSolver.enable.bind(FreecellSolver));
 }, "0.0.1", {requires: ["solitaire"]});

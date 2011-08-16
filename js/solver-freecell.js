@@ -234,12 +234,12 @@ YUI.add("solver-freecell", function (Y) {
 			}
 
 			solveButton = Y.one("#solve");
-			children = Y.one("#menu").get("children");
-			last = children.item(children.size() - 1);
-
 			if (solveButton) {
 				solveButton.get("parentNode").remove();
 			}
+
+			children = Y.one("#menu").get("children");
+			last = children.item(children.size() - 1);
 
 			if (last) {
 				last.addClass("end");

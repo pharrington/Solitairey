@@ -19,7 +19,6 @@ Current games include:
 - Will O' The Wisp
 - Yukon
 
-***
 License
 =======
 

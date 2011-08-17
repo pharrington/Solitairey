@@ -186,7 +186,7 @@ GameState.prototype = {
 	},
 
 	_serialized: null,
-	// TODO write a serialize function
+	// TODO write a real hash function
 	serialize: function () {
 		if (this._serialized !== null) { return this._serialized; }
 

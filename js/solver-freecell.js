@@ -252,6 +252,8 @@ YUI.add("solver-freecell", function (Y) {
 		},
 
 		show: function () {
+			if (Y.one("#solver_bar")) { return; }
+
 			var bar = Y.Node.create("<div id=solver_bar></div>"),
 			    indicator = Y.Node.create("<span class=indicator>"),
 			    next = Y.Node.create("<div class=fastforward>"),
@@ -317,24 +319,8 @@ YUI.add("solver-freecell", function (Y) {
 		},
 
 		disable: function () {
-			var children,
-			    last,
-			    solveButton;
-
 			if (this.worker) {
 				this.worker.terminate();
-			}
-
-			solveButton = Y.one("#solve");
-			if (solveButton) {
-				solveButton.get("parentNode").remove();
-			}
-
-			children = Y.one("#menu").get("children");
-			last = children.item(children.size() - 1);
-
-			if (last) {
-				last.addClass("end");
 			}
 
 			Status.hide();
@@ -362,7 +348,7 @@ YUI.add("solver-freecell", function (Y) {
 
 			// human interaction stops playing the current solution
 			document.documentElement.addEventListener("mousedown", function (e) {
-				if (e.target.id === "solve" || e.target.className.match(/\bpause\b/)) { return; }
+				if (e.target.className.match(/\bpause\b/)) { return; }
 				pause();
 			}, true);
 
@@ -370,17 +356,6 @@ YUI.add("solver-freecell", function (Y) {
 		},
 
 		createUI: function () {
-			if (Y.one("#solve")) { return; }
-
-			var menu = Y.one("#menu"),
-			    solveButton = Y.Node.create("<li class=end><a id=solve>Solve</a></li>");
-
-			solveButton.on("click", function () {
-				Animation.play(Game);
-			});
-
-			menu.one(".end").removeClass("end");
-			menu.append(solveButton);
 			Status.show();
 		},
 

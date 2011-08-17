@@ -497,7 +497,9 @@ YUI.add("solitaire-ios", function (Y) {
 		menu.append(cancel);
 
 		nav.append(showMenu);
-		navigator.onLine ? nav.append(fb) : fb.remove();
+		if (fb) {
+			navigator.onLine ? nav.append(fb) : fb.remove();
+		}
 
 		nav.append(undo.addClass("button"));
 

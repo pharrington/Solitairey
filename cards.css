@@ -30,6 +30,10 @@ a {
 	cursor: pointer;
 }
 
+.hidden {
+	display: none;
+}
+
 .card, .stack {
 	position: absolute;
 }
@@ -254,6 +258,10 @@ p {
 	border-left: 15px solid #ddd;
 }
 
+.play:hover {
+	border-left-color: #32c700;
+}
+
 .pause {
 	top: 0;
 	width: 4px;
@@ -261,6 +269,10 @@ p {
 	border-color: #ddd;
 	border-left: 5px solid;
 	border-right: 5px solid;
+}
+
+.pause:hover {
+	border-color: #32c700;
 }
 
 .rewind {
@@ -282,6 +294,14 @@ p {
 	content: "";
 }
 
+.rewind:hover {
+	border-right-color: #32c700;
+}
+
+.rewind:hover:after {
+	background: #32c700;
+}
+
 .fastforward {
 	top: 0;
 	height: 0px;
@@ -299,6 +319,14 @@ p {
 	width: 4px;
 	background: #ddd;
 	content: "";
+}
+
+.fastforward:hover {
+	border-left-color: #32c700;
+}
+
+.fastforward:hover:after {
+	background: #32c700;
 }
 
 .scrollable {

@@ -1,4 +1,4 @@
-Solitairey is an Javascript Solitaire collection using YUI 3.
+Solitairey is a JavaScript Solitaire collection using YUI 3.
 
 Current games include:
 
@@ -6,11 +6,15 @@ Current games include:
 - Flower Garden
 - Forty Thieves
 - Freecell
+- Golf
 - Grandfather's Clock
 - Klondike
 - Monte Carlo
 - Pyramid
+- Russian Solitaire
 - Scorpion
-- Spider
+- Spider (1, 2, and 4 Suit)
+- Spiderette
 - Tri Towers
+- Will O' The Wisp
 - Yukon

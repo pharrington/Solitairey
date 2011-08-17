@@ -107,12 +107,29 @@ YUI.add("solver-freecell", function (Y) {
 		return ret;
 	}
 
+	function withSelector(selector, callback) {
+		var node = Y.one(selector);
+
+		if (node) {
+			callback(node);
+		}
+	}
+
 	var Animation = {
 		interval: 500,
 		timer: null,
 		remainingMoves: null,
 
 		init: function (moves) {
+			var current = moves;
+
+			while (current) {
+				if (current.next) {
+					current.next.prev = current;
+				}
+				current = current.next;
+			}
+
 			this.remainingMoves = moves;
 		},
 
@@ -125,6 +142,12 @@ YUI.add("solver-freecell", function (Y) {
 		pause: function () {
 			window.clearTimeout(this.timer);
 			this.timer = null;
+
+			withSelector("#solver_bar .pause", function (node) {
+				node.removeClass("pause");
+				node.addClass("play");
+			});
+
 		},
 
 		playCurrent: function (game) {
@@ -148,7 +171,7 @@ YUI.add("solver-freecell", function (Y) {
 			var prev = this.remainingMoves.prev;
 
 			if (prev) {
-				game.undo();
+				Y.fire("undo", true);
 				this.remainingMoves = prev;
 			}
 		},
@@ -160,7 +183,6 @@ YUI.add("solver-freecell", function (Y) {
 			this.playCurrent(game);
 
 			if (next) {
-				next.prev = current;
 				this.remainingMoves = next;
 			}
 
@@ -172,6 +194,11 @@ YUI.add("solver-freecell", function (Y) {
 			    card, origin;
 
 			if (!this.remainingMoves) { return; }
+
+			withSelector("#solver_bar .play", function (node) {
+				node.removeClass("play");
+				node.addClass("pause");
+			});
 
 			this.next(game);
 			this.timer = window.setTimeout(function () {
@@ -206,13 +233,19 @@ YUI.add("solver-freecell", function (Y) {
 		},
 
 		stopIndicator: function (solved) {
+			var indicator = this.indicator;
+
 			window.clearTimeout(this.indicatorTimer);
-			if (!this.indicator) { return; }
+			if (!indicator) { return; }
 
 			if (solved) {
-				this.indicator.set("text", "Solution found");
+				indicator.set("text", "Solution found");
+				withSelector("#solver_bar .controls", function (node) {
+					node.removeClass("hidden");
+				});
+
 			} else {
-				this.indicator.set("text", "Unable to find solution");
+				indicator.set("text", "Unable to find solution");
 			}
 
 			this.indicatorTimer = null;
@@ -224,7 +257,7 @@ YUI.add("solver-freecell", function (Y) {
 			    next = Y.Node.create("<div class=fastforward>"),
 			    prev = Y.Node.create("<div class=rewind>"),
 			    playPause = Y.Node.create("<div class=play>"),
-			    controls = Y.Node.create("<div class=controls>"),
+			    controls = Y.Node.create("<div class='controls hidden'>"),
 			    playCallback;
 
 			next.on("click", function () {
@@ -241,12 +274,8 @@ YUI.add("solver-freecell", function (Y) {
 
 				if (this.hasClass("play")) {
 					Animation.play(Game);
-					this.toggleClass("play");
-					this.toggleClass("pause");
 				} else if (this.hasClass("pause")) {
 					Animation.pause();
-					this.toggleClass("pause");
-					this.toggleClass("play");
 				}
 			});
 
@@ -333,7 +362,7 @@ YUI.add("solver-freecell", function (Y) {
 
 			// human interaction stops playing the current solution
 			document.documentElement.addEventListener("mousedown", function (e) {
-				if (e.target.id === "solve") { return; }
+				if (e.target.id === "solve" || e.target.className.match(/\bpause\b/)) { return; }
 				pause();
 			}, true);
 
@@ -359,6 +388,10 @@ YUI.add("solver-freecell", function (Y) {
 			if (this.worker) {
 				this.worker.terminate();
 			}
+
+			withSelector("#solver_bar .controls", function (node) {
+				node.addClass("hidden");
+			});
 
 			this.currentSolution = null;
 			this.worker = new Worker("js/solver-freecell-worker.js");

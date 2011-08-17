@@ -20,7 +20,8 @@ Current games include:
 - Yukon
 
 ***
-**License**
+License
+=======
 
 (FreeBSD License)
 

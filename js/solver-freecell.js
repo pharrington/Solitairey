@@ -388,6 +388,5 @@ YUI.add("solver-freecell", function (Y) {
 		}
 	});
 
-	window.Animation = Animation;
 	Y.on("beforeSetup", FreecellSolver.enable.bind(FreecellSolver));
 }, "0.0.1", {requires: ["solitaire"]});

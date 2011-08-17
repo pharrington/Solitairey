@@ -316,8 +316,8 @@ Y.mix(Solitaire, {
 		container.delegate("click", Game.Events.click, ".card");
 		container.delegate("touchend", Game.Events.click, ".card");
 
-		Y.on("endTurn", Game.Events.endTurn);
-		Y.on("undo", Game.Events.undo);
+		Y.on("solitaire|endTurn", Game.Events.endTurn);
+		Y.on("solitaire|undo", Game.Events.undo);
 	},
 
 

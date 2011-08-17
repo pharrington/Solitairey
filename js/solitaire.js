@@ -1236,7 +1236,10 @@ Y.Solitaire.Stack = {
 				}
 			}
 
-			height += last.height;
+			if (last) {
+				height += last.height;
+			}
+
 			if (height <= max) {
 				this.rankHeight = 0;
 				this.hiddenRankHeight = 0;

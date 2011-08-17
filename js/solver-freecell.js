@@ -4,9 +4,9 @@
 YUI.add("solver-freecell", function (Y) {
 	Y.namespace("Solitaire.Solver.Freecell");
 
-	// only let this work with Web Workers
+	// only let this work with web workers and typed arrays
 
-	if (!Worker) { return; }
+	if (!(window.Worker && window.ArrayBuffer && window.Uint8Array)) { return; }
 
 	var Solitaire = Y.Solitaire,
 	    FreecellSolver = Solitaire.Solver.Freecell,

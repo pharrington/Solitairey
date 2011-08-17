@@ -179,8 +179,6 @@ Y.mix(Solitaire, {
 
 	undo: function () {
 		Y.fire("undo");
-		Undo.undo();
-		Solitaire.endTurn();
 	},
 
 	pushMove: function (move) {
@@ -319,6 +317,7 @@ Y.mix(Solitaire, {
 		container.delegate("touchend", Game.Events.click, ".card");
 
 		Y.on("endTurn", Game.Events.endTurn);
+		Y.on("undo", Game.Events.undo);
 	},
 
 
@@ -639,6 +638,14 @@ Y.Solitaire.Events = {
 			} else {
 				Game.save();
 			}
+		},
+
+		undo: function () {
+			var args = argsArray(arguments);
+
+			args.unshift("endTurn");
+			Undo.undo();
+			Y.fire.apply(Y, args);
 		}
 };
 

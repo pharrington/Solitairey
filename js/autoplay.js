@@ -1,10 +1,14 @@
 YUI.add("solitaire-autoplay", function (Y) {
+	Y.namespace("Solitaire.Autoplay");
+
 	var Solitaire = Y.Solitaire,
+	    Autoplay = Solitaire.Autoplay,
+	    whenWon = true,
 	    autoPlayInterval = null,
 	    autoPlayable = ["Klondike", "Klondike1T", "FortyThieves", "GClock", "Freecell", "FlowerGarden", "Yukon"];
 
 	Y.on("endTurn", function () {
-		if (autoPlayable.indexOf(Solitaire.game.name()) === -1) { return; }
+		if (!whenWon || autoPlayable.indexOf(Solitaire.game.name()) === -1) { return; }
 
 		if (autoPlayInterval === null && isWon()) {
 			autoPlayInterval = setInterval(autoPlay, 130);
@@ -52,4 +56,14 @@ YUI.add("solitaire-autoplay", function (Y) {
 
 		return !stop;
 	}
+
+	Y.mix(Autoplay, {
+		enable: function () {
+			whenWon = true;
+		},
+
+		disable: function () {
+			whenWon = false;
+		}
+	});
 }, "0.0.1", {requires: ["solitaire"]});

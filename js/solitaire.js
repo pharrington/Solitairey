@@ -1176,22 +1176,18 @@ Y.Solitaire.Stack = {
 
 		pushStack: function (proxy) {
 			var origin = Solitaire.activeCard.stack,
-			    //cards = origin.cards,
 			    stack = this;
 
 			/* save the card's index in the stack so we can properly undo this move */
-			//Y.Array.each(cards, function (card, i) {
 			origin.eachCard(function (card, i) {
 				card.index = i;
 			});
 
 			Game.stationary(function () {
-				//Y.Array.each(proxy.cards, function (card) {
 				proxy.eachCard(function (card) {
 					card.moveTo(stack);
 					card.index = -1;
 				});
-				//Y.Array.each(cards, function (card) {
 				origin.eachCard(function (card) {
 					card.index = -1;
 				});

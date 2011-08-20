@@ -133,13 +133,9 @@ YUI.add("solver-freecell", function (Y) {
 			this.remainingMoves = moves;
 		},
 
-		stop: function () {
-			this.remainingMoves = null;
-			window.clearTimeout(this.timer);
-			this.timer = null;
-		},
-
 		pause: function () {
+			Solitaire.Autoplay.enable();
+
 			window.clearTimeout(this.timer);
 			this.timer = null;
 
@@ -147,7 +143,6 @@ YUI.add("solver-freecell", function (Y) {
 				node.removeClass("pause");
 				node.addClass("play");
 			});
-
 		},
 
 		playCurrent: function (game) {
@@ -158,6 +153,9 @@ YUI.add("solver-freecell", function (Y) {
 
 			move = moveToCardAndStack(game, this.remainingMoves);
 			card = move.card;
+
+			if (!card) { return; }
+
 			origin = card.stack;
 
 			card.after(function () {
@@ -194,6 +192,8 @@ YUI.add("solver-freecell", function (Y) {
 			    card, origin;
 
 			if (!this.remainingMoves) { return; }
+
+			Solitaire.Autoplay.disable();
 
 			withSelector("#solver_bar .play", function (node) {
 				node.removeClass("play");
@@ -359,10 +359,14 @@ YUI.add("solver-freecell", function (Y) {
 			Status.show();
 		},
 
-		solve: function () {
+		stop: function () {
 			if (this.worker) {
 				this.worker.terminate();
 			}
+		},
+
+		solve: function () {
+			this.stop();
 
 			withSelector("#solver_bar .controls", function (node) {
 				node.addClass("hidden");

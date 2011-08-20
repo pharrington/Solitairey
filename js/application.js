@@ -283,7 +283,8 @@
 	function exportAPI() {
 		Y.Solitaire.Application = {
 			resizeEvent: "resize",
-			GameChooser: GameChooser
+			GameChooser: GameChooser,
+			newGame: newGame
 		};
 	}
 

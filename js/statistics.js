@@ -4,6 +4,7 @@
 YUI.add("statistics", function (Y) {
 	var loaded,
 	    won,
+	    enabled = true,
 	    localStorage = window.localStorage,
 	    Solitaire = Y.Solitaire,
 	    Statistics = Y.namespace("Solitaire.Statistics");
@@ -31,7 +32,7 @@ YUI.add("statistics", function (Y) {
 	});
 
 	Y.on("win", function () {
-		if (won) { return; }
+		if (won || !enabled) { return; }
 
 		var winDisplayDelay = 1000;
 		loaded = null;
@@ -48,6 +49,7 @@ YUI.add("statistics", function (Y) {
 		var winDisplay = Y.one("#win_display");
 
 		winDisplay && winDisplay.remove();
+		Statistics.enable();
 	});
 
 	/*
@@ -92,6 +94,7 @@ YUI.add("statistics", function (Y) {
 		output += "<li>Current win streak: <span class='streak'>" + streakCount + "</li>";
 		output += "<li>Total wins: <span class='wins'>" + winCount + "</li>";
 		output += "<li>Total loses: <span class='loses'>" + loseCount + "</li>";
+		output += "<div class=replay_options><button class=new_deal>New Deal</button><button class=choose_game>Choose Game</button></div>";
 
 		output += "</ul></div>";
 
@@ -176,8 +179,29 @@ YUI.add("statistics", function (Y) {
 		};
 	}
 
-	Statistics.winDisplay = function () {
-		Y.one("body").append(winDisplay());
-	};
+	Y.mix(Statistics, {
+		winDisplay: function () {
+			var Application = Solitaire.Application;
+
+			Y.one("body").append(winDisplay());
+
+			Y.on("click", function () {
+				Application.newGame();
+			}, Y.one("#win_display .new_deal"));
+
+			Y.on("click", function () {
+				Application.GameChooser.show(true);
+			}, Y.one("#win_display .choose_game"));
+
+		},
+
+		enable: function () {
+			enabled = true;
+		},
+
+		disable: function () {
+			enabled = false;
+		}
+	});
 
 }, "0.0.1", {requires: ["solitaire", "array-extras"]});

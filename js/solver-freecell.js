@@ -178,6 +178,7 @@ YUI.add("solver-freecell", function (Y) {
 			var current = this.remainingMoves,
 			    next = this.remainingMoves.next;
 
+			Solitaire.Statistics.disable();
 			this.playCurrent(game);
 
 			if (next) {

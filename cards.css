@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Questrial);
+
 html, body, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
 	position: relative;
 	margin: 0;
@@ -91,7 +93,7 @@ a {
 }
 
 #game-chooser h2 {
-	font-size: 1.2em;
+	font: 20px Questrial;
 	cursor: pointer;
 	padding-left: 1em;
 }
@@ -110,8 +112,8 @@ p {
 	background: #fff;
 	left: 4em;
 	top: 4em;
-	width: 58em;
-	height: 42em;
+	width: 930px;
+	min-height: 700px;
 	z-index: 1001;
 	padding-top: 2em;
 	padding-right: 1em;
@@ -135,7 +137,7 @@ p {
 }
 
 #descriptions {
-	width: 15em;
+	width: 260px;
 	background: #eec;
 	padding-top: 2em;
 	margin-top: -2em;
@@ -150,7 +152,7 @@ p {
 
 #descriptions li {
 	padding: 0.5em 0 0.5em 0;
-	border-bottom: 1px solid #000;
+	border-bottom: 1px solid #a1a172;
 }
 
 #descriptions li:hover {

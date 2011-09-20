@@ -82,15 +82,17 @@
 	GameChooser = {
 		selected: null,
 		fade: false,
-		draggable: true,
 
 		init: function () {
-			if (this.draggable) {
-				new Y.DD.Drag({
-					node: Y.one("#game-chooser"),
-					handles: [Y.one("#game-chooser > .titlebar")]
-				});
-			}
+			this.refit();
+		},
+
+		refit: function () {
+			var node = Y.one("#game-chooser"),
+			    width = node.get("winWidth"),
+			    height = node.get("winHeight");
+
+			node.setStyle("min-height", height);
 		},
 
 		show: function (fade) {
@@ -133,7 +135,6 @@
 			if (node) {
 				this.selected = game;
 				new Y.Node(document.getElementById(game)).addClass("selected");
-				Y.one("#game-chooser-contents").append(node);
 			}
 
 			if (previous && previous !== game) {
@@ -144,10 +145,7 @@
 		unSelect: function () {
 			if (!this.selected) { return; }
 
-			var description = Y.one("#game-chooser-contents > .description");
-
 			new Y.Node(document.getElementById(this.selected)).removeClass("selected");
-			Y.one("#" + this.selected).append(description);
 			this.selected = null;
 		}
 	};
@@ -173,7 +171,8 @@
 	}
 
 	function showDescription() {
-		GameChooser.select(this._node.parentNode.id);
+		GameChooser.select(this._node.id);
+		GameChooser.choose();
 	}
 
 	function attachEvents() {
@@ -183,8 +182,7 @@
 		Y.on("click", newGame, Y.one("#new_deal"));
 		Y.on("click", function () { GameChooser.hide(); }, Y.one("#game-chooser .close"));
 
-		Y.delegate("click", showDescription, "#descriptions", "h2");
-		Y.delegate("click", function () { GameChooser.choose(); }, "#game-chooser", ".choose");
+		Y.delegate("click", showDescription, "#descriptions", "li");
 
 		Y.one("document").on("keydown", function (e) {
 			e.keyCode === 27 && GameChooser.hide();
@@ -212,6 +210,7 @@
 
 	function resize() {
 		active.game.resize(sizeRatio());
+		GameChooser.refit();
 	}
 
 	function sizeRatio() {

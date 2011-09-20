@@ -67,14 +67,11 @@
 
 				el.setStyles(css);
 
-				body.addClass("scrollable");
 			},
 
 			hide: function() {
 				css.display = "none";
 				element().setStyles(css);
-
-				body.removeClass("scrollable");
 			}
 		};
 	}()),
@@ -106,6 +103,7 @@
 			}
 
 			Y.one("#game-chooser").addClass("show");
+			Y.one("body").addClass("scrollable");
 		},
 
 		hide: function () {
@@ -115,6 +113,7 @@
 
 			Y.one("#game-chooser").removeClass("show");
 			Y.fire("gamechooser:hide", this);
+			Y.one("body").removeClass("scrollable");
 		},
 
 		choose: function () {
@@ -177,10 +176,9 @@
 
 	function attachEvents() {
 		Y.on("click", restart, Y.one("#restart"));
-		Y.on("click", function () { GameChooser.show(true); }, Y.one("#choose_game"));
+		Y.on("click", function () { GameChooser.show(false); }, Y.one("#choose_game"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
-		Y.on("click", function () { GameChooser.hide(); }, Y.one("#game-chooser .close"));
 
 		Y.delegate("click", showDescription, "#descriptions", "li");
 

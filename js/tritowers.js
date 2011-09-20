@@ -136,6 +136,13 @@ YUI.add("tri-towers", function (Y) {
 				return diff === 1 || diff === 12;
 			},
 
+			playable: function () {
+				var stack = this.stack;
+
+				return (stack.field === "deck" && this === stack.last()) ||
+					(this.isFree() && this.validTarget(Game.foundation.stacks[0]));
+			},
+
 			isFree: function () {
 				var stack = this.stack,
 				    next = stack.next(),

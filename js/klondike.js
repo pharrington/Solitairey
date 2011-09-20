@@ -102,6 +102,20 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Card: instance(Solitaire.Card, {
+		playable: function () {
+
+			switch (this.stack.field) {
+			case "tableau":
+				return !this.isFaceDown;
+			case "foundation":
+				return false;
+			case "waste":
+				return this.isFree();
+			case "deck":
+				return true;
+			}
+		},
+
 		validFoundationTarget: function (target) {
 			if (!target) {
 				return this.rank === 1;

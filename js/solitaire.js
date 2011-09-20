@@ -304,6 +304,11 @@ Y.mix(Solitaire, {
 		callback.call(this);
 
 		Solitaire.moves = [];
+
+		Game.eachStack(function (s) {
+			s.updateCardsStyle();
+		});
+
 		Y.fire("afterSetup");
 	},
 
@@ -632,6 +637,9 @@ Y.Solitaire.Events = {
 			Solitaire.moves.length && Undo.push(Solitaire.moves);
 			Solitaire.moves = [];
 			Solitaire.activeCard = null;
+			Game.eachStack(function (s) {
+				s.updateCardsStyle();
+			});
 
 			if (Game.isWon()) {
 				Game.win();
@@ -682,7 +690,7 @@ Y.Solitaire.Deck = {
 			var cards = this.cards,
 			    maxInt = Math.pow(2, 31),
 			    rand,
-			    temp, temp,
+			    temp,
 			    i;
 
 			for (i = cards.length; i > 1; i--) {
@@ -880,6 +888,10 @@ Y.Solitaire.Card = {
 
 		isFree: function () {
 			return this === this.stack.last();
+		},
+
+		playable: function () {
+			return this.stack.field === "deck" || (this.isFree() && (this.stack !== "foundation"));
 		},
 
 		createNode: function () {
@@ -1096,6 +1108,18 @@ Y.Solitaire.Stack = {
 				}
 
 				return card;
+			});
+		},
+
+		updateCardsStyle: function () {
+			var field = this.field;
+
+			field === "foundation" || this.eachCard(function (c) {
+				if (c.playable()) {
+					c.node.addClass("playable");
+				} else {
+					c.node.removeClass("playable");
+				}
 			});
 		},
 

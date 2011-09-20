@@ -96,6 +96,14 @@ YUI.add("agnes", function (Y) {
 		},
 
 	        Card: instance(Klondike.Card, {
+			playable: function () {
+				if (this.stack.field === "reserve") {
+					return this.isFree();
+				} else {
+					return Klondike.Card.playable.call(this);
+				}
+			},
+
 			validTarget: function (stack) {
 				var target = stack.last();
 

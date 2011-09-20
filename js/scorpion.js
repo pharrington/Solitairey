@@ -88,6 +88,12 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Card: instance(Solitaire.Card, {
+		playable: function () {
+			var field = this.stack.field;
+
+			return field === "deck" || field === "tableau" && !this.isFaceDown;
+		},
+
 		validTarget: function (stack) {
 			var target = stack.last();
 

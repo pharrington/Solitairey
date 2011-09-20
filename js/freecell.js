@@ -83,6 +83,17 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Card: instance(Solitaire.Card, {
+		playable: function () {
+			switch (this.stack.field) {
+			case "reserve":
+				return true;
+			case "tableau":
+				return this.createProxyStack();
+			case "foundation": 
+				return false;
+			}
+		},
+
 		createProxyStack: function () {
 			var stack = Solitaire.Card.createProxyStack.call(this);
 

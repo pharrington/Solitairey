@@ -44,6 +44,10 @@ a {
 	z-index: -10;
 }
 
+.card.playable {
+	cursor: pointer;
+}
+
 #menu {
 	display: inline-block;
 	list-style: none;

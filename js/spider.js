@@ -36,9 +36,7 @@ var Solitaire = Y.Solitaire,
 		var deck = this.deck.stacks[0],
 		    i, len;
 
-		if (Y.Array.some(this.tableau.stacks, function (stack) {
-			return !stack.cards.length;
-			})) {
+		if (hasFreeTableaus()) {
 			return;
 		}
 
@@ -98,6 +96,18 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Card: instance(Solitaire.Card, {
+		playable: function () {
+			var previous = this.stack[this.index - 1];
+
+			switch (this.stack.field) {
+			case "tableau":
+				return this.createProxyStack();
+			case "deck": 
+				return !hasFreeTableaus(); case "foundation":
+				return false;
+			}
+		},
+
 		validTarget: function (stack) {
 			if (stack.field !== "tableau") { return false; }
 
@@ -107,6 +117,12 @@ var Solitaire = Y.Solitaire,
 		}
 	})
 });
+
+function hasFreeTableaus() {
+	return Y.Array.some(Game.tableau.stacks, function (stack) {
+		return !stack.cards.length;
+	});
+}
 
 Y.Array.each(Spider.fields, function (field) {
 	Spider[field].Stack = instance(Spider.Stack);

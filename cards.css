@@ -17,9 +17,9 @@ body {
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	-moz-background-size: 100% 100%;
-	overflow: hidden;
 	font-family: helvetica, verdana, sans;
 	z-index: -99;
+	overflow: hidden;
 }
 
 ul {
@@ -92,86 +92,75 @@ a {
 	padding-right: 12px;
 }
 
-#game-chooser h2 {
-	font: 20px Questrial;
-	cursor: pointer;
-	padding-left: 1em;
-}
-
 p {
 	margin-bottom: 1em;
+}
+
+#game-chooser {
+	display: none;
+	position: absolute;
+	padding: 50px 35px;
+	left: 0;
+	top: 0;
+	z-index: 1001;
+	background-attachment: fixed;
+	background-image: url(green.jpg);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	-moz-background-size: 100% 100%;
 }
 
 #game-chooser.show {
 	display: block;
 }
 
-#game-chooser, #options-chooser {
+#game-chooser h2 {
+	font: 20px Questrial;
+	
+	text-align: center;
+	padding: 6px 0 6px 0;
+	background: rgba(255, 255, 255, 0.5);
+}
+
+.titlebar {
 	display: none;
-	position: absolute;
-	background: #fff;
-	left: 4em;
-	top: 4em;
-	width: 930px;
-	min-height: 700px;
-	z-index: 1001;
-	padding-top: 2em;
-	padding-right: 1em;
-	border: 1px solid #000;
-	-webkit-box-shadow: 2px 2px 5px #000;
-	-moz-box-shadow: 2px 2px 5px #000;
-	-o-box-shadow: 2px 2px 5px #000;
-	-box-shadow: 2px 2px 5px #000;
+}
+
+#game-chooser-contents, #description {
+	display: inline-block;
 }
 
 #game-chooser-contents > .description {
-	position: absolute;
-	top: 2.5em;
-	left: 22em;
-	width: 37em;
-        font-size: 0.9em;
-}
-
-#game-chooser-contents {
+	width: 100%;
 	height: 100%;
-}
-
-#descriptions {
-	width: 260px;
-	background: #eec;
-	padding-top: 2em;
-	margin-top: -2em;
-	height: 100%;
-	overflow-y: scroll;
 }
 
 #descriptions div {
-	display: none;
 	position: absolute;
+	width: 100%;
+	height: 127px;
+	overflow: hidden;
 }
 
 #descriptions li {
-	padding: 0.5em 0 0.5em 0;
-	border-bottom: 1px solid #a1a172;
+	border: 2px solid #eec;
+	border-radius: 7px;
+	float:  left;
+	width: 250px;
+	height: 150px;
+	margin: 10px;
+	background-image: -webkit-linear-gradient(#EEC, #a1a172);
+	background-color: #EEC;
+	overflow: hidden;
+	cursor: pointer;
 }
 
 #descriptions li:hover {
-	background: #fff;
+	background: #eec;
 }
 
 .selected {
 	background: #fff;
-}
-
-.titlebar {
-	height: 2em;
-	width: 100%;
-	background: #147243;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 1;
-	border-bottom: 1px #000 solid;
 }
 
 .close {
@@ -332,7 +321,7 @@ p {
 }
 
 .scrollable {
-	overflow: scroll;
+	overflow-y: scroll;
 }
 
 #fb {
@@ -343,115 +332,80 @@ p {
 
 .layout {
 	background-repeat: no-repeat;
+	background-position: center;
 	margin: 0 auto 10px auto;
 }
 
 .agnes .layout {
-	background-image: url(layouts/agnes.png);
-	width: 250px;
-	height: 275px;
+	background-image: url(layouts/mini/agnes.png);
 }
 
 .flower-garden .layout {
-	background-image: url(layouts/flower-garden.png);
-	width: 248px;
-	height: 350px;
+	background-image: url(layouts/mini/flower-garden.png);
 }
 
 .forty-thieves .layout {
-	background-image: url(layouts/forty-thieves.png);
-	width: 500px;
-	height: 203px;
+	background-image: url(layouts/mini/forty-thieves.png);
 }
 
 .freecell .layout {
-	background-image: url(layouts/freecell.png);
-	width: 500px;
-	height: 293px;
+	background-image: url(layouts/mini/freecell.png);
 }
 
 .golf .layout {
-	background-image: url(layouts/golf.png);
-	width: 477px;
-	height: 350px;
+	background-image: url(layouts/mini/golf.png);
 }
 
 .grandfathers-clock .layout {
-	background-image: url(layouts/gclock.png);
-	width: 575px;
-	height: 289px;
+	background-image: url(layouts/mini/gclock.png);
 }
 
 .klondike .layout {
-	background-image: url(layouts/klondike.png);
-	width: 500px;
-	height: 277px;
+	background-image: url(layouts/mini/klondike.png);
 }
 
 .klondike1t .layout {
-	background-image: url(layouts/klondike1t.png);
-	width: 500px;
-	height: 273px;
+	background-image: url(layouts/mini/klondike1t.png);
 }
 
 .monte-carlo .layout {
-	background-image: url(layouts/montecarlo.png);
-	width: 281px;
-	height: 350px;
+	background-image: url(layouts/mini/montecarlo.png);
 }
 
 .pyramid .layout {
-	background-image: url(layouts/pyramid.png);
-	width: 409px;
-	height: 300px;
+	background-image: url(layouts/mini/pyramid.png);
 }
 
 .scorpion .layout {
-	background-image: url(layouts/scorpion.png);
-	width: 416px;
-	height: 350px;
+	background-image: url(layouts/mini/scorpion.png);
 }
 
 .spider .layout {
-	background-image: url(layouts/spider.png);
-	width: 500px;
-	height: 185px;
+	background-image: url(layouts/mini/spider.png);
 }
 
 .spider1s .layout {
-	background-image: url(layouts/spider1s.png);
-	width: 500px;
-	height: 185px;
+	background-image: url(layouts/mini/spider1s.png);
 }
 
 .spider2s .layout {
-	background-image: url(layouts/spider2s.png);
-	width: 500px;
-	height: 185px;
+	background-image: url(layouts/mini/spider2s.png);
 }
 
 .spiderette .layout {
-        background-image: url(layouts/spiderette.png);
-        width: 500px;
-        height: 273px;
+        background-image: url(layouts/mini/spiderette.png);
 }
 
 .tri-towers .layout {
-	background-image: url(layouts/tritowers.png);
-	width: 500px;
-	height: 264px;
+	background-image: url(layouts/mini/tritowers.png);
 }
 
 .will-o-the-wisp .layout {
-	background-image: url(layouts/will-o-the-wisp.png);
-	width: 500px;
-	height: 244px;
+	background-image: url(layouts/mini/will-o-the-wisp.png);
 }
 
 .yukon .layout, .russian-solitaire .layout {
-	background-image: url(layouts/yukon.png);
-	width: 473px;
-	height: 350px;
+	background-image: url(layouts/mini/yukon.png);
 }
 
 button {
@@ -470,3 +424,8 @@ button {
 	display: table;
 	margin: 20px auto;
 }
+
+.description blockquote {display: none;}
+.description h3 {display: none;}
+.description p {display: none;}
+.description button {display: none;}

@@ -445,7 +445,7 @@ Y.mix(Solitaire, {
 		var cancel = Solitaire.preventDefault;
 
 		Y.on("selectstart", cancel, document);
-		Y.on("mousedown", cancel, document.body);
+		Y.on("mousedown", cancel, document);
 		Y.on("contextmenu", function (e) {
 			var target = e.target;
 

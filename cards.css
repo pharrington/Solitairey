@@ -44,6 +44,10 @@ a {
 	z-index: -10;
 }
 
+.card {
+	border-radius: 7px;
+}
+
 .card.playable {
 	cursor: pointer;
 }

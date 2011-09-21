@@ -40,9 +40,7 @@ YUI.add("statistics", function (Y) {
 
 		recordWin();
 
-		setTimeout(function () {
-			Statistics.winDisplay();
-		}, winDisplayDelay);
+		explodeFoundations();
 	});
 
 	Y.on("beforeSetup", function () {
@@ -51,6 +49,37 @@ YUI.add("statistics", function (Y) {
 		winDisplay && winDisplay.remove();
 		Statistics.enable();
 	});
+
+	function explodeFoundations() {
+		var delay = 500,
+		    duration = 900,
+		    interval = 900;
+
+		Game.eachStack(function (stack) {
+			stack.eachCard(function (card) {
+				if (!card) { return; }
+
+				var node = card.node;
+				if (card !== stack.last()) {
+					node.addClass("hidden");
+					return;
+				}
+
+				node.plug(Y.Breakout, {columns: 5});
+				(function (node) {
+					setTimeout(function () {
+						node.breakout.explode({random: 0.65, duration: duration});
+					}, delay);
+				})(node);
+
+				delay += interval;
+			});
+		}, "foundation");
+
+		setTimeout(function () {
+			Statistics.winDisplay();
+		}, delay + 200);
+	}
 
 	/*
 	 * TODO: a templating system might make this less grody
@@ -204,4 +233,4 @@ YUI.add("statistics", function (Y) {
 		}
 	});
 
-}, "0.0.1", {requires: ["solitaire", "array-extras"]});
+}, "0.0.1", {requires: ["solitaire", "array-extras", "breakout"]});

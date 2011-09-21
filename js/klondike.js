@@ -39,7 +39,10 @@ var Solitaire = Y.Solitaire,
 		}
 
 		Klondike.Card.updatePosition = updatePosition;
-		waste.update();
+
+		waste.eachCard(function (c) {
+			c.updatePosition();
+		});
 	},
 
 	redeal: function () {
@@ -168,19 +171,29 @@ Y.mix(Klondike.Tableau.Stack, {
 
 Y.mix(Klondike.Waste.Stack, {
 	// always display only the last three cards
-	update: function () {
+	setCardPosition: function (card) {
 		var cards = this.cards,
+		    last = cards.last(),
 		    stack = this;
 
-		Y.Array.each(cards.slice(-6, -3), function (card, i) {
+		Y.Array.each(cards.slice(-2), function (card, i) {
 			card.left = stack.left;
-			card.updatePosition();
+			card.top = stack.top;
 		});
 
-		Y.Array.each(cards.slice(-3), function (card, i) {
-			card.left = stack.left + i * 0.2 * card.width;
-			card.updatePosition();
-		});
+		if (!cards.length) {
+			card.left = stack.left;
+		}
+
+		if (cards.length === 1) {
+			card.left = stack.left + 0.2 * card.width;
+		} else if (cards.length > 1) {
+			last.left = stack.left + 0.2 * card.width;
+			last.top = stack.top;
+			card.left = stack.left + 0.4 * card.width;
+		}
+
+		card.top = stack.top;
 	}
 }, true);
 

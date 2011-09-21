@@ -450,7 +450,7 @@ Y.mix(Solitaire, {
 		var cancel = Solitaire.preventDefault;
 
 		Y.on("selectstart", cancel, document);
-		Y.on("mousedown", cancel, document);
+		Y.on("mousedown", cancel, document.body);
 		Y.on("contextmenu", function (e) {
 			var target = e.target;
 
@@ -872,6 +872,7 @@ Y.Solitaire.Card = {
 				foundation = stacks[i];
 				if (this.isFree() && this.validTarget(foundation)) {
 					this.moveTo(foundation);
+					origin.updateCardsPosition();
 					origin.update();
 
 					Solitaire.endTurn();
@@ -891,7 +892,7 @@ Y.Solitaire.Card = {
 		},
 
 		playable: function () {
-			return this.stack.field === "deck" || (this.isFree() && (this.stack !== "foundation"));
+			return this.stack.field === "deck" || (this.isFree() && (this.stack.field !== "foundation"));
 		},
 
 		createNode: function () {
@@ -1066,7 +1067,7 @@ Y.Solitaire.Stack = {
 
 			for (i = 0, len = cards.length; i < len; i++) {
 				if (cards[i]) {
-					if (callback(cards[i], i) === false) { return false; }
+					if (callback.call(this, cards[i], i) === false) { return false; }
 				}
 			}
 
@@ -1098,16 +1099,22 @@ Y.Solitaire.Stack = {
 		updateCardsPosition: function () {
 			var cards = this.cards;
 
-			this.proxy || this.adjustRankHeight();
-			this.setCards(cards.length, function (i) {
-				var card = cards[i];
+			Game.stationary(function () {
+				this.proxy || this.adjustRankHeight();
+				this.setCards(cards.length, function (i) {
+					var card = cards[i];
 
-				if (card) {
-					card.stack = this;
-					card.setRankHeight();
-				}
+					if (card) {
+						card.stack = this;
+						card.setRankHeight();
+					}
 
-				return card;
+					return card;
+				});
+			}.bind(this));
+
+			this.eachCard(function (c) {
+				c.updatePosition();
 			});
 		},
 

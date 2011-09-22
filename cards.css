@@ -64,6 +64,7 @@ a {
 	background: #eee;
 	background: -webkit-linear-gradient(#fff, #ddd);
 	background: -moz-linear-gradient(#fff, #ddd);
+	background: -ms-linear-gradient(#fff, #ddd);
 	box-shadow: 0 1px 12px 0.5px #000;
 	left: 20%;
 	height: 35px;
@@ -87,6 +88,7 @@ a {
 #menu li:hover {
 	background: #bbb -webkit-linear-gradient(#fff, #bbb);
 	background: #bbb -moz-linear-gradient(#fff, #bbb);
+	background: #bbb -ms-linear-gradient(#fff, #bbb);
 }
 
 #menu a {
@@ -160,6 +162,7 @@ p {
 	background-color: #EEC;
 	background-image: -webkit-linear-gradient(#EEC, #a1a172);
 	background-image: -moz-linear-gradient(#EEC, #a1a172);
+	background-image: -ms-linear-gradient(#EEC, #a1a172);
 	overflow: hidden;
 	cursor: pointer;
 }
@@ -201,8 +204,9 @@ p {
 	padding: 1em 1em 2em 1em;
 	-webkit-box-shadow: 0 0 10px 3px #fff;
 	-moz-box-shadow: 0 0 10px 3px #fff;
-	-o-box-shadow: 0 0 10px 3px #fff;
 	-box-shadow: 0 0 10px 3px #fff;
+	-ms-box--shadow: 0 0 10px 3px #fff;
+	-o-box-shadow: 0 0 10px 3px #fff;
 }
 
 #win_display > p {
@@ -229,9 +233,10 @@ p {
 	width: 500px;
 	height: 15px;
 	padding: 10px;
-	background: black;
+	background-color: black;
 	background-image: -webkit-linear-gradient(#000, #222);
 	background-image: -moz-linear-gradient(#000, #222);
+	background-image: -ms-linear-gradient(#000, #222);
 	position: fixed;
 	bottom: 0;
 	left: 25%;
@@ -431,6 +436,7 @@ button {
 	background-color: #eec;
 	background-image: -webkit-linear-gradient(white, #EEC);
 	background-image: -moz-linear-gradient(white, #EEC);
+	background-image: -ms-linear-gradient(white, #EEC);
 	padding: 6px 17px;
 	border-radius: 5px;
 	box-shadow: inset 0 0 3px 1px #fff;
@@ -443,6 +449,7 @@ button:hover {
 	background-color: #a1a172;
 	background-image: -webkit-linear-gradient(#EEC, #a1a172);
 	background-image: -moz-linear-gradient(#EEC, #a1a172);
+	background-image: -ms-linear-gradient(#EEC, #a1a172);
 }
 
 .replay_options {

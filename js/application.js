@@ -86,7 +86,6 @@
 
 		refit: function () {
 			var node = Y.one("#game-chooser"),
-			    width = node.get("winWidth"),
 			    height = node.get("winHeight");
 
 			node.setStyle("min-height", height);
@@ -242,13 +241,16 @@
 		attachEvents();
 		loadOptions();
 
-		if (save) {
-			active.game = Y.Solitaire[games[active.name]];
-			clearDOM();
-			active.game.loadGame(save);
-		} else {
-			playGame(active.name);
-		}
+		Preloader.preload();
+		Preloader.loaded(function () {
+			if (save) {
+				active.game = Y.Solitaire[games[active.name]];
+				clearDOM();
+				active.game.loadGame(save);
+			} else {
+				playGame(active.name);
+			}
+		});
 
 		GameChooser.init();
 	}
@@ -285,6 +287,65 @@
 			newGame: newGame
 		};
 	}
+
+	var Preloader = {
+		loadingCount: 0,
+
+		loaded: function (callback) {
+			if (this.loadingCount) {
+				setTimeout(function () {
+					this.loaded(callback);
+				}.bind(this), 100);
+			} else {
+				callback();
+			}
+		},
+	
+		load: function (path) {
+			var image = new Image;
+
+			image.onload = function () {
+				--this.loadingCount;
+			}.bind(this);
+			image.src = path;
+
+			this.loadingCount++;
+		},
+
+		preload: function () {
+			    var rank,
+			    icons = ["agnes",
+			    	     "flower-garden",
+				     "forty-thieves",
+				     "freecell",
+				     "gclock",
+				     "golf",
+				     "klondike1t",
+				     "klondike",
+				     "montecarlo",
+				     "pyramid",
+				     "scorpion",
+				     "spider1s",
+				     "spider2s",
+				     "spiderette",
+				     "spider",
+				     "tritowers",
+				     "will-o-the-wisp",
+				     "yukon"];
+
+			Y.Array.each(["s", "h", "c", "d"], function (suit) {
+				for (rank = 1; rank <= 13; rank++) {
+					this.load(Y.Solitaire.Card.base.theme + "/" + suit + rank + ".png");
+				}
+			}, this);
+
+			this.load(Y.Solitaire.Card.base.theme + "/facedown.png");
+
+			Y.Array.each(icons, function (image) {
+				this.load("layouts/mini/" + image + ".png");
+			}, this);
+		}
+	};
 
 	yui.use.apply(yui, modules().concat(main));
 }());

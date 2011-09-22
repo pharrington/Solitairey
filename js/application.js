@@ -182,6 +182,7 @@
 
 		Y.delegate("click", showDescription, "#descriptions", "li");
 
+                Y.on("click", function () { GameChooser.hide(); }, Y.one("#close-chooser"));
 		Y.one("document").on("keydown", function (e) {
 			e.keyCode === 27 && GameChooser.hide();
 		});

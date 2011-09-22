@@ -181,6 +181,14 @@ p {
 	cursor: pointer;
 }
 
+#close-chooser {
+	font-size: 30px;
+	border: 0px;
+	margin: 20px auto;
+	width: 300px;
+	display: block;
+}
+
 #win_display {
 	background-color: #EEC;
 	width: 35em;

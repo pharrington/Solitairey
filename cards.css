@@ -50,6 +50,18 @@ a {
 
 .card.playable {
 	cursor: pointer;
+	-webkit-transition: box-shadow 0.2s linear;
+	-moz-transition: box-shadow 0.2s linear;
+	-ms-transition: box-shadow 0.2s linear;
+	transition: box-shadow 0.2s linear;
+}
+
+.card.playable:hover {
+	box-shadow: 0 0 6px 4px rgba(255, 252, 143, 0.9);
+	-webkit-transition: box-shadow 0s;
+	-moz-transition: box-shadow 0s;
+	-ms-transition: box-shadow 0s;
+	transition: box-shadow 0s;
 }
 
 #menu {

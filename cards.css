@@ -469,6 +469,7 @@ button:hover {
 	background-image: -webkit-linear-gradient(#EEC, #a1a172);
 	background-image: -moz-linear-gradient(#EEC, #a1a172);
 	background-image: -ms-linear-gradient(#EEC, #a1a172);
+	box-shadow: none;
 }
 
 .replay_options {

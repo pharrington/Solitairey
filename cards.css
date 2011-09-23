@@ -32,6 +32,13 @@ a {
 	cursor: pointer;
 }
 
+.loading {
+	z-index: 10000;
+	position: absolute;
+	bottom: 30px;
+	right: 30px;
+}
+
 .hidden {
 	display: none;
 }

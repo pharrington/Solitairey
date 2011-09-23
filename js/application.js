@@ -297,7 +297,9 @@
 					this.loaded(callback);
 				}.bind(this), 100);
 			} else {
+				Y.one(".loading").addClass("hidden");
 				callback();
+				Fade.hide();
 			}
 		},
 	
@@ -344,6 +346,9 @@
 			Y.Array.each(icons, function (image) {
 				this.load("layouts/mini/" + image + ".png");
 			}, this);
+
+			Fade.show();
+			Y.one(".loading").removeClass("hidden");
 		}
 	};
 

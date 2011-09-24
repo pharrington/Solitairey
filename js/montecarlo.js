@@ -8,6 +8,26 @@ var Solitaire = Y.Solitaire,
 		Solitaire.createEvents.call(this);
 
 		Y.delegate("click", Solitaire.Events.clickEmptyDeck, Solitaire.selector, ".stack");
+
+		Y.on("solitaire|endTurn", this.deckPlayable);
+		Y.on("solitaire|afterSetup", this.deckPlayable);
+	},
+
+	deckPlayable: function () {
+		var gap = false,
+		    node = Game.deck.stacks[0].node;
+
+		Game.eachStack(function (s) {
+			if (!gap && Y.Array.indexOf(s.cards, null) !== -1) {
+				gap = true;
+			}
+		}, "tableau");
+
+		if (gap) {
+			node.addClass("playable");
+		} else {
+			node.removeClass("playable");
+		}
 	},
 
 	deal: function () {
@@ -63,8 +83,7 @@ var Solitaire = Y.Solitaire,
 
 	},
 
-	width: function () { return this.Card.base.width * 10.75; },
-	height: function () { return this.Card.base.height * 7.5; },
+	height: function () { return this.Card.base.height * 6; },
 
 	Stack: instance(Solitaire.Stack, {
 		images: { deck: "freeslot.png" },
@@ -108,7 +127,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				spacing: 0,
 				top: 0,
-				left: function () { return Solitaire.Card.width * 8.5; }
+				left: function () { return Solitaire.Card.width * 10.5; }
 			}
 		},
 		field: "foundation"
@@ -120,7 +139,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				spacing: 0,
 				top: 0,
-				left: 0
+				left: function () { return Solitaire.Card.width * 2}
 			}
 		},
 		field: "deck",
@@ -142,7 +161,7 @@ var Solitaire = Y.Solitaire,
 				vspacing: 1.25,
 				hspacing: 0,
 				top: 0,
-				left: function () { return Solitaire.Card.width * 1.5; }
+				left: function () { return Solitaire.Card.width * 3.5; }
 			}
 		},
 		field: "tableau"

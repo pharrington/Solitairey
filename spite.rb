@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require "RMagick"
 require "fileutils"
 
@@ -56,4 +58,6 @@ def split name
   end
 end
 
-split "dondorf"
+if ARGV[0]
+  split ARGV[0]
+end

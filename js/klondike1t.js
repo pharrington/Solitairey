@@ -14,6 +14,15 @@ YUI.add("klondike1t", function (Y) {
 
 		Waste: instance(Klondike.Waste, {
 			Stack: instance(Solitaire.Stack)
+		}),
+
+	    	Deck: instance(Klondike.Deck, {
+			Stack: instance(Klondike.Deck.Stack, {
+				createNode: function () {
+					Klondike.Deck.Stack.createNode.call(this);
+					this.node.removeClass("playable");
+				}
+			})
 		})
 	    });
 }, "0.0.1", {requires: ["klondike"]});

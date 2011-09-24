@@ -158,6 +158,8 @@ Y.mix(Solitaire, {
 	moves: null,
 	selector: "body",
 	offset: {left: 50, top: 70},
+	padding: {x: 50, y: 50},
+	widthScale: 0,
 
 	noop: function () {},
 
@@ -173,9 +175,13 @@ Y.mix(Solitaire, {
 		return Y.one(Solitaire.selector);
 	},
 
-	width: function () { return this.Card.base.width * 10; },
-	height: function () { return this.Card.base.height * 6; },
-	maxStackHeight: function () { return this.Card.base.height * 4; },
+	width: function () { return this.Card.base.width * this.widthScale; },
+	height: function () { return this.Card.base.height * 4.2; },
+	maxStackHeight: function () {
+		return Solitaire.Application.windowHeight - 
+			normalize(this.Tableau.stackConfig.layout.top) -
+			Solitaire.offset.top;
+	},
 
 	undo: function () {
 		Y.fire("undo");
@@ -261,8 +267,10 @@ Y.mix(Solitaire, {
 	},
 
 	loadGame: function (data) {
-		this.setup(function () {
-			this.unserialize(data);
+		this.unanimated(function () {
+			this.setup(function () {
+				this.unserialize(data);
+			});
 		});
 
 		Y.fire("loadGame");
@@ -296,20 +304,27 @@ Y.mix(Solitaire, {
 		Solitaire.moves = null;
 		Undo.clear();
 
-		this.init();
-		Y.Solitaire.Animation.initQueue();
-		this.createStacks();
-		this.createEvents();
-		this.createDraggables();
-		callback.call(this);
+		this.stationary(function () {
+			this.init();
+			Y.Solitaire.Animation.initQueue();
+			this.createStacks();
+			this.createEvents();
+			this.createDraggables();
+			callback.call(this);
+
+		});
 
 		Solitaire.moves = [];
+		Y.fire("afterSetup");
+
+		Y.Solitaire.Animation.dealing = true;
 
 		Game.eachStack(function (s) {
 			s.updateCardsStyle();
+			s.updateCardsPosition();
 		});
 
-		Y.fire("afterSetup");
+		Y.Solitaire.Animation.dealing = false;
 	},
 
 	createEvents: function () {
@@ -376,6 +391,8 @@ Y.mix(Solitaire, {
 				stacks[i] = stack;
 			};
 		}
+
+
 		f.stacks = stacks;
 
 		typeof f.init === "function" && f.init();
@@ -447,7 +464,9 @@ Y.mix(Solitaire, {
 	},
 
 	init: function () {
-		var cancel = Solitaire.preventDefault;
+		var cancel = Solitaire.preventDefault,
+		    minX, maxX,
+		    fields;
 
 		Y.on("selectstart", cancel, document);
 		Y.on("mousedown", cancel, document.body);
@@ -459,14 +478,27 @@ Y.mix(Solitaire, {
 			}
 		}, document);
 
-		Y.Array.each(Game.fields, function (field) {
-			Game[field.toLowerCase()] = Game.createField(Game[field]);
+		this.scale(1);
+
+		fields = Y.Array.map(Game.fields, function (field) {
+			return Game[field.toLowerCase()] = Game.createField(Game[field]);
 		});
 
 		// TODO: refactor this conditional into the above iteration
 		if (Game.fields.indexOf("Deck" === -1)) {
 			Game.deck = Game.createField(Game.Deck);
 		}
+
+		// find the game/card width ratio
+		minX = Math.min.apply(Math, Y.Array.map(fields, function (f) {
+			return Y.Array.map(f.stacks, function (s) { return s.left; });
+		}).flatten());
+
+		maxX = Math.max.apply(Math, Y.Array.map(fields, function (f) {
+			return Y.Array.map(f.stacks, function (s) { return s.left; });
+		}).flatten()) + this.Card.width;
+
+		this.widthScale = (maxX - minX) / this.Card.base.width;
 	},
 
 	preventDefault: function (e) {
@@ -742,11 +774,6 @@ Y.Solitaire.Card = {
 		top: 0,
 
 		base: {
-			theme: "dondorf",
-			hiddenRankHeight: 10,
-			rankHeight: 32,
-			width: 79,
-			height: 123
 		},
 
 		origin: {
@@ -907,7 +934,8 @@ Y.Solitaire.Card = {
 					useShim: false
 				});
 
-			this.updateStyle();
+			node.setStyles({left: -this.width, top: -this.height});
+			//this.updateStyle();
 			this.setRankHeight();
 
 			Solitaire.container().append(node);
@@ -1375,6 +1403,7 @@ Y.Solitaire.Stack = {
 
 Y.Solitaire.Animation = {
 		animate: true,
+		dealing: false,
 		duration: 0.5, // seconds
 		interval: 20, // milliseconds
 		queue: new Y.AsyncQueue(),
@@ -1399,7 +1428,9 @@ Y.Solitaire.Animation = {
 		       
 			if (from.top === to.top && from.left === to.left) { return; }
 
-			if (!fields ||
+			if (this.dealing) {
+				duration = speeds.slow;
+			} else if (!fields ||
 			    fields.from === fields.to ||
 			    fields.to === "waste" ||
 			    fields.to === "foundation") {
@@ -1419,7 +1450,7 @@ Y.Solitaire.Animation = {
 				to: to,
 				easing: Y.Easing.easeOut,
 				duration: duration
-			    });
+			});
 
 			anim.on("end", function () {
 				card.positioned = true;

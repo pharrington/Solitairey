@@ -3,9 +3,6 @@ YUI.add("golf", function (Y) {
 	Golf = Y.Solitaire.Golf = instance(Solitaire, {
 		fields: ["Deck", "Foundation", "Tableau"],
 
-		width: function () { return this.Card.base.width * 10; },
-		height: function () { return this.Card.base.height * 5; },
-
 		deal: function () {
 			var card,
 			    stack,
@@ -49,6 +46,8 @@ YUI.add("golf", function (Y) {
 
 			return won;
 		},
+
+		height: function () { return this.Card.base.height * 4; },
 
 		Deck: instance(Solitaire.Deck, {
 			field: "deck",

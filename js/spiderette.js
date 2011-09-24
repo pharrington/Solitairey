@@ -3,7 +3,6 @@ YUI.add("spiderette", function (Y) {
 	    Klondike = Solitaire.Klondike,
 	    Spider = Solitaire.Spider,
 	    Spiderette = Y.Solitaire.Spiderette = instance(Spider, {
-		width: Klondike.width,
 		height: Klondike.height,
 		deal: Klondike.deal,
 

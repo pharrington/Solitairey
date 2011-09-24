@@ -39,9 +39,9 @@ var Solitaire = Y.Solitaire,
 		return total;
 	},
 
-	width: function () { return this.Card.base.width * 11; },
-
 	Stack: instance(Solitaire.Stack),
+
+	height: function () { return this.Card.base.height * 5; },
 
 	Foundation: {
 		stackConfig: {

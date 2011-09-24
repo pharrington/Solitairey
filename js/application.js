@@ -146,7 +146,78 @@
 			new Y.Node(document.getElementById(this.selected)).removeClass("selected");
 			this.selected = null;
 		}
+	},
+
+	/* theres no mechanism yet to load the appropriate deck depending on the scaled card width
+	 * so we just load the 122x190 cards and call it a day :/
+	 */
+	Themes = {
+		dondorf: {
+			sizes: [61, 79, 95, 122],
+			61: {
+				hiddenRankHeight: 7,
+				rankHeight: 25,
+				dimensions: [61, 95]
+			},
+
+			79: {
+				hiddenRankHeight: 10,
+				rankHeight: 32,
+				dimensions: [79, 123]
+			},
+
+			95: {
+				hiddenRankHeight: 12,
+				rankHeight: 38,
+				dimensions: [95, 148]
+			},
+
+			122: {
+				hiddenRankHeight: 15,
+				rankHeight: 48,
+				dimensions: [122, 190]
+			}
+		},
+
+		snapToSize: function (width) {
+			var theme,
+			    sizes = theme.sizes;
+
+			width = clamp(width, sizes[0], sizes[sizes.length - 1]) >>> 0;
+
+			while (Y.Array.indexOf(sizes, width) === -1) {
+				width++;
+			}
+
+			return width;
+		},
+
+		load: function (name) {
+			var Solitaire = Y.Solitaire,
+			    base = Solitaire.Card.base;
+
+			if (!(name in this)) {
+				name = "dondorf";
+			}
+
+			if (base.theme !== name) {
+				this.set(name, 122);
+			}
+		},
+
+		set: function (name, size) {
+			var theme = this[name][size];
+
+			Y.mix(Y.Solitaire.Card.base, {
+				theme: name + "/" + size,
+				hiddenRankHeight: theme.hiddenRankHeight,
+				rankHeight: theme.rankHeight,
+				width: theme.dimensions[0],
+				height: theme.dimensions[1]
+			}, true);
+		}
 	};
+
 
 	function modules() {
 		var modules = extensions.slice(),
@@ -186,6 +257,12 @@
 			e.keyCode === 27 && GameChooser.hide();
 		});
 
+		Y.on("afterSetup", function() {
+			active.game.stationary(function () {
+				resize()
+			});
+		});
+
 		attachResize();
 	}
 
@@ -207,17 +284,19 @@
 	}
 
 	function resize() {
-		active.game.resize(sizeRatio());
-		GameChooser.refit();
-	}
-
-	function sizeRatio() {
 		var game = active.game,
 		    el = game.container(),
-		    width = el.get("winWidth"),
-		    height = el.get("winHeight");
+		    padding = Y.Solitaire.padding,
+		    offset = Y.Solitaire.offset,
+		    width = el.get("winWidth") - padding.x,
+		    height = el.get("winHeight") - padding.y,
+		    ratio = 1;
 
-		return Math.min(width / game.width(), height / game.height(), 1);
+		Y.Solitaire.Application.windowHeight = height;
+		ratio = Math.min((width - offset.left) / game.width(), (height - offset.top) / game.height());
+
+		active.game.resize(ratio);
+		GameChooser.refit();
 	}
 
 	function playGame(name) {
@@ -233,6 +312,8 @@
 		var options = Y.Cookie.get("options");
 
 		options && (active.name = options);
+
+		Themes.load("dondorf");
 	}
 
 	function load() {
@@ -244,8 +325,8 @@
 		Preloader.preload();
 		Preloader.loaded(function () {
 			if (save) {
-				active.game = Y.Solitaire[games[active.name]];
 				clearDOM();
+				active.game = Y.Solitaire[games[active.name]];
 				active.game.loadGame(save);
 			} else {
 				playGame(active.name);
@@ -257,7 +338,6 @@
 
 	function clearDOM() {
 		Y.all(".stack, .card").remove();
-		active.game.scale(sizeRatio());
 	}
 
 	function restart() {
@@ -282,6 +362,7 @@
 
 	function exportAPI() {
 		Y.Solitaire.Application = {
+			windowHeight: 0,
 			resizeEvent: "resize",
 			GameChooser: GameChooser,
 			newGame: newGame

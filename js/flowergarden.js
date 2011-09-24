@@ -25,8 +25,8 @@ var Solitaire = Y.Solitaire,
 		}
 	},
 
-	width: function () { return this.Card.base.width * 11.25; },
-	height: function () { return this.Card.base.height * 7.8; },
+	height: function () { return this.Card.height * 5.5; },
+	maxStackHeight: function () { return this.Card.height * 4.4; },
 
 	Stack: instance(Solitaire.Stack),
 
@@ -36,7 +36,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				hspacing: 1.25,
 				top: 0,
-				left: function () { return Solitaire.Card.width * 4.25; }
+				left: function () { return Solitaire.Card.width * 2.25; }
 			}
 		},
 		field: "foundation",
@@ -48,8 +48,8 @@ var Solitaire = Y.Solitaire,
 			total: 1,
 			layout: {
 				hspacing: 1.25,
-				top: function () { return Solitaire.Card.height * 5.5; },
-				left: function () { return Solitaire.Card.width * 3; }
+				top: function () { return Solitaire.Card.height * 4.5; },
+				left: function () { return Solitaire.Card.width * 1; }
 			}
 		},
 		field: "reserve",
@@ -62,7 +62,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				hspacing: 1.25,
 				top: function () { return Solitaire.Card.height * 1.25; },
-				left: function () { return Solitaire.Card.width * 3; }
+				left: function () { return Solitaire.Card.width * 1; }
 			}
 		},
 		field: "tableau",

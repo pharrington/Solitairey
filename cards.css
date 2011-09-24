@@ -45,17 +45,14 @@ a {
 
 .card, .stack {
 	position: absolute;
+	border-radius: 7px;
 }
 
 .stack {
 	z-index: -10;
 }
 
-.card {
-	border-radius: 7px;
-}
-
-.card.playable {
+.playable {
 	cursor: pointer;
 	-webkit-transition: box-shadow 0.2s linear;
 	-moz-transition: box-shadow 0.2s linear;
@@ -63,7 +60,7 @@ a {
 	transition: box-shadow 0.2s linear;
 }
 
-.card.playable:hover {
+.playable:hover {
 	box-shadow: 0 0 6px 4px rgba(255, 252, 143, 0.9);
 	-webkit-transition: box-shadow 0s;
 	-moz-transition: box-shadow 0s;

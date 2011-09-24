@@ -201,6 +201,7 @@ Y.mix(Klondike.Deck.Stack, {
 	createNode: function () {
 		Solitaire.Stack.createNode.call(this);
 		this.node.on("click", Solitaire.Events.clickEmptyDeck);
+		this.node.addClass("playable");
 	}
 }, true);
 

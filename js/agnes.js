@@ -12,7 +12,7 @@ YUI.add("agnes", function (Y) {
 	    Agnes = Solitaire.Agnes = instance(Klondike, {
 		fields: ["Foundation", "Deck", "Waste", "Tableau", "Reserve"],
 
-		height: function () { return this.Card.base.height * 5.4; },
+		height: function () { return this.Card.base.height * 5.6; },
 		maxStackHeight: function () { return this.Card.height * 4.3; },
 
 		deal: function () {

@@ -1293,6 +1293,7 @@ Y.Solitaire.Stack = {
 
 			if (last) {
 				height += last.height;
+				sumRankHeights = max - last.height;
 			}
 
 			if (height <= max) {
@@ -1301,8 +1302,6 @@ Y.Solitaire.Stack = {
 				return;
 			}
 
-			sumRankHeights = max - last.height;
-			
 			rhHidden = sumRankHeights * (sumHidden / (sumHidden + sumVisible)) / countHidden;
 			rhVisible = sumRankHeights * (sumVisible / (sumHidden + sumVisible)) / countVisible;
 

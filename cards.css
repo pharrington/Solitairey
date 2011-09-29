@@ -478,3 +478,25 @@ button:hover {
 .description h3 {display: none;}
 .description p {display: none;}
 .description button {display: none;}
+
+.chromestore {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+
+.chromestore .hide {
+	display: block;
+	font: 20px Questrial;
+	text-align: right;
+	padding: 0 7px 5px 0;
+}
+
+.chromestore .hide:hover {
+	color: #EEC;
+}
+
+.chromestore img {
+	background: #fff;
+	display: block;
+}

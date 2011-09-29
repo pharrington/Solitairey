@@ -250,6 +250,8 @@
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
 
+		Y.on("click", hideChromeStoreLink, Y.one(".chromestore"));
+
 		Y.delegate("click", showDescription, "#descriptions", "li");
 
                 Y.on("click", function () { GameChooser.hide(); }, Y.one("#close-chooser"));
@@ -300,7 +302,7 @@
 	}
 
 	function playGame(name) {
-		var twoWeeks = 1206900000;
+		var twoWeeks = 1000 * 3600 * 24 * 14;
 
 		active.name = name;
 		active.game = Y.Solitaire[games[name]];
@@ -324,6 +326,7 @@
 
 		Preloader.preload();
 		Preloader.loaded(function () {
+			showChromeStoreLink();
 			if (save) {
 				clearDOM();
 				active.game = Y.Solitaire[games[active.name]];
@@ -367,6 +370,19 @@
 			GameChooser: GameChooser,
 			newGame: newGame
 		};
+	}
+
+        function hideChromeStoreLink() {
+		var expires = 1000 * 3600 * 24 * 365; // one year
+
+		Y.one(".chromestore").addClass("hidden");
+		Y.Cookie.set("disable-chromestore-link", true, {expires: new Date(new Date().getTime() + expires)});
+        }
+
+	function showChromeStoreLink() {
+		if (Y.UA.chrome && !Y.Cookie.get("disable-chromestore-link", Boolean)) {
+			Y.one(".chromestore").removeClass("hidden");
+		}
 	}
 
 	var Preloader = {

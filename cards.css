@@ -362,10 +362,14 @@ p {
 	overflow-y: scroll;
 }
 
-#fb {
+#social {
 	position: absolute;
 	bottom: 10px;
 	left: 20px;
+}
+
+#social > * {
+  float: left;
 }
 
 .layout {

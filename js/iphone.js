@@ -483,7 +483,7 @@ YUI.add("solitaire-ios", function (Y) {
 		menu = Y.one("#menu");
 		body = Y.one("body");
 		undo = Y.one("#undo");
-                fb = Y.one("#fb");
+                fb = Y.one("#social");
 		nav = Y.Node.create("<nav id=navbar>");
 		showMenu = Y.Node.create("<a id=show_menu class='button'>New Game</a>");
 		cancel = Y.Node.create("<li class=cancel><a id='cancel'>Cancel</a></li>");

@@ -351,6 +351,10 @@ YUI.add("solver-freecell", function (Y) {
 				FreecellSolver.disable();
 			});
 
+			Y.on("win", function () {
+				FreecellSolver.disable();
+			});
+
 			// human interaction stops playing the current solution
 			document.documentElement.addEventListener("mousedown", function (e) {
 				if (e.target.className.match(/\bpause\b/)) { return; }

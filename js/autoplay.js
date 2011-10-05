@@ -10,7 +10,7 @@ YUI.add("solitaire-autoplay", function (Y) {
 	Y.on("endTurn", function () {
 		if (!whenWon || autoPlayable.indexOf(Solitaire.game.name()) === -1) { return; }
 
-		if (autoPlayInterval === null && isWon()) {
+		if (autoPlayInterval === null && isEffectivelyWon()) {
 			Y.fire("autoPlay");
 		}
 	});
@@ -38,7 +38,7 @@ YUI.add("solitaire-autoplay", function (Y) {
 		});
 	}
 
-	function isWon() {
+	function isEffectivelyWon() {
 		var stop = false;
 
 		Solitaire.game.eachStack(function (stack) {

@@ -11,13 +11,17 @@ YUI.add("solitaire-autoplay", function (Y) {
 		if (!whenWon || autoPlayable.indexOf(Solitaire.game.name()) === -1) { return; }
 
 		if (autoPlayInterval === null && isWon()) {
-			autoPlayInterval = setInterval(autoPlay, 130);
+			Y.fire("autoPlay");
 		}
 	});
 
 	Y.on("win", function () {
 		clearInterval(autoPlayInterval);
 		autoPlayInterval = null;
+	});
+
+	Y.on("autoPlay", function () {
+		autoPlayInterval = setInterval(autoPlay, 130);
 	});
 
 	function autoPlay() {

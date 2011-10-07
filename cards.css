@@ -86,7 +86,7 @@ a {
 }
 
 #menu li {
-	height: 100%;
+	height: 35px;
 	float: left;
 	border-right: 1px solid #444;
 }

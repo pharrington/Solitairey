@@ -70,8 +70,6 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Card: instance(Solitaire.Card, {
-		rankHeight: 24,
-
 		createProxyStack: function () {
 			var stack;
 

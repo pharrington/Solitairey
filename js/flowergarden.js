@@ -2,6 +2,7 @@ YUI.add("flower-garden", function (Y) {
 
 var Solitaire = Y.Solitaire,
     FlowerGarden = Y.Solitaire.FlowerGarden = instance(Solitaire, {
+	offset: {left: function () { return Solitaire.Card.base.width * 1.5; }, top: 70},
 	fields: ["Foundation", "Reserve", "Tableau"],
 
 	deal: function () {
@@ -36,7 +37,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				hspacing: 1.25,
 				top: 0,
-				left: function () { return Solitaire.Card.width * 4.25; }
+				left: function () { return Solitaire.Card.width * 1.25; }
 			}
 		},
 		field: "foundation",
@@ -49,7 +50,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				hspacing: 1.25,
 				top: function () { return Solitaire.Card.height * 4.5; },
-				left: function () { return Solitaire.Card.width * 3; }
+				left: 0
 			}
 		},
 		field: "reserve",
@@ -62,7 +63,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				hspacing: 1.25,
 				top: function () { return Solitaire.Card.height * 1.25; },
-				left: function () { return Solitaire.Card.width * 3; }
+				left: 0
 			}
 		},
 		field: "tableau",
@@ -158,7 +159,7 @@ Y.mix(FlowerGarden.Stack, {
 Y.mix(FlowerGarden.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
-		    top = last ? last.top + Solitaire.game.Card.rankHeight : this.top,
+		    top = last ? last.top + card.rankHeight : this.top,
 		    left = this.left;
 
 		card.left = left;
@@ -170,7 +171,7 @@ Y.mix(FlowerGarden.Reserve.Stack, {
 
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
-		    left = last ? last.left + Solitaire.Card.width * 0.4 : this.left,
+		    left = last ? last.left + card.width * 0.4 : this.left,
 		    top = this.top;
 
 		card.left = left;

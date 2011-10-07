@@ -27,7 +27,7 @@ var Solitaire = Y.Solitaire,
 	},
 
 	height: function () { return this.Card.base.height * 5.5; },
-	maxStackHeight: function () { return this.Card.height * 4.4; },
+	maxStackHeight: function () { return this.Card.height * 3.1; },
 
 	Stack: instance(Solitaire.Stack),
 

@@ -3,6 +3,7 @@ YUI.add("pyramid", function (Y) {
 var Solitaire = Y.Solitaire,
     Pyramid = Y.Solitaire.Pyramid = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Waste", "Tableau"],
+	width: function () { return Solitaire.Card.base.width * 10; },
 
 	deal: function () {
 		var card,

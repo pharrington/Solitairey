@@ -50,7 +50,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				hspacing: 1.25,
 				top: function () { return Solitaire.Card.height * 4.5; },
-				left: 0
+				left: function () { return Solitaire.Card.width * 0.2; }
 			}
 		},
 		field: "reserve",
@@ -168,7 +168,6 @@ Y.mix(FlowerGarden.Tableau.Stack, {
 }, true);
 
 Y.mix(FlowerGarden.Reserve.Stack, {
-
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
 		    left = last ? last.left + card.width * 0.4 : this.left,
@@ -176,22 +175,6 @@ Y.mix(FlowerGarden.Reserve.Stack, {
 
 		card.left = left;
 		card.top = top;
-	},
-
-	update: function (undo) {
-		if (undo) { return; }
-
-		var stack = this,
-		    left;
-
-		Y.Array.each(this.cards, function (card, i) {
-			left = stack.left + i * card.width * 0.4;
-
-			if (left !== card.left) {
-				card.left = left;
-				card.updatePosition();
-			}
-		});
 	}
 }, true);
 

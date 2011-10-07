@@ -180,7 +180,7 @@ Y.mix(Solitaire, {
 	maxStackHeight: function () {
 		return Solitaire.Application.windowHeight - 
 			normalize(this.Tableau.stackConfig.layout.top) -
-			Solitaire.offset.top;
+			normalize(Game.offset.top);
 	},
 
 	undo: function () {
@@ -494,6 +494,10 @@ Y.mix(Solitaire, {
 			return Y.Array.map(f.stacks, function (s) { return s.left; });
 		}).flatten());
 
+		/*
+		 * assume the leftmost point is the leftmost field
+		 * if it isn't, you should override Solitaire.width
+		 */
 		maxX = Math.max.apply(Math, Y.Array.map(fields, function (f) {
 			return Y.Array.map(f.stacks, function (s) { return s.left; });
 		}).flatten()) + this.Card.width;
@@ -1194,15 +1198,15 @@ Y.Solitaire.Stack = {
 		layout: function (layout) {
 			var hoffset = layout.hoffset * Y.Solitaire.Card.width,
 			    voffset = layout.voffset * Y.Solitaire.Card.height,
-			    gameOffset = Solitaire.offset,
+			    gameOffset = Game.offset,
 			    self = this;
 
 			Y.Array.each(["top", "left"], function (p) {
 				self[p] = normalize(layout[p]);
 			});
 
-			this.left += hoffset + gameOffset.left;
-			this.top += voffset + gameOffset.top;
+			this.left += hoffset + normalize(gameOffset.left);
+			this.top += voffset + normalize(gameOffset.top);
 		},
 
 		deleteItem: function (card) {

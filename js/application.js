@@ -326,14 +326,14 @@
 	function resize() {
 		var game = active.game,
 		    el = game.container(),
-		    padding = Y.Solitaire.padding,
-		    offset = Y.Solitaire.offset,
+		    padding = game.padding,
+		    offset = game.offset,
 		    width = el.get("winWidth") - padding.x,
 		    height = el.get("winHeight") - padding.y,
 		    ratio = 1;
 
 		Y.Solitaire.Application.windowHeight = height;
-		ratio = Math.min((width - offset.left) / game.width(), (height - offset.top) / game.height());
+		ratio = Math.min((width - normalize(offset.left)) / game.width(), (height - normalize(offset.top)) / game.height());
 
 		active.game.resize(ratio);
 		GameChooser.refit();
@@ -353,7 +353,7 @@
 
 		options && (active.name = options);
 
-		Themes.load("air");
+		Themes.load("jolly-royal");
 	}
 
 	function load() {

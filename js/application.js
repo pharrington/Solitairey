@@ -149,9 +149,27 @@
 	},
 
 	/* theres no mechanism yet to load the appropriate deck depending on the scaled card width
-	 * so we just load the 122x190 cards and call it a day :/
+	 * so we just load the largest cards and call it a day :/
 	 */
 	Themes = {
+		air: {
+			sizes: [141],
+			141: {
+				hiddenRankHeight: 17,
+				rankHeight: 55,
+				dimensions: [141, 199]
+			}
+		},
+
+		ancient_egyptians: {
+			sizes: [148],
+			148: {
+				hiddenRankHeight: 17,
+				rankHeight: 50,
+				dimensions: [148, 200]
+			}
+		},
+
 		dondorf: {
 			sizes: [61, 79, 95, 122],
 			61: {
@@ -179,6 +197,24 @@
 			}
 		},
 
+		"jolly-royal": {
+			sizes: [144],
+			144: {
+				hiddenRankHeight: 20,
+				rankHeight: 52,
+				dimensions: [144, 200]
+			}
+		},
+
+		paris: {
+			sizes: [131],
+			131: {
+				hiddenRankHeight: 18,
+				rankHeight: 48,
+				dimensions: [131, 204]
+			}
+		},
+
 		snapToSize: function (width) {
 			var theme,
 			    sizes = theme.sizes;
@@ -194,14 +230,16 @@
 
 		load: function (name) {
 			var Solitaire = Y.Solitaire,
-			    base = Solitaire.Card.base;
+			    base = Solitaire.Card.base,
+			    sizes;
 
 			if (!(name in this)) {
 				name = "dondorf";
 			}
 
 			if (base.theme !== name) {
-				this.set(name, 122);
+				sizes = this[name].sizes;
+				this.set(name, sizes[sizes.length - 1]);
 			}
 		},
 
@@ -315,7 +353,7 @@
 
 		options && (active.name = options);
 
-		Themes.load("dondorf");
+		Themes.load("air");
 	}
 
 	function load() {

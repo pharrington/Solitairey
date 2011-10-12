@@ -15,7 +15,8 @@ YUI.add("solver-freecell", function (Y) {
 		h: 1,
 		c: 2,
 		d: 3
-	    };
+	    },
+	    enabled = true;
 
 	function cardToValue(card) {
 		return card ? card.rank << 2 | suitTable[card.suit] : 0;
@@ -316,7 +317,9 @@ YUI.add("solver-freecell", function (Y) {
 			if (this.isSupported()) {
 				this.createUI();
 			}
+
 			this.attachEvents();
+			enabled = true;
 		},
 
 		disable: function () {
@@ -325,6 +328,11 @@ YUI.add("solver-freecell", function (Y) {
 			}
 
 			Status.hide();
+			enabled = false;
+		},
+
+		isEnabled: function () {
+			return enabled;
 		},
 
 		attachEvents: function () {
@@ -375,6 +383,8 @@ YUI.add("solver-freecell", function (Y) {
 		},
 
 		solve: function () {
+			if (!enabled) { return; }
+
 			this.stop();
 
 			withSelector("#solver_bar .controls", function (node) {

@@ -13,7 +13,7 @@
 	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css">
 	<![endif]>
 
-	<script type="text/javascript" src="js/yui-min.js"></script>
+	<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>
 	<script type="text/javascript" src="js/yui-breakout.js"></script>
 	<script type="text/javascript" src="js/solitaire.js"></script>
 	<script type="text/javascript" src="js/iphone.js"></script>
@@ -57,11 +57,14 @@
 		<li>
 			<a id="choose_game">Choose Solitaire Game...</a>
 		</li>
-                <li>
+                <li class="divider">
 			<a id="undo">Undo</a>
 		</li>
                 <li>
-			<a id="options">Options</a>
+			<a id="rules">Rules</a>
+		</li>
+                <li>
+			<a id="choose_options">Options</a>
 		</li>
                 <li class="end">
 			<a id="about">About</a>
@@ -362,6 +365,50 @@
 		</div>
                 <button id=close-chooser>Return to game</button>
 	</div>
+        <div id=options-chooser class="hidden">
+          <div class="tabview">
+            <ul>
+              <li><a href="#play-options">Gameplay</a></li>
+              <li><a href="#graphics-options">Graphics</a></li>
+            </ul>
+            <div>
+              <div id=play-options>
+                <p>
+                  <label for=autoplay_toggle>Autoplay Solved Games</label>
+                  <input id=autoplay_toggle type=checkbox />
+                </p>
+                <p>
+                  <label for=autoflip_toggle>Automatically Flip Cards</label>
+                  <input id=autoflip_toggle type=checkbox />
+                </p>
+                <p>
+                  <label for=solver_toggle>Enable Solver</label>
+                  <input id=solver_toggle type=checkbox />
+                </p>
+                <p>
+                  <label for=score_toggle>Show Score</label>
+                  <input id=score_toggle type=checkbox />
+                </p>
+                <p>
+                  <label for=time_toggle>Show Time</label>
+                  <input id=time_toggle type=checkbox />
+                </p>
+              </div>
+              <div id=graphics-options>
+                <p>
+                  <label for=animate_toggle>Animate Cards</label>
+                  <input id=animate_toggle type=checkbox />
+                </p>
+                <h3>Cards</h3>
+                <ul class=cards>
+                </ul>
+                <h3>Backgrounds</h3>
+                <ul>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
 	<img src=loading.gif class="loading hidden">
 	<div class="chromestore hidden">
 		<a class=hide>[Hide]</a>

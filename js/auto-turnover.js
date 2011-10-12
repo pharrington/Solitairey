@@ -24,6 +24,10 @@ YUI.add("auto-turnover", function (Y) {
 
 		disable: function () {
 			enabled = false;
+		},
+
+		isEnabled: function () {
+			return enabled;
 		}
 	}, true);
 }, "0.0.1", {requires: ["solitaire"]});

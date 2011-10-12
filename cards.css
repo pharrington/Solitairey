@@ -117,8 +117,12 @@ a {
 	padding-right: 12px;
 }
 
+#menu .divider {
+	border-right: #000 solid 2px;
+}
+
 p {
-	margin-bottom: 1em;
+	margin-bottom: 16px;
 }
 
 #game-chooser {
@@ -186,7 +190,7 @@ p {
 	background: #eec;
 }
 
-.selected {
+#game-chooser .selected {
 	background: #fff;
 }
 
@@ -502,4 +506,57 @@ button:hover {
 .chromestore img {
 	background: #fff;
 	display: block;
+}
+
+#options-chooser {
+	width: 700px;
+	margin: 90px auto;
+	background: -webkit-linear-gradient(white 50%, #ddd);
+	padding: 20px;
+	z-index: 1001;
+	font-family: Questrial;
+	font-size: 20px;
+	border-radius: 10px;
+	border: #111 5px solid;
+}
+
+.tabview .yui3-tabview-panel {
+	border: #666 1px solid;
+	padding: 20px 20px 4px 20px;
+	border-radius: 0 0 6px 6px;
+}
+
+.tabview .yui3-tab {
+	border-radius: 6px 6px 0 0;
+	margin-right: 10px;
+	padding: 3px 6px;
+	text-shadow: 1px 1px 1px #ccc;
+}
+
+.tabview .yui3-tab-selected {
+	background: -webkit-linear-gradient(#111 50%, #666);
+}
+
+.tabview .yui3-tab-selected .yui3-tab-label {
+	color: #eee;
+	text-shadow: 1px 1px 1px #555;
+}
+
+.tabview .yui3-tab-label:focus {
+	outline: 0;
+}
+
+.card_preview {
+	display: inline-block;
+	margin: 15px 5px 0 0;
+	width: 210px;
+	cursor: pointer;
+}
+
+.card_preview img {
+	height: 128px;
+	margin-right: 10px;
+}
+
+.card_preview.selected {
 }

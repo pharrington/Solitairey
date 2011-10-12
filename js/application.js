@@ -26,6 +26,8 @@
 		"yukon": "Yukon"},
 
 	    extensions = [
+		"json",
+		"tabview",
 		"auto-turnover",
 	        "statistics",
 		"solver-freecell",
@@ -148,78 +150,229 @@
 		}
 	},
 
-	/* theres no mechanism yet to load the appropriate deck depending on the scaled card width
-	 * so we just load the largest cards and call it a day :/
-	 */
+	OptionsChooser = {
+		selector: "#options-chooser",
+
+		element: (function () {
+			var element;
+
+			function createCardPreviews() {
+				var theme,
+				    themes = Themes.all,
+				    current = Themes.currentTheme,
+				    list = Y.one("#graphics-options .cards"),
+				    item;
+
+				for (theme in themes) {
+					if (!themes.hasOwnProperty(theme)) { continue; }
+
+					Themes.currentTheme = theme;
+					item = Y.Node.create(Y.Lang.sub(
+						"<li class=card_preview><img src={base}/facedown.png><img src={base}/h12.png></li>", {
+							base: Themes.basePath(90)
+						})
+					).setData("theme", theme);
+
+					if (theme === current) {
+						item.addClass("selected");
+					}
+
+					list.append(item);
+				}
+
+				list.delegate("click", function (e) {
+					Themes.load(this.getData("theme"));
+					Preloader.preload(false);
+					Preloader.loaded(resize);
+					Options.save();
+				}, ".card_preview");
+
+				Themes.currentTheme = current;
+			}
+
+			return function () {
+				var tabview;
+
+				if (!element) {
+					element = Y.one(OptionsChooser.selector);
+					tabview = new Y.TabView({
+						srcNode: element.one(".tabview")
+					});
+					tabview.render();
+
+					createCardPreviews();
+				}
+
+				return element;
+			}
+		}()),
+
+		show: function () {
+			Fade.show();
+			this.element().removeClass("hidden");
+		}
+	},
+
+	Options = {
+		properties: {
+			cardTheme: {
+				set: function (value) {
+					Themes.load(value);
+				},
+
+				get: function () {
+					return Themes.currentTheme || Themes.defaultTheme;
+				}
+			},
+
+			animateCards: {
+				set: function (value) {
+					Y.Solitaire.Animation.animate = value;
+				},
+
+				get: function () {
+					return Y.Solitaire.Animation.animate;
+				}
+			},
+
+			autoFlip: {
+				set: function (value) {
+					var autoflip = Y.Solitaire.AutoTurnover;
+
+					value ? autoflip.enable() : autoflip.disable();
+				},
+
+				get: function () {
+					return Y.Solitaire.AutoTurnover.isEnabled();
+				}
+			},
+
+			enableSolver: {
+				set: function (value) {
+					var solver = Y.Solitaire.Solver.Freecell;
+
+					value ? solver.enable() : solver.disable();
+				},
+
+				get: function () {
+					return Y.Solitaire.Solver.Freecell.isEnabled();
+				}
+			}
+		},
+
+		load: function () {
+			var game = Y.Cookie.get("options"),
+			    options;
+
+			try {
+				Y.JSON.parse(Y.Cookie.get("full-options"), this.set.bind(this));
+			} catch (e) {
+				// do nothing as we'll just use the default settings
+			}
+
+			if (!Themes.currentTheme) { Themes.load(); }
+
+			game && (active.name = game);
+		},
+
+		save: function () {
+			var twoWeeks = 1000 * 3600 * 24 * 14;
+
+			Y.Cookie.set(
+				"full-options",
+				Y.JSON.stringify(mapObject(this.properties, function (key, value) {
+					return value.get();
+				})),
+				{expires: new Date(new Date().getTime() + twoWeeks)}
+			);
+		},
+
+		set: function (key, value) {
+			var prop = this.properties[key];
+
+			if (prop) {
+				prop.set(value);
+			}
+		},
+	},
+
 	Themes = {
-		air: {
-			sizes: [141],
-			141: {
-				hiddenRankHeight: 17,
-				rankHeight: 55,
-				dimensions: [141, 199]
-			}
-		},
-
-		ancient_egyptians: {
-			sizes: [148],
-			148: {
-				hiddenRankHeight: 17,
-				rankHeight: 50,
-				dimensions: [148, 200]
-			}
-		},
-
-		dondorf: {
-			sizes: [61, 79, 95, 122],
-			61: {
-				hiddenRankHeight: 7,
-				rankHeight: 25,
-				dimensions: [61, 95]
+		all: {
+			air: {
+				sizes: [141],
+				141: {
+					hiddenRankHeight: 17,
+					rankHeight: 55,
+					dimensions: [141, 199]
+				}
 			},
 
-			79: {
-				hiddenRankHeight: 10,
-				rankHeight: 32,
-				dimensions: [79, 123]
+			ancient_egyptians: {
+				sizes: [148],
+				148: {
+					hiddenRankHeight: 17,
+					rankHeight: 50,
+					dimensions: [148, 200]
+				}
 			},
 
-			95: {
-				hiddenRankHeight: 12,
-				rankHeight: 38,
-				dimensions: [95, 148]
+			dondorf: {
+				sizes: [61, 79, 95, 122],
+				61: {
+					hiddenRankHeight: 7,
+					rankHeight: 25,
+					dimensions: [61, 95]
+				},
+
+				79: {
+					hiddenRankHeight: 10,
+					rankHeight: 32,
+					dimensions: [79, 123]
+				},
+
+				95: {
+					hiddenRankHeight: 12,
+					rankHeight: 38,
+					dimensions: [95, 148]
+				},
+
+				122: {
+					hiddenRankHeight: 15,
+					rankHeight: 48,
+					dimensions: [122, 190]
+				}
 			},
 
-			122: {
-				hiddenRankHeight: 15,
-				rankHeight: 48,
-				dimensions: [122, 190]
+			"jolly-royal": {
+				sizes: [144],
+				144: {
+					hiddenRankHeight: 20,
+					rankHeight: 52,
+					dimensions: [144, 200]
+				}
+			},
+
+			paris: {
+				sizes: [131],
+				131: {
+					hiddenRankHeight: 18,
+					rankHeight: 48,
+					dimensions: [131, 204]
+				}
 			}
 		},
 
-		"jolly-royal": {
-			sizes: [144],
-			144: {
-				hiddenRankHeight: 20,
-				rankHeight: 52,
-				dimensions: [144, 200]
-			}
-		},
+		currentTheme: null,
+		defaultTheme: "jolly-royal",
 
-		paris: {
-			sizes: [131],
-			131: {
-				hiddenRankHeight: 18,
-				rankHeight: 48,
-				dimensions: [131, 204]
-			}
-		},
-
+		/* theres no mechanism yet to load the appropriate deck depending on the scaled card width
+		 * so we just load the largest cards and call it a day :/
+		 */
 		snapToSize: function (width) {
-			var theme,
+			var theme = this.all[this.currentTheme],
 			    sizes = theme.sizes;
 
-			width = clamp(width, sizes[0], sizes[sizes.length - 1]) >>> 0;
+			width = clamp(width || 0, sizes[0], sizes[sizes.length - 1]) >>> 0;
 
 			while (Y.Array.indexOf(sizes, width) === -1) {
 				width++;
@@ -228,26 +381,30 @@
 			return width;
 		},
 
+		basePath: function (width) {
+			return this.currentTheme + "/" + this.snapToSize(width);
+		},
+
 		load: function (name) {
 			var Solitaire = Y.Solitaire,
 			    base = Solitaire.Card.base,
 			    sizes;
 
-			if (!(name in this)) {
-				name = "dondorf";
+			if (!(name in this.all)) {
+				name = this.defaultTheme;
 			}
 
-			if (base.theme !== name) {
-				sizes = this[name].sizes;
-				this.set(name, sizes[sizes.length - 1]);
-			}
+			this.currentTheme = name;
+
+			sizes = this.all[name].sizes;
+			this.set(sizes[sizes.length - 1]);
 		},
 
-		set: function (name, size) {
-			var theme = this[name][size];
+		set: function (size) {
+			var theme = this.all[this.currentTheme][size];
 
 			Y.mix(Y.Solitaire.Card.base, {
-				theme: name + "/" + size,
+				theme: this.basePath(size),
 				hiddenRankHeight: theme.hiddenRankHeight,
 				rankHeight: theme.rankHeight,
 				width: theme.dimensions[0],
@@ -256,6 +413,22 @@
 		}
 	};
 
+	function clamp(value, low, high) {
+		return Math.max(Math.min(value, high), low);
+	}
+
+	function mapObject(source, mapper) {
+		var mapped = {},
+		    key;
+
+		for (key in source) {
+			if (!source.hasOwnProperty(key)) { continue; }
+
+			mapped[key] = mapper.call(source, key, source[key]);
+		}
+
+		return mapped;
+	}
 
 	function modules() {
 		var modules = extensions.slice(),
@@ -285,6 +458,7 @@
 	function attachEvents() {
 		Y.on("click", restart, Y.one("#restart"));
 		Y.on("click", function () { GameChooser.show(false); }, Y.one("#choose_game"));
+		Y.on("click", function () { OptionsChooser.show(false); }, Y.one("#choose_options"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
 
@@ -348,19 +522,11 @@
 		newGame();
 	}
 
-	function loadOptions() {
-		var options = Y.Cookie.get("options");
-
-		options && (active.name = options);
-
-		Themes.load("jolly-royal");
-	}
-
 	function load() {
 		var save = Y.Cookie.get("saved-game");
 
 		attachEvents();
-		loadOptions();
+		Options.load();
 
 		Preloader.preload();
 		Preloader.loaded(function () {
@@ -425,6 +591,7 @@
 
 	var Preloader = {
 		loadingCount: 0,
+		showFade: true,
 
 		loaded: function (callback) {
 			if (this.loadingCount) {
@@ -434,7 +601,9 @@
 			} else {
 				Y.one(".loading").addClass("hidden");
 				callback();
-				Fade.hide();
+				if (this.showFade) {
+					Fade.hide();
+				}
 			}
 		},
 	
@@ -449,7 +618,7 @@
 			this.loadingCount++;
 		},
 
-		preload: function () {
+		preload: function (fade) {
 			    var rank,
 			    icons = ["agnes",
 			    	     "flower-garden",
@@ -482,7 +651,11 @@
 				this.load("layouts/mini/" + image + ".png");
 			}, this);
 
-			Fade.show();
+			this.showFade = fade !== false;
+			if (this.showFade) {
+				Fade.show();
+			}
+
 			Y.one(".loading").removeClass("hidden");
 		}
 	};

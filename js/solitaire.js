@@ -433,12 +433,17 @@ Y.mix(Solitaire, {
 					hoffset: i * layout.hspacing || 0,
 					voffset: i * layout.vspacing || 0}), i);
 
+				stack.setImageSrc();
 				stack.updateStyle();
 
 				stack.setCards(cards.length, function (i) {
 					var card = cards[i];
 
-					card && card.updateStyle();
+					if (card) {
+						card.setImageSrc();
+						card.updateStyle();
+					}
+
 					return card;
 				});	
 
@@ -1349,16 +1354,22 @@ Y.Solitaire.Stack = {
 			n && n.setStyles(this.wrapperStyle());
 		},
 
+		setImageSrc: function () {
+			if (this.node) {
+				this.node.setAttribute("src", this.imageSrc());
+			}
+		},
+
 		createNode: function () {
 			var node = this.node;
 
 			node = this.node = Y.Node.create("<img class='stack'>")
-				.setAttribute("src", this.imageSrc())
 				.setData("target", this)
 				.plug(Y.Plugin.Drop, {
 					useShim: true
 				});
 
+			this.setImageSrc();
 			this.updateStyle();
 
 			Solitaire.container().append(node);

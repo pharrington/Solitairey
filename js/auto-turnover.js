@@ -2,7 +2,7 @@
  * automatically turn over the first open faceup card in a stack
  */
 YUI.add("auto-turnover", function (Y) {
-	Y.namespace("Y.Solitaire.AutoTurnover");
+	Y.namespace("Solitaire.AutoTurnover");
 
 	var Turnover = Y.Solitaire.AutoTurnover,
 	    enabled = true;
@@ -29,5 +29,5 @@ YUI.add("auto-turnover", function (Y) {
 		isEnabled: function () {
 			return enabled;
 		}
-	}, true);
+	});
 }, "0.0.1", {requires: ["solitaire"]});

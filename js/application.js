@@ -506,7 +506,7 @@
 	function attachEvents() {
 		Y.on("click", restart, Y.one("#restart"));
 		Y.on("click", function () { GameChooser.show(false); }, Y.one("#choose_game"));
-		Y.on("click", function () { OptionsChooser.show(false); }, Y.one("#choose_options"));
+		//Y.on("click", function () { OptionsChooser.show(false); }, Y.one("#choose_options"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
 

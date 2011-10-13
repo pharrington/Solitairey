@@ -453,6 +453,10 @@ p {
 	background-image: url(layouts/mini/yukon.png);
 }
 
+.simple-simon .layout {
+	background-image: url(layouts/mini/simple-simon.png);
+}
+
 button {
 	font-size: 18px;
 	margin-right: 27px;

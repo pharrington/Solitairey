@@ -98,6 +98,7 @@ YUI.add("statistics", function (Y) {
 			Pyramid: "Pyramid",
 			RussianSolitaire: "Russian Solitaire",
 			Scorpion: "Scorpion",
+			SimpleSimon: "Simple Simon",
 			Spider: "Spider",
 			Spider1S: "Spider (1 Suit)",
 			Spider2S: "Spider (2 Suit)",

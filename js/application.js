@@ -16,6 +16,7 @@
 		"monte-carlo": "MonteCarlo",
 		"pyramid": "Pyramid",
 		"russian-solitaire": "RussianSolitaire",
+		"simple-simon": "SimpleSimon",
 		"scorpion": "Scorpion",
 		"spider": "Spider",
 		"spider1s": "Spider1S",

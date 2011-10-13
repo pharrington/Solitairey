@@ -153,6 +153,41 @@
 	OptionsChooser = {
 		selector: "#options-chooser",
 
+		initInputs: function () {
+			var option,
+			    options = Options.properties,
+			    value;
+
+			for (option in options) {
+				if (!options.hasOwnProperty(option)) { continue; }
+
+				value = options[option].get();
+				if (typeof value === "boolean") {
+					//Y.one("#" + option + "_toggle").set("checked", value);
+					document.getElementById(option + "_toggle").checked = value;
+				}
+			}
+		},
+
+		attachEvents: function () {
+			Y.delegate("change", function (e) {
+				var name = this.get("id").replace("_toggle", ""),
+				    option = Options.properties[name];
+
+				if (option) {
+					option.set(this.get("checked"));
+					Options.save();
+				}
+			}, this.selector, "input[type=checkbox]");
+
+			Y.delegate("click", function (e) {
+				Themes.load(this.getData("theme"));
+				Preloader.preload(false);
+				Preloader.loaded(resize);
+				Options.save();
+			}, "#graphics-options .cards", ".card_preview");
+		},
+
 		element: (function () {
 			var element;
 
@@ -180,13 +215,6 @@
 					list.append(item);
 				}
 
-				list.delegate("click", function (e) {
-					Themes.load(this.getData("theme"));
-					Preloader.preload(false);
-					Preloader.loaded(resize);
-					Options.save();
-				}, ".card_preview");
-
 				Themes.currentTheme = current;
 			}
 
@@ -200,6 +228,8 @@
 					});
 					tabview.render();
 
+					OptionsChooser.initInputs();
+					OptionsChooser.attachEvents();
 					createCardPreviews();
 				}
 
@@ -210,6 +240,11 @@
 		show: function () {
 			Fade.show();
 			this.element().removeClass("hidden");
+		},
+
+		hide: function () {
+			Fade.hide();
+			this.element().addClass("hidden");
 		}
 	},
 
@@ -222,6 +257,18 @@
 
 				get: function () {
 					return Themes.currentTheme || Themes.defaultTheme;
+				}
+			},
+
+			autoplay: {
+				set: function (value) {
+					var autoplay = Y.Solitaire.Autoplay;
+
+					value ? autoplay.enable() : autoplay.disable();
+				},
+
+				get: function () {
+					return Y.Solitaire.Autoplay.isEnabled();
 				}
 			},
 
@@ -468,7 +515,10 @@
 
                 Y.on("click", function () { GameChooser.hide(); }, Y.one("#close-chooser"));
 		Y.one("document").on("keydown", function (e) {
-			e.keyCode === 27 && GameChooser.hide();
+			if (e.keyCode === 27) {
+				GameChooser.hide();
+				OptionsChooser.hide();
+			}
 		});
 
 		Y.on("afterSetup", function() {

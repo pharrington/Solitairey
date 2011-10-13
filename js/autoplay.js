@@ -68,6 +68,10 @@ YUI.add("solitaire-autoplay", function (Y) {
 
 		disable: function () {
 			whenWon = false;
+		},
+
+		isEnabled: function () {
+			return whenWon;
 		}
 	});
 }, "0.0.1", {requires: ["solitaire"]});

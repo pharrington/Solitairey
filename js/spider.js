@@ -1,6 +1,7 @@
 YUI.add("spider", function (Y) {
 
-var Solitaire = Y.Solitaire,
+var availableMoves = 0,
+    Solitaire = Y.Solitaire,
     Spider = Solitaire.Spider = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],
 
@@ -100,9 +101,26 @@ var Solitaire = Y.Solitaire,
 			case "tableau":
 				return this.createProxyStack();
 			case "deck": 
-				return !hasFreeTableaus(); case "foundation":
+				return !hasFreeTableaus();
+			case "foundation":
 				return false;
 			}
+		},
+
+		createProxyStack: function () {
+			var stacks,
+			    stacks = Game.tableau.stacks,
+			    freeslots = 0;
+
+			availableMoves = 0;
+			for (i = 0; i < stacks.length; i++) {
+				stack = stacks[i];
+				!stack.last() && freeslots++;
+			}
+
+			availableMoves = freeslots;
+
+			return Solitaire.Card.createProxyStack.call(this);
 		},
 
 		validTarget: function (stack) {
@@ -110,7 +128,7 @@ var Solitaire = Y.Solitaire,
 
 			var target = stack.last();
 
-			return !target || !target.isFaceDown && target.rank === this.rank + 1;
+			return !target ? availableMoves > 0 : !target.isFaceDown && target.rank === this.rank + 1;
 		}
 	})
 });
@@ -128,7 +146,11 @@ Y.Array.each(Spider.fields, function (field) {
 
 Y.mix(Spider.Stack, {
 	validCard: function (card) {
-		return card.suit === this.cards.last().suit;
+		if (card.suit === this.cards.last().suit) {
+			return true;
+		} else {
+			return availableMoves-- > 0;
+		}
 	},
 
 	validTarget: function (stack) {

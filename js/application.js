@@ -585,7 +585,11 @@
 			if (save) {
 				clearDOM();
 				active.game = Y.Solitaire[games[active.name]];
-				active.game.loadGame(save);
+				try {
+					active.game.loadGame(save);
+				} catch (e) {
+					playGame(active.name);
+				}
 			} else {
 				playGame(active.name);
 			}

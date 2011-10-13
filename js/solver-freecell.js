@@ -314,21 +314,30 @@ YUI.add("solver-freecell", function (Y) {
 		},
 
 		enable: function () {
-			if (this.isSupported()) {
-				this.createUI();
-			}
-
-			this.attachEvents();
 			enabled = true;
+			this.resume();
 		},
 
 		disable: function () {
+			enabled = false;
+			this.suspend();
+		},
+
+		resume: function (dontSolve) {
+			if (!(enabled && this.isSupported())) { return; }
+
+			this.createUI();
+			this.attachEvents();
+
+			if (!dontSolve) { this.solve(); }
+		},
+
+		suspend: function () {
 			if (this.worker) {
 				this.worker.terminate();
 			}
 
 			Status.hide();
-			enabled = false;
 		},
 
 		isEnabled: function () {
@@ -345,7 +354,7 @@ YUI.add("solver-freecell", function (Y) {
 				if (this.isSupported()) {
 					this.solve();
 				} else {
-					this.disable();
+					this.suspend();
 				}
 			}.bind(this));
 
@@ -356,11 +365,11 @@ YUI.add("solver-freecell", function (Y) {
 			}.bind(this));
 
 			Y.on("autoPlay", function () {
-				FreecellSolver.disable();
+				FreecellSolver.suspend();
 			});
 
 			Y.on("win", function () {
-				FreecellSolver.disable();
+				FreecellSolver.suspend();
 			});
 
 			// human interaction stops playing the current solution
@@ -411,5 +420,7 @@ YUI.add("solver-freecell", function (Y) {
 		}
 	});
 
-	Y.on("beforeSetup", FreecellSolver.enable.bind(FreecellSolver));
+	Y.on("beforeSetup", function () {
+		FreecellSolver.resume(true);
+	});
 }, "0.0.1", {requires: ["solitaire"]});

@@ -165,7 +165,6 @@
 
 				value = options[option].get();
 				if (typeof value === "boolean") {
-					//Y.one("#" + option + "_toggle").set("checked", value);
 					document.getElementById(option + "_toggle").checked = value;
 				}
 			}
@@ -243,7 +242,7 @@
 
 					createList(Backgrounds, "#background-options .backgrounds", function (collection) {
 						return Y.Node.create("<li class=background></li>")
-							.setStyle("background-image", "url(" + collection.all[collection.current].url + ")");
+							.addClass("background-" + collection.current);
 					});
 				}
 
@@ -318,6 +317,16 @@
 				get: function () {
 					return Y.Solitaire.Solver.Freecell.isEnabled();
 				}
+			},
+
+			background: {
+				set: function (value) {
+					Backgrounds.load(value);
+				},
+
+				get: function () {
+					return Backgrounds.current || Backgrounds.defaultBackground;
+				}
 			}
 		},
 
@@ -332,6 +341,7 @@
 			}
 
 			if (!Themes.current) { Themes.load(); }
+			if (!Backgrounds.current) { Backgrounds.load(); }
 
 			game && (active.name = game);
 		},
@@ -475,48 +485,14 @@
 	},
 	
 	Backgrounds = {
-		all: {
-			green: {
-				url: "green.jpg",
-				css: {
-					attachment: "fixed",
-					repeat: "no-repeat",
-					size: "100% 100%"
-				}
-			},
-
-			vintage: {
-				url: "backgrounds/grungy-vintage.jpg"
-			},
-
-			circles: {
-				url: "backgrounds/retro-circles-army-green.jpg"
-			},
-
-			watercolor: {
-				url: "backgrounds/watercolor-grunge-ripe-apricot.jpg",
-				size: "cover"
-			},
-
-			heart: {
-				url: "backgrounds/grunge-hearts-maroon-copper.jpg",
-				size: "cover"
-			}
-		},
-
-		defaultCSS: {
-			repeat: "repeat",
-			size: "auto"
-		},
-
+		all: {"green":"", "vintage":"", "circles":"", "watercolor":"", "heart":""},
 		current: null,
 		defaultBackground: "green",
 		stylesheet: null,
 
 		load: function (name) {
-			if (this.stylesheet === null) {
-				this.stylesheet = Y.StyleSheet("background");
-			}
+			Y.one("body").removeClass("background-" + this.current);
+			Y.one("#game-chooser").removeClass("background-" + this.current);
 
 			if (!(name in this.all)) {
 				name = this.defaultBackground;
@@ -527,17 +503,8 @@
 		},
 
 		set: function () {
-			var stylesheet = this.stylesheet,
-			    defaultCSS = this.defaultCSS,
-			    background = this.all[this.current];
-
-			stylesheet.set("body", {
-				backgroundImage: "url(" + background.url + ")",
-				backgroundRepeat: background.repeat || defaultCSS.repeat,
-				webkitBackgroundSize: background.size || defaultCSS.size,
-				mozBackgroundSize: background.size || defaultCSS.size
-			});
-			stylesheet.enable();
+			Y.one("body").addClass("background-" + this.current);
+			Y.one("#game-chooser").addClass("background-" + this.current);
 		}
 	};
 
@@ -594,7 +561,11 @@
 
 		Y.delegate("click", showDescription, "#descriptions", "li");
 
-                Y.on("click", function () { GameChooser.hide(); }, Y.one("#close-chooser"));
+                Y.on("click", function () {
+			GameChooser.hide();
+			OptionsChooser.hide();
+		}, Y.all(".close-chooser"));
+
 		Y.one("document").on("keydown", function (e) {
 			if (e.keyCode === 27) {
 				GameChooser.hide();

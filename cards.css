@@ -13,10 +13,6 @@ html {
 
 body {
 	background-attachment: fixed;
-	background-image: url(green.jpg);
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
-	-moz-background-size: 100% 100%;
 	font-family: helvetica, verdana, sans;
 	z-index: -99;
 	overflow: hidden;
@@ -80,6 +76,7 @@ a {
 	background: #eee;
 	background: -webkit-linear-gradient(#fff, #ddd);
 	background: -moz-linear-gradient(#fff, #ddd);
+	background: -o-linear-gradient(#fff, #ddd);
 	background: -ms-linear-gradient(#fff, #ddd);
 	box-shadow: 0 1px 12px 0.5px #000;
 	height: 35px;
@@ -104,6 +101,7 @@ a {
 	background: #bbb -webkit-linear-gradient(#fff, #bbb);
 	background: #bbb -moz-linear-gradient(#fff, #bbb);
 	background: #bbb -ms-linear-gradient(#fff, #bbb);
+	background: #bbb -o-linear-gradient(#fff, #bbb);
 }
 
 #menu a {
@@ -126,17 +124,13 @@ p {
 }
 
 #game-chooser {
+	background-attachment: fixed;
 	display: none;
 	position: absolute;
 	padding: 50px 35px;
 	left: 0;
 	top: 0;
 	z-index: 1001;
-	background-attachment: fixed;
-	background-image: url(green.jpg);
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
-	-moz-background-size: 100% 100%;
 }
 
 #game-chooser.show {
@@ -182,6 +176,7 @@ p {
 	background-image: -webkit-linear-gradient(#EEC, #a1a172);
 	background-image: -moz-linear-gradient(#EEC, #a1a172);
 	background-image: -ms-linear-gradient(#EEC, #a1a172);
+	background-image: -o-linear-gradient(#EEC, #a1a172);
 	overflow: hidden;
 	cursor: pointer;
 }
@@ -204,7 +199,7 @@ p {
 	cursor: pointer;
 }
 
-#close-chooser {
+.close-chooser {
 	font-size: 30px;
 	border: 0px;
 	margin: 20px auto;
@@ -223,7 +218,7 @@ p {
 	padding: 1em 1em 2em 1em;
 	-webkit-box-shadow: 0 0 10px 3px #fff;
 	-moz-box-shadow: 0 0 10px 3px #fff;
-	-box-shadow: 0 0 10px 3px #fff;
+	box-shadow: 0 0 10px 3px #fff;
 	-ms-box--shadow: 0 0 10px 3px #fff;
 	-o-box-shadow: 0 0 10px 3px #fff;
 }
@@ -256,6 +251,7 @@ p {
 	background-image: -webkit-linear-gradient(#000, #222);
 	background-image: -moz-linear-gradient(#000, #222);
 	background-image: -ms-linear-gradient(#000, #222);
+	background-image: -o-linear-gradient(#000, #222);
 	position: fixed;
 	bottom: 0;
 	left: 25%;
@@ -464,6 +460,7 @@ button {
 	background-image: -webkit-linear-gradient(white, #EEC);
 	background-image: -moz-linear-gradient(white, #EEC);
 	background-image: -ms-linear-gradient(white, #EEC);
+	background-image: -o-linear-gradient(white, #EEC);
 	padding: 6px 17px;
 	border-radius: 5px;
 	box-shadow: inset 0 0 3px 1px #fff;
@@ -477,6 +474,7 @@ button:hover {
 	background-image: -webkit-linear-gradient(#EEC, #a1a172);
 	background-image: -moz-linear-gradient(#EEC, #a1a172);
 	background-image: -ms-linear-gradient(#EEC, #a1a172);
+	background-image: -o-linear-gradient(#EEC, #a1a172);
 	box-shadow: none;
 }
 
@@ -516,7 +514,10 @@ button:hover {
 	width: 700px;
 	margin: 75px auto;
 	background: -webkit-linear-gradient(white 50%, #ddd);
-	padding: 20px;
+	background: -moz-linear-gradient(white 50%, #ddd);
+	background: -ms-linear-gradient(white 50%, #ddd);
+	background: -o-linear-gradient(white 50%, #ddd);
+	padding: 20px 20px 70px 20px;
 	z-index: 1001;
 	font-family: Questrial;
 	font-size: 20px;
@@ -539,6 +540,9 @@ button:hover {
 
 .tabview .yui3-tab-selected {
 	background: -webkit-linear-gradient(#111 50%, #666);
+	background: -moz-linear-gradient(#111 50%, #666);
+	background: -ms-linear-gradient(#111 50%, #666);
+	background: -o-linear-gradient(#111 50%, #666);
 }
 
 .tabview .yui3-tab-selected .yui3-tab-label {
@@ -575,4 +579,42 @@ button:hover {
 	height: 100px;
 	margin-bottom: 10px;
 	cursor: pointer;
+}
+
+.background-green {
+	background-image: url(green.jpg);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	-moz-background-size: 100% 100%;
+}
+
+.background-vintage {
+	background-image: url(backgrounds/grungy-vintage.jpg);
+}
+
+.background-circles {
+	background-image: url(backgrounds/retro-circles-army-green.jpg);
+}
+
+.background-watercolor {
+	background-image: url(backgrounds/watercolor-grunge-ripe-apricot.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.background-heart {
+	background-image: url(backgrounds/grunge-hearts-maroon-copper.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+#options-chooser .close-chooser {
+	width: auto;
+	margin: 20px 0 0 0;
+	font-size: 20px;
+	float: right;
+	background-image: -webkit-linear-gradient(#f0f0f0 50%, #bbb);
+	background-image: -moz-linear-gradient(#f0f0f0 50%, #bbb);
+	background-image: -ms-linear-gradient(#f0f0f0 50%, #bbb);
+	background-image: -o-linear-gradient(#f0f0f0 50%, #bbb);
 }

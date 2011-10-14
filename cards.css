@@ -514,7 +514,7 @@ button:hover {
 
 #options-chooser {
 	width: 700px;
-	margin: 90px auto;
+	margin: 75px auto;
 	background: -webkit-linear-gradient(white 50%, #ddd);
 	padding: 20px;
 	z-index: 1001;
@@ -562,5 +562,17 @@ button:hover {
 	margin-right: 10px;
 }
 
-.card_preview.selected {
+.backgrounds {
+	max-height: 470px;
+	overflow-y: scroll;
+}
+
+#background-options h3 {
+	margin-bottom: 10px;
+}
+
+.backgrounds .background {
+	height: 100px;
+	margin-bottom: 10px;
+	cursor: pointer;
 }

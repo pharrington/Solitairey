@@ -29,6 +29,7 @@
 	    extensions = [
 		"json",
 		"tabview",
+		"stylesheet",
 		"auto-turnover",
 	        "statistics",
 		"solver-freecell",
@@ -181,8 +182,13 @@
 				}
 			}, this.selector, "input[type=checkbox]");
 
+			Y.delegate("click", function () {
+				Backgrounds.load(this.getData("item"));
+				Options.save();
+			}, "#background-options .backgrounds", ".background");
+
 			Y.delegate("click", function (e) {
-				Themes.load(this.getData("theme"));
+				Themes.load(this.getData("item"));
 				Preloader.preload(false);
 				Preloader.loaded(resize);
 				Options.save();
@@ -192,31 +198,27 @@
 		element: (function () {
 			var element;
 
-			function createCardPreviews() {
-				var theme,
-				    themes = Themes.all,
-				    current = Themes.currentTheme,
-				    list = Y.one("#graphics-options .cards"),
-				    item;
+			function createList(collection, selector, callback) {
+				var item,
+				    all = collection.all,
+				    current = collection.current,
+				    list = Y.one(selector),
+				    node;
 
-				for (theme in themes) {
-					if (!themes.hasOwnProperty(theme)) { continue; }
+				for (item in all) {
+					if (!all.hasOwnProperty(item)) { continue; }
 
-					Themes.currentTheme = theme;
-					item = Y.Node.create(Y.Lang.sub(
-						"<li class=card_preview><img src={base}/facedown.png><img src={base}/h12.png></li>", {
-							base: Themes.basePath(90)
-						})
-					).setData("theme", theme);
+					collection.current = item;
+					node = callback(collection).setData("item", item);
 
-					if (theme === current) {
-						item.addClass("selected");
+					if (item === current) {
+						node.addClass("selected");
 					}
 
-					list.append(item);
+					list.append(node);
 				}
 
-				Themes.currentTheme = current;
+				collection.current = current;
 			}
 
 			return function () {
@@ -231,7 +233,18 @@
 
 					OptionsChooser.initInputs();
 					OptionsChooser.attachEvents();
-					createCardPreviews();
+
+					createList(Themes, "#graphics-options .cards", function (collection) {
+						return Y.Node.create(Y.Lang.sub(
+							"<li class=card_preview><img src={base}/facedown.png><img src={base}/h12.png></li>", {
+								base: collection.basePath(90)
+							}));
+					});
+
+					createList(Backgrounds, "#background-options .backgrounds", function (collection) {
+						return Y.Node.create("<li class=background></li>")
+							.setStyle("background-image", "url(" + collection.all[collection.current].url + ")");
+					});
 				}
 
 				return element;
@@ -257,7 +270,7 @@
 				},
 
 				get: function () {
-					return Themes.currentTheme || Themes.defaultTheme;
+					return Themes.current || Themes.defaultTheme;
 				}
 			},
 
@@ -318,7 +331,7 @@
 				// do nothing as we'll just use the default settings
 			}
 
-			if (!Themes.currentTheme) { Themes.load(); }
+			if (!Themes.current) { Themes.load(); }
 
 			game && (active.name = game);
 		},
@@ -410,14 +423,14 @@
 			}
 		},
 
-		currentTheme: null,
+		current: null,
 		defaultTheme: "jolly-royal",
 
 		/* theres no mechanism yet to load the appropriate deck depending on the scaled card width
 		 * so we just load the largest cards and call it a day :/
 		 */
 		snapToSize: function (width) {
-			var theme = this.all[this.currentTheme],
+			var theme = this.all[this.current],
 			    sizes = theme.sizes;
 
 			width = clamp(width || 0, sizes[0], sizes[sizes.length - 1]) >>> 0;
@@ -430,7 +443,7 @@
 		},
 
 		basePath: function (width) {
-			return this.currentTheme + "/" + this.snapToSize(width);
+			return this.current + "/" + this.snapToSize(width);
 		},
 
 		load: function (name) {
@@ -442,14 +455,14 @@
 				name = this.defaultTheme;
 			}
 
-			this.currentTheme = name;
+			this.current = name;
 
 			sizes = this.all[name].sizes;
 			this.set(sizes[sizes.length - 1]);
 		},
 
 		set: function (size) {
-			var theme = this.all[this.currentTheme][size];
+			var theme = this.all[this.current][size];
 
 			Y.mix(Y.Solitaire.Card.base, {
 				theme: this.basePath(size),
@@ -458,6 +471,73 @@
 				width: theme.dimensions[0],
 				height: theme.dimensions[1]
 			}, true);
+		}
+	},
+	
+	Backgrounds = {
+		all: {
+			green: {
+				url: "green.jpg",
+				css: {
+					attachment: "fixed",
+					repeat: "no-repeat",
+					size: "100% 100%"
+				}
+			},
+
+			vintage: {
+				url: "backgrounds/grungy-vintage.jpg"
+			},
+
+			circles: {
+				url: "backgrounds/retro-circles-army-green.jpg"
+			},
+
+			watercolor: {
+				url: "backgrounds/watercolor-grunge-ripe-apricot.jpg",
+				size: "cover"
+			},
+
+			heart: {
+				url: "backgrounds/grunge-hearts-maroon-copper.jpg",
+				size: "cover"
+			}
+		},
+
+		defaultCSS: {
+			repeat: "repeat",
+			size: "auto"
+		},
+
+		current: null,
+		defaultBackground: "green",
+		stylesheet: null,
+
+		load: function (name) {
+			if (this.stylesheet === null) {
+				this.stylesheet = Y.StyleSheet("background");
+			}
+
+			if (!(name in this.all)) {
+				name = this.defaultBackground;
+			}
+
+			this.current = name;
+			this.set();
+		},
+
+		set: function () {
+			var stylesheet = this.stylesheet,
+			    defaultCSS = this.defaultCSS,
+			    background = this.all[this.current];
+
+			stylesheet.set("body", {
+				backgroundImage: "url(" + background.url + ")",
+				backgroundRepeat: background.repeat || defaultCSS.repeat,
+				webkitBackgroundSize: background.size || defaultCSS.size,
+				mozBackgroundSize: background.size || defaultCSS.size
+			});
+			stylesheet.enable();
 		}
 	};
 
@@ -506,7 +586,7 @@
 	function attachEvents() {
 		Y.on("click", restart, Y.one("#restart"));
 		Y.on("click", function () { GameChooser.show(false); }, Y.one("#choose_game"));
-		//Y.on("click", function () { OptionsChooser.show(false); }, Y.one("#choose_options"));
+		Y.on("click", function () { OptionsChooser.show(false); }, Y.one("#choose_options"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
 

@@ -310,7 +310,7 @@ YUI.add("solver-freecell", function (Y) {
 		supportedGames: ["Freecell"],
 
 		isSupported: function () {
-			return this.supportedGames.indexOf(Game.name()) !== -1;
+			return Game && this.supportedGames.indexOf(Game.name()) !== -1;
 		},
 
 		enable: function () {

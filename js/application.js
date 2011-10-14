@@ -29,7 +29,6 @@
 	    extensions = [
 		"json",
 		"tabview",
-		"stylesheet",
 		"auto-turnover",
 	        "statistics",
 		"solver-freecell",

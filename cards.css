@@ -513,6 +513,7 @@ button:hover {
 #options-chooser {
 	width: 700px;
 	margin: 75px auto;
+	background-color: #fff;
 	background: -webkit-linear-gradient(white 50%, #ddd);
 	background: -moz-linear-gradient(white 50%, #ddd);
 	background: -ms-linear-gradient(white 50%, #ddd);
@@ -539,6 +540,7 @@ button:hover {
 }
 
 .tabview .yui3-tab-selected {
+	background-color: #111;
 	background: -webkit-linear-gradient(#111 50%, #666);
 	background: -moz-linear-gradient(#111 50%, #666);
 	background: -ms-linear-gradient(#111 50%, #666);
@@ -613,6 +615,7 @@ button:hover {
 	margin: 20px 0 0 0;
 	font-size: 20px;
 	float: right;
+	background-color: #ddd;
 	background-image: -webkit-linear-gradient(#f0f0f0 50%, #bbb);
 	background-image: -moz-linear-gradient(#f0f0f0 50%, #bbb);
 	background-image: -ms-linear-gradient(#f0f0f0 50%, #bbb);

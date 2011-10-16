@@ -61,7 +61,10 @@ YUI.add("statistics", function (Y) {
 
 				var node = card.node;
 				if (card !== stack.last()) {
-					node.addClass("hidden");
+					setTimeout(function (node) {
+						node.addClass("hidden");
+					}.partial(node), delay);
+
 					return;
 				}
 

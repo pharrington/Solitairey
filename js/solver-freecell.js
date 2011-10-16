@@ -4,6 +4,12 @@
 YUI.add("solver-freecell", function (Y) {
 	Y.namespace("Solitaire.Solver.Freecell");
 
+	Y.mix(Y.Solitaire.Solver.Freecell, {
+		enable: Y.Solitaire.noop,
+		disable: Y.Solitaire.noop,
+		isEnabled: function () { return false; }
+	});
+
 	// only let this work with web workers and typed arrays
 
 	if (!(window.Worker && window.ArrayBuffer && window.Uint8Array)) { return; }
@@ -418,7 +424,7 @@ YUI.add("solver-freecell", function (Y) {
 			window.clearTimeout(Status.indicatorTimer);
 			Status.indicatorTimer = window.setTimeout(Status.updateIndicator.bind(Status), Status.delay);
 		}
-	});
+	}, true);
 
 	Y.on("beforeSetup", function () {
 		FreecellSolver.resume(true);

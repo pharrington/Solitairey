@@ -944,7 +944,6 @@ Y.Solitaire.Card = {
 				});
 
 			node.setStyles({left: -this.width, top: -this.height});
-			//this.updateStyle();
 			this.setRankHeight();
 
 			Solitaire.container().append(node);

@@ -33,8 +33,7 @@
 	        "statistics",
 		"solver-freecell",
 		"solitaire-autoplay",
-	        "solitaire-ios",
-		"solitaire-background-fix"],
+	        "solitaire-ios"],
 
 	Fade = (function() {
 		var el = null,
@@ -514,9 +513,7 @@
 		stylesheet: null,
 
 		load: function (name) {
-			//Y.one("body").removeClass("background-" + this.current);
 			Y.one("#game-chooser").removeClass("background-" + this.current);
-			this.node().removeClass("background-" + this.current);
 
 			if (!(name in this.all)) {
 				name = this.defaultBackground;

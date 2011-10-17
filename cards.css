@@ -621,3 +621,10 @@ button:hover {
 	background-image: -ms-linear-gradient(#f0f0f0 50%, #bbb);
 	background-image: -o-linear-gradient(#f0f0f0 50%, #bbb);
 }
+
+#background {
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: -10000;
+}

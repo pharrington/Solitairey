@@ -75,6 +75,10 @@
 			hide: function() {
 				css.display = "none";
 				element().setStyles(css);
+			},
+
+			resize: function () {
+				if (css.display === "block") { this.show(); }
 			}
 		};
 	}()),
@@ -484,14 +488,35 @@
 	},
 	
 	Backgrounds = {
-		all: {"green":"", "vintage":"", "circles":"", "watercolor":"", "heart":""},
+		all: {  "green": {
+				image:"green.jpg",
+				size: "100%"
+		     	}, 
+			"vintage": {
+				image:"backgrounds/grungy-vintage.jpg",
+				repeat: true,
+			},
+			"circles": {
+				image: "backgrounds/retro-circles-army-green.jpg",
+				repeat: true,
+			},
+			"watercolor": {
+				image: "backgrounds/watercolor-grunge-ripe-apricot.jpg",
+				size: "cover",
+			},
+			"heart": {
+				image: "backgrounds/grunge-hearts-maroon-copper.jpg",
+				size: "cover"
+			}
+		},
 		current: null,
 		defaultBackground: "green",
 		stylesheet: null,
 
 		load: function (name) {
-			Y.one("body").removeClass("background-" + this.current);
+			//Y.one("body").removeClass("background-" + this.current);
 			Y.one("#game-chooser").removeClass("background-" + this.current);
+			this.node().removeClass("background-" + this.current);
 
 			if (!(name in this.all)) {
 				name = this.defaultBackground;
@@ -502,8 +527,60 @@
 		},
 
 		set: function () {
-			Y.one("body").addClass("background-" + this.current);
+			var selected = this.all[this.current],
+			    node;
+
 			Y.one("#game-chooser").addClass("background-" + this.current);
+
+			node = this.node();
+			if (selected.repeat) {
+				Y.one("#background_image").hide();
+				Y.one("body").addClass("background-" + this.current);
+			} else {
+				Y.one("#background_image").set("src", selected.image);
+			}
+		},
+
+		resize: function () {
+			window.edgar = Y.one("#background_image");
+			var selected = this.all[this.current],
+			    img = Y.one("#background_image"),
+			    width = img.get("width"),
+			    height = img.get("height"),
+			    winWidth = img.get("winWidth"),
+			    winHeight = img.get("winHeight"),
+			    ratioWidth, ratioHeight,
+			    ratio;
+
+			if (selected.repeat) { return; }
+
+			if (selected.size === "cover") {
+				ratioWidth = width / winWidth;
+				ratioHeight = height / winHeight;
+				ratio = ratioWidth < ratioHeight ? ratioWidth : ratioHeight;
+
+				img.set("width", Math.ceil(width / ratio));
+				img.set("height", Math.ceil(height / ratio));
+			} else if (selected.size === "100%") {
+				img.set("width", winWidth);
+				img.set("height", winHeight);
+			}
+
+			img.show();
+		},
+
+		node: function () {
+			var node = Y.one("#background"),
+			    image;
+
+			if (!node) {
+				node = Y.Node.create("<div id=background>").appendTo(document.body);
+				image = Y.Node.create("<img id=background_image>");
+				image.on("load", this.resize.bind(this));
+				node.append(image);
+			}
+
+			return node;
 		}
 	};
 
@@ -612,6 +689,8 @@
 
 		active.game.resize(ratio);
 		GameChooser.refit();
+		Fade.resize();
+		Backgrounds.resize();
 	}
 
 	function playGame(name) {

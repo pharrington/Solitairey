@@ -256,8 +256,9 @@
 					});
 
 					createList(Backgrounds, "#background-options .backgrounds", function (collection) {
+						console.log(collection.all[collection.current].image);
 						return Y.Node.create("<li class=background></li>")
-							.setStyle("background-image", "url(" + collection.all[collection.current].image + ")");
+							.setStyle("backgroundImage", "url(" + collection.all[collection.current].image + ")");
 					});
 				}
 
@@ -542,9 +543,9 @@
 			node = this.node();
 			if (selected.repeat) {
 				this.imageNode().hide();
-				this.node().setStyle("background-image", "url(" + selected.image + ")");
+				this.node().setStyle("backgroundImage", "url(" + selected.image + ")");
 			} else {
-				this.node().setStyle("background-image", "none");
+				this.node().setStyle("backgroundImage", "none");
 				this.imageNode().set("src", selected.image).show();
 			}
 		},

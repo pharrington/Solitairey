@@ -1,9 +1,21 @@
 (function () {
+	function cacheNode(selector) {
+		var node;
+
+		return function () {
+			if (!node) { 
+				node = Y.one(selector);
+			}
+			return node;
+		};
+	}
+
 	var active = {
 		name: "klondike",
 		game: null
 	    },
 	    yui = YUI(), Y,
+	    body = cacheNode("body"),
 	    games = {
 		"agnes": "Agnes",
 		"klondike": "Klondike",
@@ -37,7 +49,6 @@
 
 	Fade = (function() {
 		var el = null,
-		    body,
 		    css = {
 		    position: "absolute",
 		    display: "none",
@@ -54,7 +65,7 @@
 			if (el === null) {
 				el = Y.Node.create("<div>");
 				el.setStyles(css);
-				body = Y.one("body").append(el);
+				body().append(el);
 			}
 			return el;
 		};
@@ -90,6 +101,8 @@
 			this.refit();
 		},
 
+		node: cacheNode("#game-chooser"),
+
 		refit: function () {
 			var node = Y.one("#game-chooser"),
 			    height = node.get("winHeight");
@@ -107,8 +120,8 @@
 				this.fade = true;
 			}
 
-			Y.one("#game-chooser").addClass("show");
-			Y.one("body").addClass("scrollable");
+			this.node().addClass("show").append(Backgrounds.node());
+			body().addClass("scrollable");
 		},
 
 		hide: function () {
@@ -116,9 +129,9 @@
 				Fade.hide();
 			}
 
-			Y.one("#game-chooser").removeClass("show");
+			this.node().removeClass("show");
 			Y.fire("gamechooser:hide", this);
-			Y.one("body").removeClass("scrollable");
+			body().removeClass("scrollable").append(Backgrounds.node());
 		},
 
 		choose: function () {
@@ -244,7 +257,7 @@
 
 					createList(Backgrounds, "#background-options .backgrounds", function (collection) {
 						return Y.Node.create("<li class=background></li>")
-							.addClass("background-" + collection.current);
+							.setStyle("background-image", "url(" + collection.all[collection.current].image + ")");
 					});
 				}
 
@@ -487,7 +500,8 @@
 	},
 	
 	Backgrounds = {
-		all: {  "green": {
+		all: {
+			"green": {
 				image:"green.jpg",
 				size: "100%"
 		     	}, 
@@ -513,8 +527,6 @@
 		stylesheet: null,
 
 		load: function (name) {
-			Y.one("#game-chooser").removeClass("background-" + this.current);
-
 			if (!(name in this.all)) {
 				name = this.defaultBackground;
 			}
@@ -527,21 +539,19 @@
 			var selected = this.all[this.current],
 			    node;
 
-			Y.one("#game-chooser").addClass("background-" + this.current);
-
 			node = this.node();
 			if (selected.repeat) {
-				Y.one("#background_image").hide();
-				Y.one("body").addClass("background-" + this.current);
+				this.imageNode().hide();
+				this.node().setStyle("background-image", "url(" + selected.image + ")");
 			} else {
-				Y.one("#background_image").set("src", selected.image);
+				this.node().setStyle("background-image", "none");
+				this.imageNode().set("src", selected.image).show();
 			}
 		},
 
 		resize: function () {
-			window.edgar = Y.one("#background_image");
 			var selected = this.all[this.current],
-			    img = Y.one("#background_image"),
+			    img = this.imageNode(),
 			    width = img.get("width"),
 			    height = img.get("height"),
 			    winWidth = img.get("winWidth"),
@@ -555,23 +565,21 @@
 				ratioWidth = width / winWidth;
 				ratioHeight = height / winHeight;
 				ratio = ratioWidth < ratioHeight ? ratioWidth : ratioHeight;
-
-				img.set("width", Math.ceil(width / ratio));
-				img.set("height", Math.ceil(height / ratio));
+				img.setAttrs({width: Math.ceil(width / ratio), height: Math.ceil(height / ratio)});
 			} else if (selected.size === "100%") {
-				img.set("width", winWidth);
-				img.set("height", winHeight);
+				img.setAttrs({width: winWidth, height: winHeight});
 			}
 
 			img.show();
 		},
 
+		imageNode: cacheNode("#background_image"),
 		node: function () {
 			var node = Y.one("#background"),
 			    image;
 
 			if (!node) {
-				node = Y.Node.create("<div id=background>").appendTo(document.body);
+				node = Y.Node.create("<div id=background>").appendTo(body());
 				image = Y.Node.create("<img id=background_image>");
 				image.on("load", this.resize.bind(this));
 				node.append(image);

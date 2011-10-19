@@ -1436,8 +1436,7 @@ Y.Solitaire.Animation = {
 			    speeds = card.animSpeeds,
 			    from = {top: node.getStyle("top"), left: node.getStyle("left")}.mapToFloat().mapAppend("px"),
 			    zIndex = to.zIndex,
-			    duration,
-			    anim;
+			    duration;
 		       
 			if (from.top === to.top && from.left === to.left) { return; }
 
@@ -1457,21 +1456,18 @@ Y.Solitaire.Animation = {
 			node.setStyle("zIndex", 500 + zIndex);
 			delete to.zIndex;
 
-			anim = new Y.Anim({
-				node: node,
-				from: from,
-				to: to,
-				easing: Y.Easing.easeOut,
-				duration: duration
+			q.add(function () {
+				node.transition({
+					left: to.left,
+					top: to.top,
+					easing: "ease-out",
+					duration: duration
+				}, function () {
+					card.positioned = true;
+					node.setStyle("zIndex", zIndex);
+					card.runCallback();
+				});
 			});
-
-			anim.on("end", function () {
-				card.positioned = true;
-				node.setStyle("zIndex", zIndex);
-				card.runCallback();
-			});
-
-			q.add(function () { anim.run(); });
 			q.run();
 		},
 
@@ -1538,4 +1534,4 @@ var Undo = {
 	}
 };
 
-}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "async-queue", "cookie", "array-extras"]});
+}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "transition", "async-queue", "cookie", "array-extras"]});

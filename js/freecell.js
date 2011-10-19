@@ -101,6 +101,10 @@ var Solitaire = Y.Solitaire,
 			return this.proxyStack;
 		},
 
+		validTableauTarget: function (card) {
+			return card.color !== this.color && card.rank === this.rank + 1;
+		},
+
 		validTarget: function (stack) {
 			var target = stack.last();
 
@@ -109,7 +113,7 @@ var Solitaire = Y.Solitaire,
 				if (!target) {
 					return true;
 				} else {
-					return target.color !== this.color && target.rank === this.rank + 1;
+					return this.validTableauTarget(target);
 				}
 				break;
 			case "foundation":

@@ -22,8 +22,10 @@
 	<script type="text/javascript" src="js/autoplay.js"></script>
 	<script type="text/javascript" src="js/ie-opera-background-fix.js"></script>
 	<script type="text/javascript" src="js/statistics.js"></script>
+	<script type="text/javascript" src="js/acesup.js"></script>
 	<script type="text/javascript" src="js/agnes.js"></script>
 	<script type="text/javascript" src="js/bakersdozen.js"></script>
+	<script type="text/javascript" src="js/bakersgame.js"></script>
 	<script type="text/javascript" src="js/eightoff.js"></script>
 	<script type="text/javascript" src="js/golf.js"></script>
 	<script type="text/javascript" src="js/klondike.js"></script>
@@ -70,6 +72,14 @@
 	<div id="game-chooser">
 		<div id="game-chooser-contents">
 		<ul id="descriptions">
+			<li id="acesup">
+				<h2>Aces Up</h2>
+				<div class="description acesup">
+					<div class="layout"></div>
+					<blockquote>
+					</blockquote>
+				</div>
+			</li>
 			<li id="agnes">
 				<h2>Agnes</h2>
 				<div class="description agnes">
@@ -102,6 +112,19 @@
 					<h3>Wastepile</h3>
 					<p>The last two cards from the stock are transfered here; Both cards are playable on the tableau or a foundation.</p>
 					<button class="choose">Play Baker's Dozen Solitaire</button>
+				</div>
+			</li>
+			<li id="bakersgame">
+				<h2>Baker's Game</h2>
+				<div class="description freecell">
+					<div class="layout"></div>
+                                        <blockquote>
+						Baker's Game is much like Freecell, except that tableau stacks are built downwards by suit, instead of by alternating color. This makes for a more challenging and rewarding solitaire when Freecell gets too easy.
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Play:</h3>
+					<p>The top card from the tableau can be played on the foundation, another tableau pile/empty space, or a free slot in the reserve. Build the tableau downwards by suit. Whole or partial runs may be moved as long as there's enough free reserve and tableau cells to move all the cards.</p>
+					<button class="choose">Play Baker's Game</button>
 				</div>
 			</li>
 			<li id="eightoff">

@@ -89,8 +89,10 @@ YUI.add("statistics", function (Y) {
 	 */
 	function winDisplay() {
 		var nameMap = {
+			AcesUp: "Aces Up",
 			Agnes: "Agnes",
 			BakersDozen: "Baker's Dozen",
+			BakersGame: "Baker's Game",
 			Eightoff: "Eight Off",
 			Klondike: "Klondike",
 			Klondike1T: "Klondike (Vegas style)",

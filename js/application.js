@@ -17,8 +17,10 @@
 	    yui = YUI(), Y,
 	    body = cacheNode("body"),
 	    games = {
+	        "acesup": "AcesUp",
 		"agnes": "Agnes",
 		"bakersdozen": "BakersDozen",
+		"bakersgame": "BakersGame",
 		"eightoff": "Eightoff",
 		"klondike": "Klondike",
 		"klondike1t": "Klondike1T",

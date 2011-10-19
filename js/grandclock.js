@@ -60,7 +60,8 @@ var Solitaire = Y.Solitaire,
 		}
 	},
 
-	height: function () { return this.Card.base.height * 6.7; },
+	height: function () { return this.Card.base.height * 5.75; },
+	maxStackHeight: function () { return this.Card.height * 3; },
 
 	Stack: instance(Solitaire.Stack),
 
@@ -154,6 +155,14 @@ Y.mix(GClock.Tableau.Stack, {
 
 		card.left = left;
 		card.top = top;
+	},
+
+	layout: function (layout, i) {
+		Solitaire.Stack.layout.call(this, layout, i);
+		if (i > 3) {
+			this.top = normalize(layout.top) + Solitaire.Card.height * 3.75;
+			this.left -= Solitaire.Card.width * 5;
+		}
 	}
 }, true);
 

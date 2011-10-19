@@ -18,6 +18,8 @@
 	    body = cacheNode("body"),
 	    games = {
 		"agnes": "Agnes",
+		"bakersdozen": "BakersDozen",
+		"eightoff": "Eightoff",
 		"klondike": "Klondike",
 		"klondike1t": "Klondike1T",
 		"flower-garden": "FlowerGarden",

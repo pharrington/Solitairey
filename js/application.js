@@ -256,7 +256,6 @@
 					});
 
 					createList(Backgrounds, "#background-options .backgrounds", function (collection) {
-						console.log(collection.all[collection.current].image);
 						return Y.Node.create("<li class=background></li>")
 							.setStyle("backgroundImage", "url(" + collection.all[collection.current].image + ")");
 					});

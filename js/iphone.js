@@ -358,10 +358,11 @@ YUI.add("solitaire-ios", function (Y) {
 		alert("You win!");
 	};
 
-	Solitaire.scale = Solitaire.noop;
+	//Solitaire.scale = Solitaire.noop;
 	Solitaire.Card.ghost = false;
-	Solitaire.Animation.animate = false;
+	//Solitaire.Animation.animate = false;
 
+	/*
 	Solitaire.Card.base = {
 		theme: "mobile",
 		hiddenRankHeight: 3,
@@ -369,6 +370,7 @@ YUI.add("solitaire-ios", function (Y) {
 		width: 40,
 		height: 50
 	};
+	*/
 
 	function fieldLayout(game, field, layout) {
 		Y.mix(game[field].stackConfig.layout, layout, true);
@@ -582,4 +584,6 @@ YUI.add("solitaire-ios", function (Y) {
 	Y.on("touchmove", cancelIfBody, document);
 
 	Y.on("domready", setupUI);
+	Solitaire.padding = {x: 5, y: 5};
+	Solitaire.offset = {left: 5, top: 5};
 }, "0.0.1", {requires: ["solitaire", "statistics"]});

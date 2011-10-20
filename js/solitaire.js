@@ -1507,6 +1507,11 @@ var Undo = {
 	},
 
 	act: function (move) {
+		if (typeof move === "function") {
+			move();
+			return [];
+		}
+
 		var from = move.from,
 		    card = move.card,
 		    to = card.stack,

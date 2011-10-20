@@ -101,6 +101,7 @@ YUI.add("statistics", function (Y) {
 			Freecell: "Freecell",
                         Golf: "Golf",
 			GClock: "Grandfather's Clock",
+			LaBelleLucie: "La Belle Lucie",
 			MonteCarlo: "Monte Carlo",
 			Pyramid: "Pyramid",
 			RussianSolitaire: "Russian Solitaire",

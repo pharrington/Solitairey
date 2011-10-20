@@ -29,6 +29,7 @@
 		"freecell": "Freecell",
 		"golf": "Golf",
 		"grandfathers-clock": "GClock",
+		"labellelucie": "LaBelleLucie",
 		"monte-carlo": "MonteCarlo",
 		"pyramid": "Pyramid",
 		"russian-solitaire": "RussianSolitaire",

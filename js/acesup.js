@@ -116,6 +116,10 @@ Y.Array.each(AcesUp.fields, function (field) {
 	AcesUp[field].Stack = instance(AcesUp.Stack);
 });
 
+Y.mix(AcesUp.Deck.Stack, {
+	images: {}
+}, true);
+
 Y.mix(AcesUp.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),

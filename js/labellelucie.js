@@ -2,7 +2,7 @@ YUI.add("labellelucie", function (Y) {
 
 var Solitaire = Y.Solitaire,
     LaBelleLucie = Y.Solitaire.LaBelleLucie = instance(Solitaire, {
-	redeals: 2,
+	redeals: 0,
 	fields: ["Foundation", "Tableau", "Deck"],
 
 	createEvents: function () {
@@ -12,6 +12,13 @@ var Solitaire = Y.Solitaire,
 		Y.on("solitaire|newGame", function () {
 			Game.redeals = 2;
 			Game.redealSeed = Math.random() * 0x7FFFFFFF >>> 0;
+			Game.deck.stacks[0].node.addClass("playable");
+		});
+
+		Y.on("solitaire|afterSetup", function () {
+			if (Game.redeals) {
+				Game.deck.stacks[0].node.addClass("playable");
+			}
 		});
 	},
 
@@ -21,17 +28,16 @@ var Solitaire = Y.Solitaire,
 				String.fromCharCode((seed >> 16) & 0xFF) +
 				String.fromCharCode((seed >> 8) & 0xFF) +
 				String.fromCharCode(seed & 0xFF);
+
 		return String.fromCharCode(this.redeals) + seedString + Solitaire.serialize.call(this);
 	},
 
 	unserialize: function (serialized) {
-		var seedString = serialized.substr(1, 4);
-
 		this.redeals = serialized.charCodeAt(0);
-		this.redealSeed = seedString.charCodeAt(0) << 24 +
-				seedString.charCodeAt(1) << 16 +
-				seedString.charCodeAt(2) << 8 +
-				seedString.charCodeAt(3);
+		this.redealSeed = serialized.charCodeAt(1) << 24 +
+				serialized.charCodeAt(2) << 16 +
+				serialized.charCodeAt(3) << 8 +
+				serialized.charCodeAt(4);
 		
 		return Solitaire.unserialize.call(this, serialized.substr(5));
 	},
@@ -61,6 +67,9 @@ var Solitaire = Y.Solitaire,
 
 		this.deal(true);
 		this.redeals--;
+		if (!this.redeals) {
+			this.deck.stacks[0].node.removeClass("playable");
+		}
 	},
 
 	deal: function (redeal) {
@@ -181,8 +190,10 @@ Y.mix(LaBelleLucie.Tableau.Stack, {
 		var rankWidth = card.width / 4,
 		    last = this.cards.last(),
 		    top = this.top,
-		    left = last ? last.left + rankWidth : this.left;
+		    left = last ? last.left + rankWidth : this.left,
+		    zIndex = last ? last.zIndex + 1 : 1;
 
+		card.zIndex = zIndex;
 		card.left = left;
 		card.top = top;
 	},

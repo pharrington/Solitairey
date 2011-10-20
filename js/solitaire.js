@@ -280,9 +280,8 @@ Y.mix(Solitaire, {
 		Y.Cookie.remove("saved-game");
 		this.setup(this.deal);
 
-		Game.save("initial-game");
-
 		Y.fire("newGame");
+		Game.save("initial-game");
 	},
 
 	cleanup: function () {

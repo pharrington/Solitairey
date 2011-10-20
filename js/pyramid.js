@@ -176,7 +176,7 @@ var Solitaire = Y.Solitaire,
 			    next = stack.next();
 
 			if (stack.field === "deck" || stack.field === "waste") {
-				return !this.isFaceDown;
+				return !this.isFaceDown && this === this.stack.last();
 			} else {
 				return !(this.stack.field === "foundation" ||
 					next &&

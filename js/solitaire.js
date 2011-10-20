@@ -335,7 +335,7 @@ Y.mix(Solitaire, {
 		container.delegate("click", Game.Events.click, ".card");
 		container.delegate("touchend", Game.Events.click, ".card");
 
-		Y.on("solitaire|endTurn", Game.Events.endTurn);
+		Y.after("solitaire|endTurn", Game.Events.endTurn);
 		Y.on("solitaire|undo", Game.Events.undo);
 	},
 
@@ -555,14 +555,14 @@ Y.Solitaire.Events = {
 			card.dragging = false;
 			card.turnOver(e);
 			Solitaire.moves.reverse();
-			Solitaire.endTurn();
+			Game.endTurn();
 			e.preventDefault();
 		},
 
 		clickEmptyDeck: function () {
 			Game.redeal();
 			Solitaire.moves.reverse();
-			Solitaire.endTurn();
+			Game.endTurn();
 		},
 
 		drag: function () {
@@ -670,7 +670,7 @@ Y.Solitaire.Events = {
 				}
 			}
 
-			Solitaire.endTurn();
+			Game.endTurn();
 		},
 
 		endTurn: function () {
@@ -910,7 +910,7 @@ Y.Solitaire.Card = {
 					origin.updateCardsPosition();
 					origin.update();
 
-					Solitaire.endTurn();
+					Game.endTurn();
 					return true;
 				}
 			}

@@ -3,17 +3,21 @@ YUI.add("labellelucie", function (Y) {
 var Solitaire = Y.Solitaire,
     LaBelleLucie = Y.Solitaire.LaBelleLucie = instance(Solitaire, {
 	redeals: 0,
+	redealSeed: 0,
+
 	fields: ["Foundation", "Tableau", "Deck"],
+
+	initRedeals: function () {
+		this.redeals = 2;
+		this.redealSeed = Math.random() * 0x7FFFFFFF >>> 0;
+		this.deck.stacks[0].node.addClass("playable");
+	},
 
 	createEvents: function () {
 		Solitaire.createEvents.call(this);
 		Y.delegate("click", Solitaire.Events.clickEmptyDeck, Solitaire.selector, ".stack");
 
-		Y.on("solitaire|newGame", function () {
-			Game.redeals = 2;
-			Game.redealSeed = Math.random() * 0x7FFFFFFF >>> 0;
-			Game.deck.stacks[0].node.addClass("playable");
-		});
+		Y.on("solitaire|newGame", this.initRedeals.bind(this));
 
 		Y.on("solitaire|afterSetup", function () {
 			if (Game.redeals) {
@@ -100,7 +104,20 @@ var Solitaire = Y.Solitaire,
 	height: function () { return this.Card.base.height * 7; },
 	maxStackHeight: function () { return Solitaire.Card.height * 2.5; },
 
-	Stack: instance(Solitaire.Stack),
+	Stack: instance(Solitaire.Stack, {
+		images: {
+			deck: "freeslot.png",
+			foundation: "freeslot.png",
+			tableau: null
+		},
+
+		validTarget: function (stack) {
+			return stack.field === "tableau" &&
+			    this.first().validTarget(stack);
+		},
+
+		validCard: function () { return false; }
+	}),
 
 	Foundation: {
 		stackConfig: {
@@ -142,17 +159,20 @@ var Solitaire = Y.Solitaire,
 			return this.stack.field === "tableau" && this === this.stack.last();
 		},
 
+		validTableauTarget: function (target) {
+			if (!target) {
+				return false;
+			} else {
+				return target.suit === this.suit && target.rank === this.rank + 1;
+			}
+		},
+
 		validTarget: function (stack) {
 			var target = stack.last();
 
 			switch (stack.field) {
 			case "tableau":
-				if (!target) {
-					return false
-				} else {
-					return target.suit === this.suit && target.rank === this.rank + 1;
-				}
-				break;
+				return this.validTableauTarget(target);
 			case "foundation":
 				if (!target) {
 					return this.rank === 1;
@@ -172,20 +192,7 @@ Y.Array.each(LaBelleLucie.fields, function (field) {
 });
 
 
-Y.mix(LaBelleLucie.Stack, {
-	validTarget: function (stack) {
-		return stack.field === "tableau" &&
-		    this.first().validTarget(stack);
-	},
-
-	validCard: function () { return false; }
-}, true);
-
-LaBelleLucie.Deck.Stack.images = {deck: "freeslot.png"};
-
 Y.mix(LaBelleLucie.Tableau.Stack, {
-	images: {},
-
 	setCardPosition: function (card) {
 		var rankWidth = card.width / 4,
 		    last = this.cards.last(),

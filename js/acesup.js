@@ -10,7 +10,7 @@ var Solitaire = Y.Solitaire,
 		    deck = this.deck,
 		    stacks = this.tableau.stacks;
 
-		for (stack = 0; stack < 4; stack++) {
+		for (stack = 0; stack < stacks.length; stack++) {
 			card = deck.pop().faceUp();
 			stacks[stack].push(card);
 		}
@@ -24,7 +24,7 @@ var Solitaire = Y.Solitaire,
 		    deck = this.deck.stacks[0],
 		    card;
 
-		for (stack = 0; stack < 4; stack++) {
+		for (stack = 0; stack < stacks.length; stack++) {
 			card = deck.last();
 			if (!card) { break; }
 
@@ -124,8 +124,10 @@ Y.mix(AcesUp.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
 		    top = last ? last.top + last.rankHeight : this.top,
-		    left = this.left;
+		    left = this.left,
+		    zIndex = last ? last.zIndex + 1 : 1;
 
+		card.zIndex = zIndex;
 		card.left = left;
 		card.top = top;
 	}

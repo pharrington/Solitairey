@@ -4,7 +4,7 @@ YUI.add("agnes", function (Y) {
 	}
 
 	function seedRank() {
-		return Agnes.foundation.stacks[0].first().rank;
+		return Game.foundation.stacks[0].first().rank;
 	};
 
 	var Solitaire = Y.Solitaire,
@@ -111,7 +111,7 @@ YUI.add("agnes", function (Y) {
 				switch (stack.field) {
 				case "tableau":
 					if (!target) {
-						return inSeries(this.rank, seedRank());
+						return this.validFreeTableauTarget();
 					} else {
 						return !target.isFaceDown && target.color !== this.color && inSeries(this.rank, target.rank);
 					}
@@ -120,6 +120,10 @@ YUI.add("agnes", function (Y) {
 				default:
 					return false;
 				}
+			},
+
+			validFreeTableauTarget: function () {
+				return inSeries(this.rank, seedRank());
 			},
 
 			validFoundationTarget: function (target) {

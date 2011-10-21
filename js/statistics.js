@@ -95,6 +95,7 @@ YUI.add("statistics", function (Y) {
 			BakersDozen: "Baker's Dozen",
 			BakersGame: "Baker's Game",
 			Baroness: "Baroness",
+			Canfield: "Canfield",
 			Eightoff: "Eight Off",
 			Klondike: "Klondike",
 			Klondike1T: "Klondike (Vegas style)",

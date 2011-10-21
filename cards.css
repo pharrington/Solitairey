@@ -453,6 +453,38 @@ p {
 	background-image: url(layouts/mini/simple-simon.png);
 }
 
+.alternations .layout {
+	background-image: url(layouts/mini/alternations.png);
+}
+
+.acesup .layout {
+	background-image: url(layouts/mini/aces-up.png);
+}
+
+.bakersdozen .layout {
+	background-image: url(layouts/mini/bakers-dozen.png);
+}
+
+.baroness .layout {
+	background-image: url(layouts/mini/baroness.png);
+}
+
+.eightoff .layout {
+	background-image: url(layouts/mini/eightoff.png);
+}
+
+.thefan .layout {
+	background-image: url(layouts/mini/the-fan.png);
+}
+
+.labellelucie .layout {
+	background-image: url(layouts/mini/la-belle-lucie.png);
+}
+
+.canfield .layout {
+	background-image: url(layouts/mini/canfield.png);
+}
+
 button {
 	font-size: 18px;
 	margin-right: 27px;

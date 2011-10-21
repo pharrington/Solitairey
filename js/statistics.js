@@ -91,6 +91,7 @@ YUI.add("statistics", function (Y) {
 		var nameMap = {
 			AcesUp: "Aces Up",
 			Agnes: "Agnes",
+			Alternations: "Alternations",
 			BakersDozen: "Baker's Dozen",
 			BakersGame: "Baker's Game",
 			Baroness: "Baroness",

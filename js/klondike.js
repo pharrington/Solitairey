@@ -3,6 +3,7 @@ YUI.add("klondike", function (Y) {
 var Solitaire = Y.Solitaire,
     Klondike = Y.Solitaire.Klondike = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Waste", "Tableau"],
+	cardsPerTurnOver: 3,
 
 	deal: function () {
 		var card,
@@ -34,7 +35,7 @@ var Solitaire = Y.Solitaire,
 
 		Klondike.Card.updatePosition = Solitaire.noop;
 
-		for (i = deck.cards.length, stop = i - 3; i > stop && i; i--) {
+		for (i = deck.cards.length, stop = i - this.cardsPerTurnOver; i > stop && i; i--) {
 			deck.last().faceUp().moveTo(waste);
 		}
 
@@ -149,7 +150,6 @@ var Solitaire = Y.Solitaire,
 Y.Array.each(Klondike.fields, function (field) {
 	Klondike[field].Stack = instance(Klondike.Stack);
 });
-
 
 Y.mix(Klondike.Stack, {
 	validTarget: function (stack) {

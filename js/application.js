@@ -19,6 +19,7 @@
 	    games = {
 	        "acesup": "AcesUp",
 		"agnes": "Agnes",
+		"alternations": "Alternations",
 		"bakersdozen": "BakersDozen",
 		"bakersgame": "BakersGame",
 		"baroness": "Baroness",

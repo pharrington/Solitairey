@@ -7,16 +7,16 @@ var Solitaire = Y.Solitaire,
 
 	deal: function () {
 		var card,
-		    piles = 6,
 		    stack = 0,
 		    deck = this.deck,
-		    stacks = this.tableau.stacks;
+		    stacks = this.tableau.stacks,
+		    piles = stacks.length - 1;
 
 		while (piles >= 0) {
 			card = deck.pop().faceUp();
-			stacks[6 - piles].push(card);
+			stacks[(stacks.length - 1) - piles].push(card);
 
-			for (stack = 7 - piles; stack < 7; stack++) {
+			for (stack = stacks.length - piles; stack < stacks.length; stack++) {
 				card = deck.pop();
 				stacks[stack].push(card);			
 			}

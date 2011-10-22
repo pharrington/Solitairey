@@ -23,6 +23,7 @@
 		"bakersdozen": "BakersDozen",
 		"bakersgame": "BakersGame",
 		"baroness": "Baroness",
+		"doubleklondike": "DoubleKlondike",
 		"canfield": "Canfield",
 		"eightoff": "Eightoff",
 		"klondike": "Klondike",

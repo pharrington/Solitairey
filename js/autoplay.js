@@ -5,7 +5,7 @@ YUI.add("solitaire-autoplay", function (Y) {
 	    Autoplay = Solitaire.Autoplay,
 	    whenWon = true,
 	    autoPlayInterval = null,
-	    autoPlayable = ["Klondike", "Klondike1T", "FortyThieves", "GClock", "Freecell", "FlowerGarden", "Yukon", "BakersGame", "BakersDozen", "Eightoff", "LaBelleLucie", "TheFan", "Alternations"];
+	    autoPlayable = ["Klondike", "Klondike1T", "FortyThieves", "GClock", "Freecell", "FlowerGarden", "Yukon", "BakersGame", "BakersDozen", "Eightoff", "LaBelleLucie", "TheFan", "Alternations", "DoubleKlondike"];
 
 	Y.on("endTurn", function () {
 		if (!whenWon || autoPlayable.indexOf(Solitaire.game.name()) === -1) { return; }

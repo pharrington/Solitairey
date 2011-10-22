@@ -31,15 +31,16 @@ var Solitaire = Y.Solitaire,
 		    waste = this.waste.stacks[0],
 		    updatePosition = Klondike.Card.updatePosition,
 		    last,
+		    Card = Solitaire.game.Card,
 		    i, stop;
 
-		Klondike.Card.updatePosition = Solitaire.noop;
+		Card.updatePosition = Solitaire.noop;
 
 		for (i = deck.cards.length, stop = i - this.cardsPerTurnOver; i > stop && i; i--) {
 			deck.last().faceUp().moveTo(waste);
 		}
 
-		Klondike.Card.updatePosition = updatePosition;
+		Card.updatePosition = updatePosition;
 
 		waste.eachCard(function (c) {
 			c.updatePosition();

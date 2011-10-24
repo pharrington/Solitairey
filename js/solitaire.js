@@ -1017,7 +1017,7 @@ Y.Solitaire.Card = {
 		updatePosition: function (fields) {
 			if (!this.node) { return; }
 
-			var to = {left: this.left + "px", top: this.top + "px", zIndex: this.zIndex},
+			var to = {left: Math.floor(this.left) + "px", top: Math.floor(this.top) + "px", zIndex: this.zIndex},
 			    origin = this.origin;
 
 			if (!this.positioned) {

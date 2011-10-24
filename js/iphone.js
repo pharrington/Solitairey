@@ -310,6 +310,16 @@ YUI.add("solitaire-ios", function (Y) {
 		]
 	    };
 
+	/*
+		mobile: {
+			sizes: [40],
+			40: {
+				hiddenRankHeight: 3,
+				rankHeight: 15,
+				dimensions: [40, 50]
+			}
+		},
+		*/
 	OPTIONS.FortyThieves = OPTIONS.Spider1S = OPTIONS.Spider2S = OPTIONS.Spider;
 	gameOverrides.FortyThieves = gameOverrides.Spider1S = gameOverrides.Spider2S = gameOverrides.Spider;
 
@@ -322,9 +332,11 @@ YUI.add("solitaire-ios", function (Y) {
 		useHash: false, // :\
 		_pg_activate: Solitaire.noop,
 		_pg_size: function () {
+			/*
 			if (this.activeDrag) {
 				this._pg.setStyles({width: "100%", height: "100%"});
 			}
+			*/
 		}
 	}, true);
 
@@ -358,9 +370,9 @@ YUI.add("solitaire-ios", function (Y) {
 		alert("You win!");
 	};
 
-	//Solitaire.scale = Solitaire.noop;
+	Solitaire.scale = Solitaire.noop;
 	Solitaire.Card.ghost = false;
-	//Solitaire.Animation.animate = false;
+	Solitaire.Animation.animate = false;
 
 	/*
 	Solitaire.Card.base = {

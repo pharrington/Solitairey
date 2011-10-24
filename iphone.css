@@ -196,3 +196,7 @@ body.fullscreen.portrait {
 	background-image: none;
 	display: none;
 }
+
+#background {
+	display: none;
+}

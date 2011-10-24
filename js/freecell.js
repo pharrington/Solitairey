@@ -97,7 +97,7 @@ var Solitaire = Y.Solitaire,
 		createProxyStack: function () {
 			var stack = Solitaire.Card.createProxyStack.call(this);
 
-			this.proxyStack = stack && stack.cards.length <= Freecell.openSlots(stack) ? stack : null;
+			this.proxyStack = stack && stack.cards.length <= Solitaire.game.openSlots(stack) ? stack : null;
 			return this.proxyStack;
 		},
 
@@ -140,7 +140,7 @@ Y.mix(Freecell.Stack, {
 		if (stack.field !== "tableau" ||
 		    !this.first().validTarget(stack)) { return false; }
 
-		return this.cards.length <= Freecell.openSlots(stack, this.last());
+		return this.cards.length <= Solitaire.game.openSlots(stack, this.last());
 	}
 }, true);
 

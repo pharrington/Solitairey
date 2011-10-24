@@ -1221,10 +1221,6 @@ Y.Solitaire.Stack = {
 			    to = this.field,
 			    from = card.stack ? card.stack.field : "deck";
 
-			/*
-			 * TODO: should zIndex setting up in setCardPosition?
-			 */
-
 			if (last) { card.zIndex = last.zIndex + 1; }
 			else if (to === "deck" || to === "foundation") { card.zIndex = 200; }
 			else if (from === "deck") { card.zIndex = Game.Card.zIndex; }

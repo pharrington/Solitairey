@@ -641,10 +641,29 @@
 		GameChooser.choose();
 	}
 
+	var aboutPopup = cacheNode("#about_popup");
+
+	function showAbout() {
+		aboutPopup().removeClass("hidden");
+		Fade.show();
+	}
+
+	function hideAbout() {
+		aboutPopup().addClass("hidden");
+		Fade.hide();
+	}
+
 	function attachEvents() {
+		var hideMenus = function () {
+			GameChooser.hide();
+			OptionsChooser.hide();
+			hideAbout();
+		    };
+
 		Y.on("click", restart, Y.one("#restart"));
 		Y.on("click", function () { GameChooser.show(false); }, Y.one("#choose_game"));
 		Y.on("click", function () { OptionsChooser.show(false); }, Y.one("#choose_options"));
+		Y.on("click", showAbout, Y.one("#about"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
 
@@ -652,15 +671,11 @@
 
 		Y.delegate("click", showDescription, "#descriptions", "li");
 
-                Y.on("click", function () {
-			GameChooser.hide();
-			OptionsChooser.hide();
-		}, Y.all(".close-chooser"));
+                Y.on("click", hideMenus, Y.all(".close-chooser"));
 
 		Y.one("document").on("keydown", function (e) {
 			if (e.keyCode === 27) {
-				GameChooser.hide();
-				OptionsChooser.hide();
+				hideMenus();
 			}
 		});
 

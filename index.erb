@@ -30,12 +30,20 @@
 	<script type="text/javascript" src="js/autoplay.js"></script>
 	<script type="text/javascript" src="js/ie-opera-background-fix.js"></script>
 	<script type="text/javascript" src="js/statistics.js"></script>
+	<script type="text/javascript" src="js/acesup.js"></script>
 	<script type="text/javascript" src="js/agnes.js"></script>
+	<script type="text/javascript" src="js/alternations.js"></script>
+	<script type="text/javascript" src="js/baroness.js"></script>
 	<script type="text/javascript" src="js/bakersdozen.js"></script>
+	<script type="text/javascript" src="js/bakersgame.js"></script>
+	<script type="text/javascript" src="js/canfield.js"></script>
+	<script type="text/javascript" src="js/doubleklondike.js"></script>
 	<script type="text/javascript" src="js/eightoff.js"></script>
+	<script type="text/javascript" src="js/thefan.js"></script>
 	<script type="text/javascript" src="js/golf.js"></script>
 	<script type="text/javascript" src="js/klondike.js"></script>
 	<script type="text/javascript" src="js/klondike1t.js"></script>
+	<script type="text/javascript" src="js/labellelucie.js"></script>
 	<script type="text/javascript" src="js/flowergarden.js"></script>
 	<script type="text/javascript" src="js/fortythieves.js"></script>
 	<script type="text/javascript" src="js/freecell.js"></script>
@@ -69,14 +77,12 @@
   })();
 
 </script>
-<script type="text/javascript">var switchTo5x=false;</script><script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher:'85c2f50b-8b7b-41dc-baf0-a2d273906b91'});</script>
 <% end %>
 </head>
 <body>
 <% unless development %>
 <div id=social>
 	<iframe id="fb" src="http://www.facebook.com/plugins/like.php?href=www.solitairey.com&amp;layout=button_count&amp;show_faces=false&amp;width=50&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
-	<span class='st_sharethis_button' displayText='ShareThis' st_title='Solitairey - A Beautiful HTML5 Solitaire collection'></span>
 </div>
 <% end %>
 	<ul id="menu">
@@ -93,21 +99,26 @@
 			<a id="undo">Undo</a>
 		</li>
                 <li>
-			<a id="rules">Rules</a>
-		</li>
-                <li>
 			<a id="choose_options">Options</a>
 		</li>
                 <li class="end">
 			<a id="about">About</a>
 		</li>
 	</ul>
-        <div id="about">
-          Solitairey is a collection of Solitaire games written by <a href=mailto:paul.c.harrington@gmail.com>Paul Harrington</a>
+        <div id="about_popup" class="hidden popup">
+          Solitairey is a collection of Solitaire games written by <a class="external" href=mailto:paul.c.harrington@gmail.com>Paul Harrington</a>.
         </div>
 	<div id="game-chooser">
 		<div id="game-chooser-contents">
 		<ul id="descriptions">
+			<li id="acesup">
+				<h2>Aces Up</h2>
+				<div class="description acesup">
+					<div class="layout"></div>
+					<blockquote>
+					</blockquote>
+				</div>
+			</li>
 			<li id="agnes">
 				<h2>Agnes</h2>
 				<div class="description agnes">
@@ -123,6 +134,14 @@
 					<h3>Wastepile</h3>
 					<p>The last two cards from the stock are transfered here; Both cards are playable on the tableau or a foundation.</p>
 					<button class="choose">Play Agnes Solitaire</button>
+				</div>
+			</li>
+			<li id="alternations">
+				<h2>Alternations</h2>
+				<div class="description alternations">
+					<div class="layout"></div>
+					<blockquote>
+					</blockquote>
 				</div>
 			</li>
 			<li id="bakersdozen">
@@ -142,6 +161,50 @@
 					<button class="choose">Play Baker's Dozen Solitaire</button>
 				</div>
 			</li>
+			<li id="bakersgame">
+				<h2>Baker's Game</h2>
+				<div class="description freecell">
+					<div class="layout"></div>
+                                        <blockquote>
+						Baker's Game is much like Freecell, except that tableau stacks are built downwards by suit, instead of by alternating color. This makes for a more challenging and rewarding solitaire when Freecell gets too easy.
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Play:</h3>
+					<p>The top card from the tableau can be played on the foundation, another tableau pile/empty space, or a free slot in the reserve. Build the tableau downwards by suit. Whole or partial runs may be moved as long as there's enough free reserve and tableau cells to move all the cards.</p>
+					<button class="choose">Play Baker's Game</button>
+				</div>
+			</li>
+			<li id="baroness">
+				<h2>Baroness</h2>
+				<div class="description baroness">
+					<div class="layout"></div>
+					<blockquote>
+					</blockquote>
+				</div>
+			</li>
+			<li id="canfield">
+				<h2>Canfield</h2>
+				<div class="description canfield">
+					<div class="layout"></div>
+					<blockquote>
+					</blockquote>
+				</div>
+			</li>
+			<li id="doubleklondike">
+				<h2>Double Klondike</h2>
+				<div class="description doubleklondike">
+					<div class="layout"></div>
+                                        <blockquote>
+						Double Klondike is Klondike played with two decks.
+                                        </blockquote>
+					<h3>Foundation:</h3>
+					<p>Built in series from Ace to King, in suit.</p>
+					<h3>Tableau:</h3>
+					<p>The top card of each pile may be played on another tableau pile or on the foundation. Tableau piles are built downwards by alternating color. Partial or complete face up runs may be moved. Free spaces may only be filled by a King or a pile starting with a King.</p>
+					<h3>Wastepile</h3>
+					<p>Click the stock to transfer 3 cards to the wastepile. The top card on the wastepile may be played on the foundation or tableau. When the stock is deplected, click it to start a new stock with the remaining waste cards.</p>
+				</div>
+			</li>
 			<li id="eightoff">
 				<h2>Eight Off</h2>
 				<div class="description eightoff">
@@ -153,6 +216,14 @@
 					<h3>Play:</h3>
 					<p>The top card from the tableau can be played on the foundation, another tableau pile, or a free slot in the reserve. Free tableau slots can by filled by a King. Build the tableau downwards by suit. Whole or partial runs may be moved as long as there's enough free reserve cells to move all the cards.</p>
 					<button class="choose">Play Eight Off</button>
+				</div>
+			</li>
+			<li id="thefan">
+				<h2>The Fan</h2>
+				<div class="description thefan">
+					<div class="layout"></div>
+					<blockquote>
+					</blockquote>
 				</div>
 			</li>
 			<li id="flower-garden">
@@ -254,6 +325,14 @@
 					<h3>Wastepile</h3>
 					<p>Click the stock to transfer 1 card to the wastepile. The top card on the wastepile may be played on the foundation or tableau.</p>
 					<button class="choose">Play Klondike (Vegas Style)</button>
+				</div>
+			</li>
+			<li id="labellelucie">
+				<h2>La Belle Lucie</h2>
+				<div class="description labellelucie">
+					<div class="layout"></div>
+					<blockquote>
+					</blockquote>
 				</div>
 			</li>
 			<li id="monte-carlo">
@@ -444,7 +523,7 @@
 		</div>
                 <button class=close-chooser>Return to game</button>
 	</div>
-        <div id=options-chooser class="hidden">
+        <div id=options-chooser class="hidden popup">
           <div class="tabview">
             <ul>
               <li><a href="#play-options">Gameplay</a></li>

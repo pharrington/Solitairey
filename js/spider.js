@@ -169,7 +169,7 @@ Y.mix(Spider.Deck.Stack, {
 	setCardPosition: function (card) {
 		var numCards = this.cards.length,
 		    last = this.cards.last(),
-		    numTableaus = (Solitaire.game.tableau.stacks.length);
+		    numTableaus = Solitaire.game.tableau.stacks.length;
 
 		card.top = this.top;
 		card.left = this.left + Math.floor(numCards / numTableaus) * card.width * 0.2;

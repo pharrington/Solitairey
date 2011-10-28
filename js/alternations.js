@@ -15,16 +15,52 @@ var Solitaire = Y.Solitaire,
 		for (i = 0; i < tableau.length * 7; i++) {
 			card = deck.pop();
 
+			tableau[stack++].push(card);
+
 			if (!(row % 2)) {
 				card.faceUp();
 			}
-			tableau[stack++].push(card);
 
 			if (!((i + 1) % 7)) {
 				stack = 0;
 				row++;
 			}
 		}
+
+		card.after(function () {
+			var rows = 7,
+			    columns = tableau.length,
+			    diag = columns + Math.floor(rows / 2),
+			    x = 0,
+			    row, col,
+			    cards,
+			    delay = 0, interval = 200;
+
+			for (x = 0; x < diag; x++) {
+				cards = [];
+				col = x;
+				row = 0;
+
+				while (row < rows && col >= 0)  {
+					stack = tableau[col];
+
+					if (stack && stack.cards[row]) {
+						cards.push(stack.cards[row]);
+					}
+
+					row += 2;
+					col--;
+				}
+
+				Y.Array.each(cards, function (c) {
+					setTimeout(function () {
+						Solitaire.Animation.flip(c);
+					}, delay);
+				});
+
+				delay += interval;
+			}
+		});
 
 		deck.createStack();
 	},
@@ -37,7 +73,7 @@ var Solitaire = Y.Solitaire,
 		this.withoutFlip(function () {
 			card = deck.last();
 			if (card) {
-				card.flipPostMove();
+				card.flipPostMove(0);
 		       		card.faceUp().moveTo(waste);
 			}
 		});

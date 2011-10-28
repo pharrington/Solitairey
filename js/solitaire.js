@@ -1073,6 +1073,12 @@ Y.Solitaire.Card = {
 			return this;
 		},
 
+		flipPostMove: function () {
+			this.after(function () {
+				Solitaire.Animation.flip(this);
+			});
+		},
+
 		after: function (callback) {
 			this.callback = callback;
 		},

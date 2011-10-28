@@ -39,10 +39,61 @@ var Solitaire = Y.Solitaire,
 
 		for (stack = 0; stack < 5; stack++) {
 			for (i = 0; i < 5; i++) {
-				card = deck.pop().faceUp();
+				card = deck.pop();
 				stacks[stack].push(card);
+				card.faceUp();
 			}
 		}
+
+		card.after(function () {
+			var x = 2,
+			    y = 2,
+			    xinc = 1,
+			    yinc = 0,
+			    xdir = 1,
+			    ydir = -1,
+			    spiralLength = -1,
+			    factor = 1,
+			    run = 0,
+			    delay = 50, interval = 70,
+			    card;
+
+			for (i = 0; i < 25; i++) {
+				if (i === (spiralLength + 1) * factor) {
+					spiralLength++;
+					factor++;
+				}
+
+				card = stacks[y].cards[x];
+
+				setTimeout(function (c) {
+					Solitaire.Animation.flip(c);
+				}.partial(card), delay);
+
+				delay += interval;
+
+				x += xinc;
+				y += yinc;
+
+				if (run++ === spiralLength) {
+					run = 0;
+					if (xinc === 1) {
+						xdir = -1;
+					} else if (xinc === -1) {
+						xdir = 1;
+					}
+
+					if (yinc === 1) {
+						ydir = -1;
+					} else if (yinc === -1) {
+						ydir = 1;
+					}
+
+					xinc += xdir;
+					yinc += ydir;
+				}
+			}
+		});
 
 		deck.createStack();
 	},
@@ -73,13 +124,17 @@ var Solitaire = Y.Solitaire,
 			stacks[s].push(cards[i]);
 		}
 
-		while (i < 25 && deck.cards.length) {
-			if (!(i % 5)) { s++; }
-			card = deck.last().faceUp();
-			card.moveTo(stacks[s]);
-			card.node.setStyle("zIndex", 100 - i);
-			i++;
-		}
+		this.withoutFlip(function () {
+			while (i < 25 && deck.cards.length) {
+				if (!(i % 5)) { s++; }
+				card = deck.last();
+				card.moveTo(stacks[s]);
+				card.faceUp();
+				card.node.setStyle("zIndex", 100 - i);
+				i++;
+				card.flipPostMove(Solitaire.Animation.interval * 5);
+			}
+		});
 
 	},
 

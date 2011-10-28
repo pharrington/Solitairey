@@ -1073,9 +1073,15 @@ Y.Solitaire.Card = {
 			return this;
 		},
 
-		flipPostMove: function () {
+		flipPostMove: function (delay) {
+			if (delay === undefined) {
+				delay = anim.interval * 20;
+			}
+
 			this.after(function () {
-				Solitaire.Animation.flip(this);
+				var anim = Solitaire.Animation;
+
+				anim.flip(this, delay);
 			});
 		},
 
@@ -1500,7 +1506,7 @@ Y.Solitaire.Animation = {
 			q.run();
 		},
 
-		flip: function(card) {
+		flip: function(card, delay) {
 			if (!(this.animate && card.node)) {
 				card.setImageSrc();
 				return;
@@ -1528,9 +1534,9 @@ Y.Solitaire.Animation = {
 						width: width + "px",
 						easing: easing,
 						duration: duration
-					});
+					}, card.updateStyle.bind(card));
 				});
-			}, 0);
+			}, delay || 0);
 		}
 	};
 

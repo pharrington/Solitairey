@@ -10,16 +10,21 @@ var Solitaire = Y.Solitaire,
 		    stack = 0,
 		    deck = this.deck,
 		    stacks = this.tableau.stacks,
-		    piles = stacks.length - 1;
+		    piles = stacks.length - 1,
+		    anim = Solitaire.Animation;
 
 		while (piles >= 0) {
-			card = deck.pop().faceUp();
+			card = deck.pop();
+			card.flipPostMove();
+
 			stacks[(stacks.length - 1) - piles].push(card);
+			card.faceUp();
 
 			for (stack = stacks.length - piles; stack < stacks.length; stack++) {
 				card = deck.pop();
 				stacks[stack].push(card);			
 			}
+
 			piles--;
 		}
 
@@ -32,13 +37,29 @@ var Solitaire = Y.Solitaire,
 		    updatePosition = Klondike.Card.updatePosition,
 		    last,
 		    Card = Solitaire.game.Card,
+		    card,
+		    moved = [],
 		    i, stop;
 
 		Card.updatePosition = Solitaire.noop;
 
-		for (i = deck.cards.length, stop = i - this.cardsPerTurnOver; i > stop && i; i--) {
-			deck.last().faceUp().moveTo(waste);
-		}
+		this.withoutFlip(function () {
+			for (i = deck.cards.length, stop = i - this.cardsPerTurnOver; i > stop && i; i--) {
+				card = deck.last();
+				moved.push(card);
+				card.faceUp();
+
+				if (i === stop + 1 || i === 1) {
+					card.after(function () {
+						Y.Array.forEach(moved, function (c) {
+							Solitaire.Animation.flip(c);
+						});
+					});
+				}
+
+				card.moveTo(waste);
+			}
+		});
 
 		Card.updatePosition = updatePosition;
 

@@ -17,11 +17,15 @@ YUI.add("agnes", function (Y) {
 
 		deal: function () {
 			var deck = this.deck.stacks[0],
-			    foundation = this.foundation.stacks[0];
+			    foundation = this.foundation.stacks[0],
+			    card;
 
 			Klondike.deal.call(this);
 
-			deck.last().faceUp().moveTo(foundation);
+			card = deck.last();
+			card.moveTo(foundation);
+			card.faceUp();
+			card.flipPostMove();
 
 			this.turnOver();
 		},
@@ -34,6 +38,8 @@ YUI.add("agnes", function (Y) {
 			    waste = this.waste.stacks,
 			    count,
 			    target,
+			    card,
+			    moved = [],
 			    i;
 
 			if (deck.cards.length < 7) {
@@ -44,9 +50,23 @@ YUI.add("agnes", function (Y) {
 				target = reserves;
 			}
 
-			for (i = 0; i < count; i++) {
-				deck.last().faceUp().moveTo(target[i]);
-			}
+			this.withoutFlip(function () {
+				for (i = 0; i < count; i++) {
+					card = deck.last();
+					card.moveTo(target[i]);
+					card.faceUp();
+					moved.push(card);
+
+					if (i === count - 1) {
+						card.after(function () {
+							Y.Array.forEach(moved, function (c) {
+								Solitaire.Animation.flip(c);
+							});
+						});
+					}
+				}
+			});
+
 		},
 
 		Waste: instance(Klondike.Waste, {

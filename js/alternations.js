@@ -14,11 +14,12 @@ var Solitaire = Y.Solitaire,
 
 		for (i = 0; i < tableau.length * 7; i++) {
 			card = deck.pop();
+
 			if (!(row % 2)) {
 				card.faceUp();
 			}
-
 			tableau[stack++].push(card);
+
 			if (!((i + 1) % 7)) {
 				stack = 0;
 				row++;
@@ -31,9 +32,15 @@ var Solitaire = Y.Solitaire,
 	turnOver: function () {
 		var deck = this.deck.stacks[0],
 		    waste = this.waste.stacks[0],
-		    card = deck.last();
+		    card;
 
-		card && card.faceUp().moveTo(waste);
+		this.withoutFlip(function () {
+			card = deck.last();
+			if (card) {
+				card.flipPostMove();
+		       		card.faceUp().moveTo(waste);
+			}
+		});
 	},
 
     	Deck: instance(Solitaire.Deck, {

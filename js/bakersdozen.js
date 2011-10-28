@@ -6,15 +6,20 @@ var Solitaire = Y.Solitaire,
 
 	deal: function () {
 		var card,
+		    last,
 		    cards,
 		    stack = 0,
 		    stacks = this.tableau.stacks,
+		    delay = 200,
+		    interval = 150,
+		    game = this,
     		    i;
 
 		for (stack = 0; stack < 13; stack++) {
 			for (i = 0; i < 4; i++) {
 				card = this.deck.pop();
-				stacks[stack].push(card.faceUp());
+				stacks[stack].push(card);
+				card.faceUp();
 			}
 
 			cards = stacks[stack].cards;
@@ -26,6 +31,19 @@ var Solitaire = Y.Solitaire,
 	    			}
 			}
 		}
+
+		last = stacks[stacks.length - 1].last();
+		last.after(function () {
+			game.eachStack(function (stack) {
+				setTimeout(function () {
+					stack.eachCard(function (c) {
+						Solitaire.Animation.flip(c);
+					});
+				}, delay);
+
+				delay += interval;
+			}, "tableau");
+		});
 	},
 
 	height: function () { return this.Card.base.height * 5; },

@@ -1074,13 +1074,13 @@ Y.Solitaire.Card = {
 		},
 
 		flipPostMove: function (delay) {
+			var anim = Solitaire.Animation;
+
 			if (delay === undefined) {
 				delay = anim.interval * 20;
 			}
 
 			this.after(function () {
-				var anim = Solitaire.Animation;
-
 				anim.flip(this, delay);
 			});
 		},
@@ -1471,7 +1471,8 @@ Y.Solitaire.Animation = {
 			    speeds = card.animSpeeds,
 			    from = {top: node.getStyle("top"), left: node.getStyle("left")}.mapToFloat().mapAppend("px"),
 			    zIndex = to.zIndex,
-			    duration;
+			    duration,
+			    $this = this;
 		       
 			if (from.top === to.top && from.left === to.left) { return; }
 
@@ -1500,6 +1501,7 @@ Y.Solitaire.Animation = {
 				}, function () {
 					card.positioned = true;
 					node.setStyle("zIndex", zIndex);
+					$this.clearTransition(node);
 					card.runCallback();
 				});
 			});
@@ -1512,6 +1514,7 @@ Y.Solitaire.Animation = {
 				return;
 			}
 
+			var $this = this;
 			/* the CSS left style doesn't animate unless I dump this onto the event loop.
 			 * I don't know why.
 			 */
@@ -1534,9 +1537,27 @@ Y.Solitaire.Animation = {
 						width: width + "px",
 						easing: easing,
 						duration: duration
-					}, card.updateStyle.bind(card));
+					}, function () {
+						card.updateStyle();
+						$this.clearTransition(node);
+					});
 				});
 			}, delay || 0);
+		},
+
+		/*
+		 * cleanup messy Transition CSS declarations left by YUI
+		 */
+		clearTransition: function (node) {
+			var style = node._node.style;
+
+			Y.Array.each(["Webkit", "Moz", "O", "MS"], function (prefix) {
+				var property = prefix + "Transition";
+
+				if (property in style) {
+					style[property] = null;
+				}
+			});
 		}
 	};
 

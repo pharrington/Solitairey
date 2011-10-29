@@ -37,7 +37,7 @@ Y.mix(Analytics, {
 	 * think harder
 	 */
 	track: function (category, event, name, value, nointeract) {
-		_qaq.push(["_trackEvent", category, event, name, value, nointeract]);
+		_gaq.push(["_trackEvent", category, event, name, value, nointeract]);
 	}
 });
 

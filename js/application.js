@@ -647,6 +647,7 @@
 	function showAbout() {
 		aboutPopup().removeClass("hidden");
 		Fade.show();
+		Y.fire("Application|About");
 	}
 
 	function hideAbout() {
@@ -662,8 +663,8 @@
 		    };
 
 		Y.on("click", restart, Y.one("#restart"));
-		Y.on("click", function () { GameChooser.show(false); }, Y.one("#choose_game"));
-		Y.on("click", function () { OptionsChooser.show(false); }, Y.one("#choose_options"));
+		Y.on("click", function () { Y.fire("Application|GameChooser"); GameChooser.show(false); }, Y.one("#choose_game"));
+		Y.on("click", function () { Y.fire("Application|Options"); OptionsChooser.show(false); }, Y.one("#choose_options"));
 		Y.on("click", showAbout, Y.one("#about"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));

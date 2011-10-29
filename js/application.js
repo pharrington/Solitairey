@@ -655,7 +655,7 @@
 	}
 
 	function showPopup(popup) {
-		Y.fire("Popup", popup);
+		Y.fire("popup", popup);
 	}
 
 	function attachEvents() {
@@ -690,7 +690,7 @@
 			});
 		});
 
-		Y.on("Application|Popup", function (popup) {
+		Y.on("Application|popup", function (popup) {
 			switch (popup) {
 			case "GameChooser":
 				GameChooser.show(false);

@@ -24,12 +24,12 @@ var Solitaire = Y.Solitaire,
 		});
 
 		if (empty) {
-			card.faceUp().moveTo(empty);
+			card.moveTo(empty);
 		}
 
 		card = reserve.last();
 		
-		if (card.isFaceDown) {
+		if (card && card.isFaceDown) {
 			card.faceUp();
 		}
 	},
@@ -46,18 +46,26 @@ var Solitaire = Y.Solitaire,
 		    i;
 
 		for (i = 0; i < tableau.length; i++) {
-			tableau[i].push(deck.pop().faceUp());
+			card = deck.pop();
+			tableau[i].push(card);
+			card.faceUp();
+			card.flipPostMove(Solitaire.Animation.interval * 5);
 		}
 
 		for (i = 0; i < reserveSize; i++) {
 			card = deck.pop();
+			reserve.push(card);
+
 			if (i === reserveSize - 1) {
 				card.faceUp();
+				card.flipPostMove(0);
 			}
-			reserve.push(card);
 		}
 
-		this.foundation.stacks[0].push(deck.pop().faceUp());
+		card = deck.pop();
+		this.foundation.stacks[0].push(card);
+		card.faceUp();
+		card.flipPostMove(0);
 
 		deck.createStack();
 	},

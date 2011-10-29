@@ -1,4 +1,9 @@
-@import url(http://fonts.googleapis.com/css?family=Questrial);
+@font-face {
+	font-family: 'Questrial';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Questrial'), local('Questrial-Regular'), url('font/questrial.woff') format('woff');
+}
 
 html, body, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
 	position: relative;

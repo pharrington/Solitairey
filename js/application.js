@@ -14,7 +14,10 @@
 		name: "klondike",
 		game: null
 	    },
-	    yui = YUI(), Y,
+	    /* remove {fetchCSS: false, bootstrap: false} during development when additional YUI modules are needed
+	     * TODO: generate this in the build script
+	     */
+	    yui = YUI({fetchCSS: false, bootstrap: false}), Y,
 	    body = cacheNode("body"),
 	    games = {
 	        "acesup": "AcesUp",

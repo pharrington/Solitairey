@@ -16,7 +16,8 @@ var availableMoves = 0,
 		    stacks = this.tableau.stacks,
 		    card,
 		    row,
-		    anim = Solitaire.Animation;
+		    anim = Solitaire.Animation,
+		    delay = anim.interval * stacks.length * 4;
 
 		for (row = 0; row < 5; row++) {
 			for (stack = 0; stack < 10; stack++) {
@@ -28,7 +29,7 @@ var availableMoves = 0,
 
 		for (stack = 0; stack < 10; stack++) {
 			card = deck.pop();
-			card.flipPostMove();
+			card.flipPostMove(delay);
 			stacks[stack].push(card);
 			card.faceUp();
 		}

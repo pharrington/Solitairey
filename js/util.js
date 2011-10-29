@@ -19,7 +19,9 @@ Y.mix(Util, {
 			game.eachStack(function (stack) {
 				setTimeout(function () {
 					stack.eachCard(function (c) {
-						Solitaire.Animation.flip(c);
+						if (!c.isFaceDown) {
+							Solitaire.Animation.flip(c);
+						}
 					});
 				}, delay);
 

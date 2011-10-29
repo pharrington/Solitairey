@@ -33,7 +33,8 @@ var Solitaire = Y.Solitaire,
 		    stack = 0,
 		    i = 51, rank,
 		    foundations = this.foundation.stacks,
-		    stacks = this.tableau.stacks;
+		    stacks = this.tableau.stacks,
+		    last;
 
 		while (i >= 0) {
 			card = cards[i];
@@ -43,21 +44,27 @@ var Solitaire = Y.Solitaire,
 				if (card.rank === rank && card.suit === wrap(suits, rank)) {
 					found = true;
 					cards.splice(i, 1);
-					clock[rank - 2] = card.faceUp();
+					clock[rank - 2] = card;
 					break;
 				}
 			}
 
 			if (!found) {
-				stacks[stack].push(card.faceUp());
+				stacks[stack].push(card);
 				stack = (stack + 1) % 8;
+				card.faceUp();
+				last = card;
 			}
 			i--;
 		}
 
 		for (i = 0; i < 12; i++) {
 			foundations[(i + 2) % 12].push(clock[i]);
+			clock[i].faceUp();
+			clock[i].flipPostMove(Solitaire.Animation.interval);
 		}
+
+		Solitaire.Util.flipStacks(last);
 	},
 
 	height: function () { return this.Card.base.height * 5.75; },
@@ -92,6 +99,16 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Card: instance(Solitaire.Card, {
+		origin: {
+			left: function () {
+				return Solitaire.game.foundation.stacks[9].left;
+			},
+
+			top: function () {
+				return Solitaire.game.foundation.stacks[0].top;
+			}
+		},
+
 		createProxyStack: function () {
 			var stack;
 
@@ -180,4 +197,4 @@ Y.mix(GClock.Foundation.Stack, {
 	}
 }, true);
 
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire", "util"]});

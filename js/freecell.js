@@ -7,10 +7,13 @@ var Solitaire = Y.Solitaire,
 	deal: function () {
 		var card,
 		    stack = 0,
-		    stacks = this.tableau.stacks;
+		    stacks = this.tableau.stacks,
+		    delay = Solitaire.Animation.interval * 50;
 
 		while (card = this.deck.pop()) {
-			stacks[stack].push(card.faceUp());			
+			stacks[stack].push(card);			
+			card.faceUp();
+			card.flipPostMove(delay);
 			stack++;
 			if (stack === 8) { stack = 0; }
 		}

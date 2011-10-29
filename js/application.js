@@ -647,7 +647,6 @@
 	function showAbout() {
 		aboutPopup().removeClass("hidden");
 		Fade.show();
-		Y.fire("Application|Popup", "About");
 	}
 
 	function hideAbout() {
@@ -656,8 +655,8 @@
 	}
 
 	function showPopup(popup) {
-		Y.fire("Application|Popup", popup);
-	},
+		Y.fire("Popup", popup);
+	}
 
 	function attachEvents() {
 		var hideMenus = function () {

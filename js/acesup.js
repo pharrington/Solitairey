@@ -8,11 +8,23 @@ var Solitaire = Y.Solitaire,
 		var card,
 		    stack,
 		    deck = this.deck,
-		    stacks = this.tableau.stacks;
+		    stacks = this.tableau.stacks,
+		    moved = [];
 
 		for (stack = 0; stack < stacks.length; stack++) {
-			card = deck.pop().faceUp();
+			card = deck.pop();
+			moved.push(card);
+
+			if (stack === stacks.length - 1) {
+				card.after(function () {
+					Y.Array.forEach(moved, function (c) {
+						Solitaire.Animation.flip(c);
+					});
+				});
+			}
+
 			stacks[stack].push(card);
+			card.faceUp();
 		}
 
 		deck.createStack();
@@ -22,14 +34,25 @@ var Solitaire = Y.Solitaire,
 		var stack,
 		    stacks = this.tableau.stacks,
 		    deck = this.deck.stacks[0],
-		    card;
+		    card,
+		    moved = [];
 
-		for (stack = 0; stack < stacks.length; stack++) {
-			card = deck.last();
-			if (!card) { break; }
+		this.withoutFlip(function () {
+			for (stack = 0; stack < stacks.length; stack++) {
+				if (!deck.last()) { break; }
 
-			card.faceUp().moveTo(stacks[stack]);
-		}
+				card = deck.last();
+				card.moveTo(stacks[stack]);
+				card.faceUp();
+				moved.push(card);
+			}
+		});
+
+		card.after(function () {
+			Y.Array.forEach(moved, function (c) {
+				Solitaire.Animation.flip(c);
+			});
+		});
 	},
 
 	isWon: function () {

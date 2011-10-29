@@ -14,13 +14,15 @@ YUI.add("golf", function (Y) {
 
 			for (row = 0; row < 5; row++) {
 				for (stack = 0; stack < 7; stack++) {
-					card = deck.pop().faceUp();
+					card = deck.pop();
 					stacks[stack].push(card);
+					card.faceUp().flipPostMove(Solitaire.Animation.interval * 40);
 				}
 			}
 
-			card = deck.pop().faceUp();
+			card = deck.pop();
 			foundation.push(card);
+			card.faceUp().flipPostMove(Solitaire.Animation.interval * 100);
 
 			deck.createStack();
 		},
@@ -30,7 +32,14 @@ YUI.add("golf", function (Y) {
 			    foundation = this.foundation.stacks[0],
 			    last = deck.last();
 
-			last && last.faceUp().moveTo(foundation);
+			if (last) {
+				this.withoutFlip(function () {
+					last.faceUp().moveTo(foundation);
+					last.after(function () {
+						Solitaire.Animation.flip(last);
+					});
+				});
+			}
 		},
 
 		isWon: function () {

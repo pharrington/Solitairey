@@ -20,6 +20,8 @@ YUI.add("baroness", function (Y) {
 			var tableau = this.tableau.stacks,
 			    deck = this.deck.stacks[0],
 	    		    cardsToFill,
+			    card,
+			    moved = [],
 			    totalCards = Y.Array.reduce(tableau, 0, function (total, stack) {
 				return total + stack.cards.length;
 			});
@@ -27,14 +29,26 @@ YUI.add("baroness", function (Y) {
 			if (totalCards >= tableau.length) { return; }
 
 			cardsToFill = 5 - totalCards;
-			this.eachStack(function (stack) {
-				if (!(cardsToFill && deck.cards.length)) { return; }
 
-				if (!stack.last()) {
-					deck.last().faceUp().moveTo(stack);
-					cardsToFill--;
-				}
-			}, "tableau");
+			this.withoutFlip(function () {
+				this.eachStack(function (stack) {
+					if (!(cardsToFill && deck.cards.length)) { return; }
+
+					if (!stack.last()) {
+						card = deck.last();
+						card.moveTo(stack);
+						card.faceUp();
+						cardsToFill--;
+						moved.push(card);
+					}
+				}, "tableau");
+			});
+
+			card.after(function () {
+				Y.Array.each(moved, function (c) {
+					Solitaire.Animation.flip(c);
+				});
+			});
 		},
 
 		isWon: Solitaire.isWon,

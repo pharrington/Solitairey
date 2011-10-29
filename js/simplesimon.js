@@ -7,10 +7,13 @@ YUI.add("simple-simon", function (Y) {
 			var card,
 			    stack = 0,
 			    stacks = this.tableau.stacks,
-			    last = stacks.length;
+			    last = stacks.length,
+			    delay = Solitaire.Animation.interval * 10;
 
 			while (card = this.deck.pop()) {
-				stacks[stack].push(card.faceUp());			
+				stacks[stack].push(card);
+				card.faceUp();
+				card.flipPostMove(delay);
 				stack++;
 				if (stack === last) {
 					stack = 0;
@@ -21,7 +24,18 @@ YUI.add("simple-simon", function (Y) {
 
 		turnOver: Solitaire.noop,
 		Deck: instance(Solitaire.Deck),
-		Foundation: instance(Solitaire.Spider.Foundation)
+		Foundation: instance(Solitaire.Spider.Foundation),
+
+		Card: instance(Solitaire.Spider.Card, {
+			origin: {
+				left: function () {
+					return Solitaire.Card.width * 6;
+				},
+				top: function () {
+					return Solitaire.container().get("winHeight") - Solitaire.Card.height * 1.25;
+				}
+			}
+		})
 	});
 
 	SimpleSimon.Foundation.stackConfig = {

@@ -9,9 +9,12 @@ YUI.add("will-o-the-wisp", function (Y) {
 			for (row = 0; row < 3; row++) {
 				this.eachStack(function (stack) {
 					var card = deck.pop();
-					if (row === 2) { card.faceUp(); }
 
 					stack.push(card);
+					if (row === 2) {
+						card.faceUp();
+						card.flipPostMove();
+					}
 				}, "tableau");
 			}
 

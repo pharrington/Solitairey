@@ -14,7 +14,10 @@ var availableMoves = 0,
 		var stack = 0,
 		    deck = this.deck,
 		    stacks = this.tableau.stacks,
-		    row;
+		    card,
+		    row,
+		    anim = Solitaire.Animation,
+		    delay = anim.interval * stacks.length * 4;
 
 		for (row = 0; row < 5; row++) {
 			for (stack = 0; stack < 10; stack++) {
@@ -25,31 +28,38 @@ var availableMoves = 0,
 		}
 
 		for (stack = 0; stack < 10; stack++) {
-			stacks[stack].push(deck.pop().faceUp());
+			card = deck.pop();
+			card.flipPostMove(delay);
+			stacks[stack].push(card);
+			card.faceUp();
 		}
 
 		deck.createStack();
 	},
 
-	redeal: function () {},
+	redeal: Solitaire.noop,
 
 	turnOver: function () {
 		var deck = this.deck.stacks[0],
+		    anim = Solitaire.Animation,
 		    i, len;
 
 		if (hasFreeTableaus()) {
 			return;
 		}
 
-		this.eachStack(function (stack) {
-			var card = deck.last();
+		this.withoutFlip(function () {
+			this.eachStack(function (stack) {
+				var card = deck.last();
 
-			if (card) {
-				card.faceUp().moveTo(stack).after(function () {
-					this.stack.updateCardsPosition();
-				});
-			}
-		}, "tableau");
+				if (card) {
+					card.faceUp().moveTo(stack).after(function () {
+						this.stack.updateCardsPosition();
+						anim.flip(this);
+					});
+				}
+			}, "tableau");
+		});
 	},
 
 	Stack: instance(Solitaire.Stack),

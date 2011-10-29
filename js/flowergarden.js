@@ -15,14 +15,31 @@ var Solitaire = Y.Solitaire,
 
 		for (i = 0; i < 36; i++) {
 			card = deck.pop();
-			stacks[stack].push(card.faceUp());			
+			card.origin = {
+				left: card.width * 1.25 * (i % 6),
+				top: -card.height
+			};
+			stacks[stack].push(card);			
+			card.faceUp();
+			card.flipPostMove(0);
+
 			stack++;
 			if (stack === 6) { stack = 0; }
 		}
 
+		card.after(function () {
+			Solitaire.Animation.flip(this);
+
+			setTimeout(function () {
+				reserve.eachCard(function (c) {
+					Solitaire.Animation.flip(c);
+				});
+			}, Solitaire.Animation.interval * 20);
+		});
+
 		while (card = deck.pop()) {
-			card.faceUp();
 			reserve.push(card);
+			card.faceUp();
 		}
 	},
 

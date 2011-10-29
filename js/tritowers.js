@@ -33,12 +33,22 @@ YUI.add("tri-towers", function (Y) {
 				for (i = 0; i < stackLength; i++) {
 					card = deck.pop();
 					stacks[stack].push(card);
-					stack === 3 && card.faceUp();
+					if (stack === 3) {
+						card.faceUp();
+					}
 				}
 			}
 
-			card = deck.pop().faceUp();
+			card.after(function () {
+				Solitaire.Animation.flip(foundation.last());
+				stacks[3].eachCard(function (c) {
+					Solitaire.Animation.flip(c);
+				});
+			});
+
+			card = deck.pop();
 			foundation.push(card);
+			card.faceUp();
 
 			deck.createStack();
 		},

@@ -13,25 +13,32 @@ var Solitaire = Y.Solitaire,
 
 		for (row = 0; row < 4; row++) {
 			for (stack = 0; stack < 10; stack++) {
-				card = deck.pop().faceUp();
+				card = deck.pop();
 				stacks[stack].push(card);
+				card.faceUp();
 			}
 		}
 
+		Solitaire.Util.flipStacks(card);
 		deck.createStack();
 	},
 
-	redeal: function () {
-		// ggpo
-	},
+	redeal: Solitaire.noop,
 
 	turnOver: function () {
 		var deck = this.deck.stacks[0],
 		    waste = this.waste.stacks[0],
-		    i, stop;
+		    card;
 
-		for (i = deck.cards.length, stop = i - 1; i > stop && i; i--) {
-			deck.last().faceUp().moveTo(waste);
+		card = deck.last();
+		if (card) {
+			this.withoutFlip(function () {
+				card.moveTo(waste);
+				card.faceUp();
+				card.after(function () {
+					Solitaire.Animation.flip(card);
+				})
+			});
 		}
 	},
 
@@ -43,11 +50,10 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				hspacing: 1.25,
 				top: 0,
-				left: function () { return Solitaire.Card.width * 3; }
+				left: function () { return Solitaire.Card.width * 2.5; }
 			}
 		},
-		field: "foundation",
-		draggable: false
+		field: "foundation"
 	},
 
 	Deck: instance(Solitaire.Deck, {
@@ -61,20 +67,7 @@ var Solitaire = Y.Solitaire,
 				left: 0
 			}
 		},
-		field: "deck",
-
-		init: function () {
-			Solitaire.Deck.init.call(this);
-			Y.Array.each(this.cards, function (c) { c.faceDown(); });
-		},
-
-		createStack: function () {
-			var i, len;
-
-			for (i = this.cards.length - 1; i >= 0; i--) {
-				this.stacks[0].push(this.cards[i]);
-			}
-		},
+		field: "deck"
 	}),
 
 	Waste: {
@@ -86,24 +79,32 @@ var Solitaire = Y.Solitaire,
 				left: function () { return Solitaire.Card.width * 1.25; }
 			}
 		},
-		field: "waste",
-		draggable: true
+		field: "waste"
 	},
 
 	Tableau: {
 		stackConfig: {
 			total: 10,
 			layout: {
-				hspacing: 1.31,
+				hspacing: 1.25,
 				top: function () { return Solitaire.Card.height * 1.5; },
 				left: 0
 			}
 		},
-		field: "tableau",
-		draggable: true
+		field: "tableau"
 	},
 
 	Card: instance(Solitaire.Card, {
+		origin: {
+			left: function () {
+				return Solitaire.game.deck.stacks[0].left;
+			},
+
+			top: function () {
+				return Solitaire.game.deck.stacks[0].top;
+			}
+		},
+
 		validTarget: function (stack) {
 			var target = stack.last();
 
@@ -135,8 +136,6 @@ Y.Array.each(FortyThieves.fields, function (field) {
 
 
 Y.mix(FortyThieves.Stack, {
-	cssClass: "freestack",
-
 	validTarget: function (stack) {
 		return stack.field === "tableau" &&
 		    this.first().validTarget(stack);
@@ -157,13 +156,14 @@ Y.mix(FortyThieves.Tableau.Stack, {
 }, true);
 
 Y.mix(FortyThieves.Deck.Stack, {
+	images: {deck: null}
+		/*
 	createDOMElement: function () {
 		Solitaire.Stack.createDOMElement.call(this);
 		this.node.on("click", Solitaire.Events.clickEmptyDeck);
 	}
+	*/
 }, true);
 
 
-FortyThieves.Foundation.Stack.cssClass = "freefoundation";
-
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire", "util"]});

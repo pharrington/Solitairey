@@ -20,23 +20,28 @@ var Solitaire = Y.Solitaire,
 			for (stack = 0; stack < 7; stack++) {
 				card = deck.pop();
 
-				if (!(row < 3 && stack < 4)) { card.faceUp(); }
-
 				stacks[stack].push(card);
+				if (!(row < 3 && stack < 4)) { card.faceUp(); }
 			}
 		}
 
+		Solitaire.Util.flipStacks(card);
 		deck.createStack();
 	},
 
 	turnOver: function () {
 		var deck = this.deck.stacks[0],
 		    stacks = this.tableau.stacks,
+		    card,
 		    i, len;
 
-		for (i = 0; i < 3; i++) {
-			deck.last().faceUp().moveTo(stacks[i]);
-		}
+		this.withoutFlip(function () {
+			for (i = 0; i < 3; i++) {
+				card = deck.last().faceUp();
+				card.flipPostMove(0);
+				card.moveTo(stacks[i]);
+			}
+		});
 	},
 
 	height: function () { return this.Card.base.height * 5.6; },
@@ -156,4 +161,4 @@ Y.mix(Scorpion.Tableau.Stack, {
 	}
 }, true);
 
-}, "0.0.1", {requires: ["auto-stack-clear"]});
+}, "0.0.1", {requires: ["auto-stack-clear", "util"]});

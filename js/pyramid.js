@@ -14,13 +14,56 @@ var Solitaire = Y.Solitaire,
 
 		for (stack = 0; stack < 7; stack++) {
 			for (i = 0; i <= stack; i++) {
-				card = deck.pop().faceUp();
+				card = deck.pop();
 				stacks[stack].push(card);
+				card.faceUp();
 			}
 		}
 
+		card.after(function () {
+			var center = Math.floor(stacks.length / 2),
+			    length = stacks.length,
+			    left, right,
+			    row,
+			    cards,
+			    i = 0,
+			    delay = 0, interval = 200;
+
+			left = right = center;
+
+			while (left >= 0) {
+				row = length - 1;
+				cards = [];
+
+				do {
+					cards = Y.Array.unique(
+						cards.concat(stacks[row].cards[left],
+						stacks[row].cards[right]));
+
+					row--;
+					right--;
+				} while (right >= left);
+
+				Y.Array.each(cards, function (c) {
+					setTimeout(function () {
+						Solitaire.Animation.flip(c);
+					}, delay);
+				});
+
+				i++;
+				left = center - i;
+				right = center + i;
+				delay += interval;
+			}
+
+			setTimeout(function () {
+				Solitaire.Animation.flip(deck.last());
+			}, delay);
+		});
+
 		deck.createStack();
-		deck.last().faceUp();
+		card = deck.last();
+		card.faceUp();
 	},
 
 	turnOver: function () {

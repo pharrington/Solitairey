@@ -89,13 +89,13 @@ var Solitaire = Y.Solitaire,
 
 				if (!card) { break; }
 
-				if (!redeal) { card.faceUp(); }
-
 				stacks[stack].push(card);
+				if (!redeal) { card.faceUp(); }
 			}
 		}
 
 		if (!redeal) {
+			Solitaire.Util.flipStacks(stacks[stacks.length - 1].last());
 			deck.createStack();
 		}
 	},
@@ -215,4 +215,4 @@ Y.mix(LaBelleLucie.Tableau.Stack, {
 	}
 }, true);
 
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire", "util"]});

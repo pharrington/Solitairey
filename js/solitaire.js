@@ -229,6 +229,25 @@ Y.mix(Solitaire, {
 		anim.animate = animate;
 	},
 
+	withoutFlip: function (callback) {
+		var anim = Solitaire.Animation,
+		    card = Solitaire.Card,
+		    flip = anim.flip,
+		    setImageSrc = card.setImageSrc;
+
+		if (!anim.animate) {
+			callback.call(this);
+			return;
+		}
+
+		anim.flip = card.setImageSrc = Solitaire.noop;
+
+		callback.call(this);
+
+		anim.flip = flip;
+		card.setImageSrc = setImageSrc;
+	},
+
 	unserialize: function (serialized) {
 		this.unanimated(function () {
 			var numStacks = serialized.charCodeAt(0),
@@ -278,7 +297,10 @@ Y.mix(Solitaire, {
 
 	newGame: function () {
 		Y.Cookie.remove("saved-game");
-		this.setup(this.deal);
+
+		this.withoutFlip(function () {
+			this.setup(this.deal);
+		});
 
 		Y.fire("newGame");
 		Game.save("initial-game");
@@ -786,12 +808,12 @@ Y.Solitaire.Card = {
 
 		origin: {
 			left: function () {
-				var offset = Solitaire.container().getXY()[0];
+				var offset = Solitaire.container().getX();
 				
 				return -offset - Y.Solitaire.Card.width;
 			},
 			top: function () {
-				var offset = Solitaire.container().getXY()[1];
+				var offset = Solitaire.container().getY();
 
 				return -offset - Y.Solitaire.Card.height;
 			}
@@ -813,7 +835,7 @@ Y.Solitaire.Card = {
 		faceDown: function (undo) {
 			this.isFaceDown = true;
 			this.setRankHeight();
-			this.setImageSrc();
+			Solitaire.Animation.flip(this);
 
 			undo || Solitaire.pushMove({card: this, faceDown: true});
 
@@ -823,7 +845,7 @@ Y.Solitaire.Card = {
 		faceUp: function (undo) {
 			this.isFaceDown = false;
 			this.setRankHeight();
-			this.setImageSrc();
+			Solitaire.Animation.flip(this);
 
 			undo || Solitaire.pushMove({card: this, faceDown: false});
 
@@ -1049,6 +1071,18 @@ Y.Solitaire.Card = {
 			Y.fire(origin.field + ":afterPop", origin);
 
 			return this;
+		},
+
+		flipPostMove: function (delay) {
+			var anim = Solitaire.Animation;
+
+			if (delay === undefined) {
+				delay = anim.interval * 20;
+			}
+
+			this.after(function () {
+				anim.flip(this, delay);
+			});
 		},
 
 		after: function (callback) {
@@ -1416,6 +1450,12 @@ Y.Solitaire.Animation = {
 		interval: 20, // milliseconds
 		queue: new Y.AsyncQueue(),
 
+		initQueue: function () {
+			var q = this.queue;
+
+			q.defaults.timeout = this.interval;
+		},
+
 		init: function (card, to, fields) {
 			if (!this.animate) {
 				card.node.setStyles(to);
@@ -1431,7 +1471,8 @@ Y.Solitaire.Animation = {
 			    speeds = card.animSpeeds,
 			    from = {top: node.getStyle("top"), left: node.getStyle("left")}.mapToFloat().mapAppend("px"),
 			    zIndex = to.zIndex,
-			    duration;
+			    duration,
+			    $this = this;
 		       
 			if (from.top === to.top && from.left === to.left) { return; }
 
@@ -1460,16 +1501,63 @@ Y.Solitaire.Animation = {
 				}, function () {
 					card.positioned = true;
 					node.setStyle("zIndex", zIndex);
+					$this.clearTransition(node);
 					card.runCallback();
 				});
 			});
 			q.run();
 		},
 
-		initQueue: function () {
-			var q = this.queue;
+		flip: function(card, delay) {
+			if (!(this.animate && card.node)) {
+				card.setImageSrc();
+				return;
+			}
 
-			q.defaults.timeout = this.interval;
+			var $this = this;
+			/* the CSS left style doesn't animate unless I dump this onto the event loop.
+			 * I don't know why.
+			 */
+			setTimeout(function () {
+				var node = card.node,
+				    duration = 0.1,
+				    easing = "linear",
+				    left = Math.floor(card.left),
+				    width = Math.floor(card.width);
+
+				node.transition({
+					left: Math.floor(left + width / 2) + "px",
+					width: 0,
+					easing: easing,
+					duration: duration
+				}, function () {
+					card.setImageSrc();
+					node.transition({
+						left: left + "px",
+						width: width + "px",
+						easing: easing,
+						duration: duration
+					}, function () {
+						card.updateStyle();
+						$this.clearTransition(node);
+					});
+				});
+			}, delay || 0);
+		},
+
+		/*
+		 * cleanup messy Transition CSS declarations left by YUI
+		 */
+		clearTransition: function (node) {
+			var style = node._node.style;
+
+			Y.Array.each(["Webkit", "Moz", "O", "MS"], function (prefix) {
+				var property = prefix + "Transition";
+
+				if (property in style) {
+					style[property] = null;
+				}
+			});
 		}
 	};
 

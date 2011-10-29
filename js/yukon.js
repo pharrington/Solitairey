@@ -9,11 +9,14 @@ var Solitaire = Y.Solitaire,
 		    piles = 6,
 		    stack = 0,
 		    deck = this.deck,
-		    stacks = this.tableau.stacks;
+		    stacks = this.tableau.stacks,
+		    delay = Solitaire.Animation.interval * 50;
 
 		while (piles >= 0) {
-			card = deck.pop().faceUp();
+			card = deck.pop();
 			stacks[6 - piles].push(card);
+			card.faceUp();
+			card.flipPostMove(delay);
 
 			for (stack = 7 - piles; stack < 7; stack++) {
 				card = deck.pop();
@@ -24,8 +27,11 @@ var Solitaire = Y.Solitaire,
 
 		stack = 1;
 		while (deck.cards.length) {
-			card = deck.pop().faceUp();
+			card = deck.pop();
 			stacks[stack].push(card);
+			card.faceUp();
+			card.flipPostMove(delay);
+
 			stack = (stack % 6) + 1;
 		}
 	},

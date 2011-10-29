@@ -1,5 +1,5 @@
 PREFIX = "js"
-JS = %w[yui-breakout solitaire analytics iphone auto-stack-clear auto-turnover autoplay ie-opera-background-fix statistics solver-freecell agnes golf klondike klondike1t flowergarden fortythieves freecell grandclock montecarlo pyramid russian-solitaire scorpion spider spider1s spider2s spiderette tritowers will-o-the-wisp yukon simplesimon bakersdozen eightoff acesup alternations bakersgame baroness canfield doubleklondike thefan labellelucie application]
+JS = %w[yui-breakout analytics solitaire analytics iphone auto-stack-clear auto-turnover autoplay ie-opera-background-fix statistics solver-freecell agnes golf klondike klondike1t flowergarden fortythieves freecell grandclock montecarlo pyramid russian-solitaire scorpion spider spider1s spider2s spiderette tritowers will-o-the-wisp yukon simplesimon bakersdozen eightoff acesup alternations bakersgame baroness canfield doubleklondike thefan labellelucie application]
 YUI = "#{PREFIX}/yui-all-min.js"
 ALL = "#{PREFIX}/all.js"
 MINIFIED = "#{PREFIX}/all-min.js"

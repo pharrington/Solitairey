@@ -7,7 +7,7 @@ var Solitaire = Y.Solitaire,
     totalMoves = 0,
     start = 0;
 
-if (!_gaq) { return; }
+if (typeof _gaq === undefined) { return; }
 
 Y.on("beforeSetup", function () {
 	totalMoves = 0;

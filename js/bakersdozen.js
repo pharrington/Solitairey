@@ -33,17 +33,7 @@ var Solitaire = Y.Solitaire,
 		}
 
 		last = stacks[stacks.length - 1].last();
-		last.after(function () {
-			game.eachStack(function (stack) {
-				setTimeout(function () {
-					stack.eachCard(function (c) {
-						Solitaire.Animation.flip(c);
-					});
-				}, delay);
-
-				delay += interval;
-			}, "tableau");
-		});
+		Solitaire.Util.flipStacks(last);
 	},
 
 	height: function () { return this.Card.base.height * 5; },
@@ -141,4 +131,4 @@ Y.mix(BakersDozen.Tableau.Stack, {
 	}
 }, true);
 
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire", "util"]});

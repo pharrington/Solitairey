@@ -51,6 +51,7 @@
 	    extensions = [
 		"json",
 		"tabview",
+		"util",
 		"auto-turnover",
 	        "statistics",
 		"solver-freecell",

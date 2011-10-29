@@ -808,12 +808,12 @@ Y.Solitaire.Card = {
 
 		origin: {
 			left: function () {
-				var offset = Solitaire.container().getXY()[0];
+				var offset = Solitaire.container().getX();
 				
 				return -offset - Y.Solitaire.Card.width;
 			},
 			top: function () {
-				var offset = Solitaire.container().getXY()[1];
+				var offset = Solitaire.container().getY();
 
 				return -offset - Y.Solitaire.Card.height;
 			}

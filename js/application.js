@@ -647,13 +647,17 @@
 	function showAbout() {
 		aboutPopup().removeClass("hidden");
 		Fade.show();
-		Y.fire("Application|About");
+		Y.fire("Application|Popup", "About");
 	}
 
 	function hideAbout() {
 		aboutPopup().addClass("hidden");
 		Fade.hide();
 	}
+
+	function showPopup(popup) {
+		Y.fire("Application|Popup", popup);
+	},
 
 	function attachEvents() {
 		var hideMenus = function () {
@@ -663,9 +667,9 @@
 		    };
 
 		Y.on("click", restart, Y.one("#restart"));
-		Y.on("click", function () { Y.fire("Application|GameChooser"); GameChooser.show(false); }, Y.one("#choose_game"));
-		Y.on("click", function () { Y.fire("Application|Options"); OptionsChooser.show(false); }, Y.one("#choose_options"));
-		Y.on("click", showAbout, Y.one("#about"));
+		Y.on("click", showPopup.partial("GameChooser"), Y.one("#choose_game"));
+		Y.on("click", showPopup.partial("OptionsChooser"), Y.one("#choose_options"));
+		Y.on("click", showPopup.partial("About"), Y.one("#about"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
 
@@ -685,6 +689,20 @@
 			active.game.stationary(function () {
 				resize()
 			});
+		});
+
+		Y.on("Application|Popup", function (popup) {
+			switch (popup) {
+			case "GameChooser":
+				GameChooser.show(false);
+				break;
+			case "OptionsChooser":
+				OptionsChooser.show();
+				break;
+			case "About":
+				showAbout();
+				break;
+			}
 		});
 
 		attachResize();

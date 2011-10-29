@@ -13,14 +13,18 @@ var Solitaire = Y.Solitaire,
 
 		for (i = 0, stack = 0; i < 48; i++) {
 			card = this.deck.pop();
-			tableau[stack].push(card.faceUp());			
+			tableau[stack].push(card);			
+			card.faceUp();
+			card.flipPostMove(0);
 			stack++;
 			if (stack === 8) { stack = 0; }
 		}
 
 		for (i = 0, stack = 0; i < 4; i++) {
 			card = this.deck.pop();
-			reserve[stack].push(card.faceUp());
+			reserve[stack].push(card);
+			card.faceUp();
+			card.flipPostMove(0);
 			stack++;
 		}
 	},
@@ -83,6 +87,16 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Card: instance(Solitaire.Card, {
+		origin: {
+			left: function () {
+				return Solitaire.Card.width * 5;
+			},
+
+			top: function () {
+				return Solitaire.container().get("winHeight") - Solitaire.Card.height * 1.2;
+			}
+		},
+
 		playable: function () {
 			switch (this.stack.field) {
 			case "reserve":

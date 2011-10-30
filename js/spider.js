@@ -106,8 +106,6 @@ var availableMoves = 0,
 
 	Card: instance(Solitaire.Card, {
 		playable: function () {
-			var previous = this.stack[this.index - 1];
-
 			switch (this.stack.field) {
 			case "tableau":
 				return this.createProxyStack();
@@ -119,17 +117,7 @@ var availableMoves = 0,
 		},
 
 		createProxyStack: function () {
-			var stacks,
-			    stacks = Game.tableau.stacks,
-			    freeslots = 0;
-
-			availableMoves = 0;
-			for (i = 0; i < stacks.length; i++) {
-				stack = stacks[i];
-				!stack.last() && freeslots++;
-			}
-
-			availableMoves = freeslots;
+			availableMoves = Util.freeTableaus().length;
 
 			return Solitaire.Card.createProxyStack.call(this);
 		},

@@ -2,6 +2,7 @@ YUI.add("spider", function (Y) {
 
 var availableMoves = 0,
     Solitaire = Y.Solitaire,
+    Util = Solitaire.Util,
     Spider = Solitaire.Spider = instance(Solitaire, {
 	fields: ["Foundation", "Deck", "Tableau"],
 
@@ -44,7 +45,7 @@ var availableMoves = 0,
 		    anim = Solitaire.Animation,
 		    i, len;
 
-		if (hasFreeTableaus()) {
+		if (Util.hasFreeTableaus()) {
 			return;
 		}
 
@@ -111,7 +112,7 @@ var availableMoves = 0,
 			case "tableau":
 				return this.createProxyStack();
 			case "deck": 
-				return !hasFreeTableaus();
+				return !Util.hasFreeTableaus();
 			case "foundation":
 				return false;
 			}
@@ -142,12 +143,6 @@ var availableMoves = 0,
 		}
 	})
 });
-
-function hasFreeTableaus() {
-	return Y.Array.some(Game.tableau.stacks, function (stack) {
-		return !stack.cards.length;
-	});
-}
 
 Y.Array.each(Spider.fields, function (field) {
 	Spider[field].Stack = instance(Spider.Stack);
@@ -195,4 +190,4 @@ Y.mix(Spider.Tableau.Stack, {
 		card.top = top;
 	}
 }, true);
-}, "0.0.1", {requires: ["auto-stack-clear"]});
+}, "0.0.1", {requires: ["auto-stack-clear", "util"]});

@@ -29,5 +29,12 @@ Y.mix(Util, {
 			}, "tableau");
 		});
 	},
+
+	hasFreeTableaus: function () {
+		return Y.Array.some(Solitaire.game.tableau.stacks, function (stack) {
+			return !stack.cards.length;
+		});
+	}
+}
 });
 }, "0.0.1", {requires: ["solitaire"]});

@@ -1,6 +1,8 @@
 YUI.add("flower-garden", function (Y) {
 
-var Solitaire = Y.Solitaire,
+var availableMoves = 0,
+    Solitaire = Y.Solitaire,
+    Util = Solitaire.Util,
     FlowerGarden = Y.Solitaire.FlowerGarden = instance(Solitaire, {
 	offset: {left: function () { return Solitaire.Card.base.width * 1.5; }, top: 70},
 	fields: ["Foundation", "Reserve", "Tableau"],
@@ -88,6 +90,14 @@ var Solitaire = Y.Solitaire,
 	},
 
 	Card: instance(Solitaire.Card, {
+		playable: function () {
+			switch (this.stack.field) {
+			case "foundation": return false;
+			case "tableau": return this.createProxyStack();
+			case "reserve": return true;
+			}
+		},
+
 		createProxyStack: function () {
 			var stack;
 
@@ -96,6 +106,8 @@ var Solitaire = Y.Solitaire,
 				this.proxyStack = null;
 				break;
 			case "tableau":
+				availableMoves = Util.freeTableaus().length;
+
 				return Solitaire.Card.createProxyStack.call(this);
 			case "reserve":
 				stack = instance(this.stack);
@@ -133,7 +145,7 @@ var Solitaire = Y.Solitaire,
 			switch (stack.field) {
 			case "tableau":
 				if (!target) {
-					return true;
+					return availableMoves > 0;
 				} else {
 					return target.rank === this.rank + 1;
 				}
@@ -170,7 +182,9 @@ Y.mix(FlowerGarden.Stack, {
 		return stack.field === "tableau" && this.first().validTarget(stack);
 	},
 
-	validCard: function () { return false; }
+	validCard: function () {
+		return availableMoves-- > 0;
+	}
 }, true);
 
 Y.mix(FlowerGarden.Tableau.Stack, {
@@ -195,4 +209,4 @@ Y.mix(FlowerGarden.Reserve.Stack, {
 	}
 }, true);
 
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire", "util"]});

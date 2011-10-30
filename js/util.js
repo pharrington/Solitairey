@@ -41,6 +41,5 @@ Y.mix(Util, {
 			return !stack.cards.length;
 		});
 	}
-}
 });
 }, "0.0.1", {requires: ["solitaire", "array-extras"]});

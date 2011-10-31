@@ -1447,6 +1447,7 @@ Y.Solitaire.Animation = {
 		animate: true,
 		dealing: false,
 		duration: 0.5, // seconds
+		flipDuration: 0.1, // seconds
 		interval: 20, // milliseconds
 		queue: new Y.AsyncQueue(),
 
@@ -1520,7 +1521,7 @@ Y.Solitaire.Animation = {
 			 */
 			setTimeout(function () {
 				var node = card.node,
-				    duration = 0.1,
+				    duration = $this.flipDuration,
 				    easing = "linear",
 				    left = Math.floor(card.left),
 				    width = Math.floor(card.width);
@@ -1530,7 +1531,9 @@ Y.Solitaire.Animation = {
 					width: 0,
 					easing: easing,
 					duration: duration
-				}, function () {
+				});
+				
+				setTimeout(function () {
 					card.setImageSrc();
 					node.transition({
 						left: left + "px",
@@ -1541,7 +1544,8 @@ Y.Solitaire.Animation = {
 						card.updateStyle();
 						$this.clearTransition(node);
 					});
-				});
+
+				}, duration * 1000);
 			}, delay || 0);
 		},
 

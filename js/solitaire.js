@@ -915,7 +915,7 @@ Y.Solitaire.Card = {
 			e.stopPropagation();
 		},
 
-		autoPlay: function () {
+		autoPlay: function (simulate) {
 			var origin = this.stack,
 			    last = origin.last(),
 			    stacks,
@@ -928,11 +928,13 @@ Y.Solitaire.Card = {
 			for (i = 0, len = stacks.length; i < len; i++) {
 				foundation = stacks[i];
 				if (this.isFree() && this.validTarget(foundation)) {
-					this.moveTo(foundation);
-					origin.updateCardsPosition();
-					origin.update();
+					if (!simulate) {
+						this.moveTo(foundation);
+						origin.updateCardsPosition();
+						origin.update();
+						Game.endTurn();
+					}
 
-					Game.endTurn();
 					return true;
 				}
 			}

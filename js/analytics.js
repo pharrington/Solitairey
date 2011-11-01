@@ -8,15 +8,13 @@ var Solitaire = Y.Solitaire,
     previousGame,
     start = 0;
 
-if (typeof _gaq === "undefined") { return; }
-
 Y.on("beforeSetup", function () {
 	var end = start;
 
 	start = new Date().getTime();
 
 	if (end) {
-		Analytics.track("Games", "Played", previousGame, end - start);
+		Analytics.track("Games", "Played", previousGame, start - end);
 	}
 
 	totalMoves = 0;
@@ -49,6 +47,7 @@ Y.mix(Analytics, {
 	 * think harder
 	 */
 	track: function (category, event, name, value, nointeract) {
+		if (typeof _gaq === "undefined") { return; }
 		_gaq.push(["_trackEvent", category, event, name, value, nointeract]);
 	}
 });

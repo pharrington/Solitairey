@@ -68,14 +68,7 @@ var Solitaire = Y.Solitaire,
 		});
 	},
 
-	redeal: function () {
-		var deck = this.deck.stacks[0],
-		    waste = this.waste.stacks[0];
-
-		while (waste.cards.length) {
-			waste.last().faceDown().moveTo(deck);
-		}
-	},
+	redeal: Solitaire.Util.moveWasteToDeck,
 
 	Stack: instance(Solitaire.Stack),
 
@@ -228,4 +221,4 @@ Y.mix(Klondike.Deck.Stack, {
 }, true);
 
 
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["util"]});

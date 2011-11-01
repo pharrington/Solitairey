@@ -30,6 +30,15 @@ Y.mix(Util, {
 		});
 	},
 
+	moveWasteToDeck: function () {
+		var deck = this.deck.stacks[0],
+		    waste = this.waste.stacks[0];
+
+		while (waste.cards.length) {
+			waste.last().faceDown().moveTo(deck);
+		}
+	},
+
 	hasFreeTableaus: function () {
 		return Y.Array.some(Solitaire.game.tableau.stacks, function (stack) {
 			return !stack.cards.length;

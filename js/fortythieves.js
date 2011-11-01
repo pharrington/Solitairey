@@ -157,12 +157,6 @@ Y.mix(FortyThieves.Tableau.Stack, {
 
 Y.mix(FortyThieves.Deck.Stack, {
 	images: {deck: null}
-		/*
-	createDOMElement: function () {
-		Solitaire.Stack.createDOMElement.call(this);
-		this.node.on("click", Solitaire.Events.clickEmptyDeck);
-	}
-	*/
 }, true);
 
 

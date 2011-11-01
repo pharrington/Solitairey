@@ -27,6 +27,7 @@
 		"bakersgame": "BakersGame",
 		"baroness": "Baroness",
 		"doubleklondike": "DoubleKlondike",
+		"calculation": "Calculation",
 		"canfield": "Canfield",
 		"eightoff": "Eightoff",
 		"klondike": "Klondike",

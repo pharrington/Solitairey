@@ -363,13 +363,14 @@ p {
 }
 
 #social {
-	position: fixed;
-	bottom: 10px;
-	left: 20px;
+	position: absolute;
+	bottom: 23px;
+	right: 85px;
 }
 
 #social > * {
   float: left;
+  margin-left: 10px;
 }
 
 .layout {
@@ -488,6 +489,10 @@ p {
 
 .doubleklondike .layout {
 	background-image: url(layouts/mini/doubleklondike.png);
+}
+
+.calculation .layout {
+	background-image: url(layouts/mini/calculation.png);
 }
 
 button {

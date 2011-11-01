@@ -13,7 +13,7 @@ YUI.add("agnes", function (Y) {
 		fields: ["Foundation", "Deck", "Waste", "Tableau", "Reserve"],
 
 		height: function () { return this.Card.base.height * 5.6; },
-		maxStackHeight: function () { return this.Card.height * 4.3; },
+		maxStackHeight: function () { return this.Card.height * 2.75; },
 
 		deal: function () {
 			var deck = this.deck.stacks[0],

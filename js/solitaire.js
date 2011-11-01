@@ -1533,9 +1533,7 @@ Y.Solitaire.Animation = {
 					width: 0,
 					easing: easing,
 					duration: duration
-				});
-				
-				setTimeout(function () {
+				}, function () {
 					card.setImageSrc();
 					node.transition({
 						left: left + "px",
@@ -1547,7 +1545,7 @@ Y.Solitaire.Animation = {
 						$this.clearTransition(node);
 					});
 
-				}, duration * 1000);
+				});
 			}, delay || 0);
 		},
 

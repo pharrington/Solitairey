@@ -99,6 +99,14 @@ var Solitaire = Y.Solitaire,
 		field: "tableau"
 	},
 
+	Events: instance(Solitaire.Events, {
+		dragCheck: function (e) {
+			if (!Solitaire.game.autoPlay.call(this)) {
+				Solitaire.Events.dragCheck.call(this);
+			}
+		},
+	}),
+
 	Card: instance(Solitaire.Card, {
 		validTarget: function (stack) {
 			if (stack.field === "tableau") {

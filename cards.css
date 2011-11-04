@@ -46,7 +46,6 @@ a {
 
 .card, .stack {
 	position: absolute;
-	border-radius: 7px;
 }
 
 .stack {
@@ -55,6 +54,7 @@ a {
 
 .playable {
 	cursor: pointer;
+	border-radius: 7px;
 	-webkit-transition: box-shadow 0.2s linear;
 	-moz-transition: box-shadow 0.2s linear;
 	-ms-transition: box-shadow 0.2s linear;

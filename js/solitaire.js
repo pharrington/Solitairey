@@ -1495,6 +1495,7 @@ Y.Solitaire.Animation = {
 			node.setStyle("zIndex", 500 + zIndex);
 			delete to.zIndex;
 
+			/*
 			q.add(function () {
 				node.transition({
 					left: to.left,
@@ -1508,9 +1509,62 @@ Y.Solitaire.Animation = {
 					card.runCallback();
 				});
 			});
+			*/
+			q.add(this.animFunction.bind(this).partial({
+				left: to.left,
+				top: to.top,
+				easing: "ease-out",
+				duration: duration,
+			}, card, function () {
+				card.positioned = true;
+				node.setStyle("zIndex", zIndex);
+			}));
+
 			q.run();
 		},
 
+		animFunction: function () {},
+
+		doTransition: function (properties, card, callback) {
+			var node = card.node,
+			    $this = this;
+
+			node.transition(properties, function () {
+				callback();
+				$this.clearTransition(node);
+				card.runCallback();
+			});
+		},
+
+		doAnim: function (properties, card, callback) {
+			var node = card.node,
+			    duration = properties.duration,
+			    map = {
+				linear: "linear",
+				"ease-out": "easeOut",
+				"ease-in": "easeIn"
+			    },
+			    easing = Y.Easing[map[properties.easing]],
+			    anim;
+
+			delete properties.duration;
+			delete properties.easing;
+
+			anim = new Y.Anim({
+				node: node,
+				to: properties,
+				duration: duration,
+				easing: easing
+			});
+
+			anim.on("end", function () {
+				callback();
+				card.runCallback();
+			});
+
+			anim.run();
+		},
+	
 		flip: function(card, delay) {
 			if (!(this.animate && card.node)) {
 				card.setImageSrc();
@@ -1528,21 +1582,20 @@ Y.Solitaire.Animation = {
 				    left = Math.floor(card.left),
 				    width = Math.floor(card.width);
 
-				node.transition({
+				$this.animFunction({
 					left: Math.floor(left + width / 2) + "px",
 					width: 0,
 					easing: easing,
 					duration: duration
-				}, function () {
+				}, card, function () {
 					card.setImageSrc();
-					node.transition({
+					$this.animFunction({
 						left: left + "px",
 						width: width + "px",
 						easing: easing,
 						duration: duration
-					}, function () {
+					}, card, function () {
 						card.updateStyle();
-						$this.clearTransition(node);
 					});
 
 				});
@@ -1564,6 +1617,8 @@ Y.Solitaire.Animation = {
 			});
 		}
 	};
+
+Solitaire.Animation.animFunction = Solitaire.Animation.doAnim;
 
 var Undo = {
 	stack: null,
@@ -1626,4 +1681,4 @@ var Undo = {
 	}
 };
 
-}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "transition", "async-queue", "cookie", "array-extras"]});
+}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "transition", "async-queue", "cookie", "array-extras"]});

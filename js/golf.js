@@ -116,6 +116,17 @@ YUI.add("golf", function (Y) {
 			/*
 			 * return true if the target is 1 rank away from the this card
 			 */
+			playable: function () {
+				switch (this.stack.field) {
+				case "tableau":
+					return this.autoPlay(true);
+				case "deck":
+					return this === this.stack.last();
+				case "foundation":
+					return false;
+				}
+			},
+
 			validTarget: function (stack) {
 				if (stack.field !== "foundation") { return false; }
 

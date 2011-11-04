@@ -111,7 +111,7 @@ var Solitaire = Y.Solitaire,
 			switch (stack.field) {
 			case "tableau":
 				if (!target) {
-					return this.rank === 13;
+					return true;
 				} else {
 					return !target.isFaceDown && target.suit === this.suit && target.rank === this.rank + 1;
 				}

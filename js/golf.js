@@ -113,9 +113,6 @@ YUI.add("golf", function (Y) {
 		}),
 
 		Card: instance(Solitaire.Card, {
-			/*
-			 * return true if the target is 1 rank away from the this card
-			 */
 			playable: function () {
 				switch (this.stack.field) {
 				case "tableau":
@@ -127,6 +124,9 @@ YUI.add("golf", function (Y) {
 				}
 			},
 
+			/*
+			 * return true if the target is 1 rank away from the this card
+			 */
 			validTarget: function (stack) {
 				if (stack.field !== "foundation") { return false; }
 

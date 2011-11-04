@@ -1495,21 +1495,6 @@ Y.Solitaire.Animation = {
 			node.setStyle("zIndex", 500 + zIndex);
 			delete to.zIndex;
 
-			/*
-			q.add(function () {
-				node.transition({
-					left: to.left,
-					top: to.top,
-					easing: "ease-out",
-					duration: duration
-				}, function () {
-					card.positioned = true;
-					node.setStyle("zIndex", zIndex);
-					$this.clearTransition(node);
-					card.runCallback();
-				});
-			});
-			*/
 			q.add(this.animFunction.bind(this).partial({
 				left: to.left,
 				top: to.top,

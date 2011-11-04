@@ -47,7 +47,7 @@ var Solitaire = Y.Solitaire,
 			i--;
 		}
 
-		start.sort(function (a, b) { return a.rank > b.rank; });
+		start.sort(function (a, b) { return a.rank - b.rank; });
 
 		for (i = 0; i < 4; i++) {
 			card = start[i];

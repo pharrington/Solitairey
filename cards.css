@@ -363,14 +363,9 @@ p {
 }
 
 #social {
-	position: absolute;
+	position: fixed;
 	bottom: 23px;
 	right: 85px;
-}
-
-#social > * {
-  float: left;
-  margin-left: 10px;
 }
 
 .layout {

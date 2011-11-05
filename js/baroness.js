@@ -44,11 +44,13 @@ YUI.add("baroness", function (Y) {
 				}, "tableau");
 			});
 
-			card.after(function () {
-				Y.Array.each(moved, function (c) {
-					Solitaire.Animation.flip(c);
+			if (card) {
+				card.after(function () {
+					Y.Array.each(moved, function (c) {
+						Solitaire.Animation.flip(c);
+					});
 				});
-			});
+			}
 		},
 
 		isWon: Solitaire.isWon,

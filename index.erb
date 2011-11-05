@@ -85,6 +85,11 @@
 <% end %>
 </head>
 <body>
+<% unless development %>
+<div id=social>
+	<iframe id="fb" src="http://www.facebook.com/plugins/like.php?href=www.solitairey.com&amp;layout=button_count&amp;show_faces=false&amp;width=50&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
+</div>
+<% end %>
 	<ul id="menu">
 		<li class="begin">
 			<a id="new_deal">Deal New Cards</a>
@@ -101,6 +106,9 @@
                 <li>
 			<a id="choose_options">Options</a>
 		</li>
+		<li>
+			<a id="rules">Rules</a>
+		</li>
                 <li class="end">
 			<a id="about">About</a>
 		</li>
@@ -115,7 +123,7 @@
           <div class="features">
             Current features include:
             <ul>
-              <li>30 complete games</li>
+              <li>Over 30 complete games</li>
               <li>Hi res full screen graphics</li>
               <li>Unlimited undo</li>
               <li>Automatic progress saving; start where you left off even after closing your browser</li>
@@ -134,11 +142,6 @@
           Tell me any games or features you want added, report any bugs you find, or just let me know I'm doing a wonderful job :)
           Have a great day.
           </p>
-<% unless development %>
-<div id=social>
-	<iframe id="fb" src="http://www.facebook.com/plugins/like.php?href=www.solitairey.com&amp;layout=button_count&amp;show_faces=false&amp;width=50&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
-</div>
-<% end %>
           <button class=close-chooser>OK</button>
         </div>
 	<div id="game-chooser">
@@ -148,7 +151,12 @@
 				<h2>Aces Up</h2>
 				<div class="description acesup">
 					<div class="layout"></div>
+					<h3>Aces Up Solitaire Rules (Suits Up)</h3>
 					<blockquote>
+Aces Up is a quick, very simple, and luck-based solitaire game. The goal is to discard everything that's not an Ace.
+The top card of each pile is free; any card that is the same suit and lower rank of another free card can be discarded by clicking it.
+Free spaces can be filled by any free card. Try to free up spaces whenever you have a chance and undo liberally if you see a better potential series of moves; even with these strategies this solitaire is rarely won. Its still an enjoyable time waster as games go be fast and there's little thinking involved.
+
 					</blockquote>
 				</div>
 			</li>
@@ -156,24 +164,19 @@
 				<h2>Agnes</h2>
 				<div class="description agnes">
 					<div class="layout"></div>
+					<h3>Agnes Solitaire Rules (Agnes Bernauer)</h3>
                                         <blockquote>
-                                        Agnes tries be an easier Klondike variety by exposing many cards for play simultaneously. Due to how the foundations are built, it is also requires a bit more skill than most solitaire games.</blockquote>
-					<h3>Foundation:</h3>
-					<p>The first card dealt to the foundation (the seed) is the rank the rest of the foundations must start with. Build 13 cards on each foundation in series and suit; Aces wrap around to Kings.</p>
-					<h3>Tableau:</h3>
-					<p>Same as Klondike, cards 1 rank less than the seed are played on empty spaces, and Aces wrap around to Kings.</p>
-					<h3>Reserve:</h3>
-					<p>Click the stock to transfer a card to each of the 7 reserve piles. The top card in any reserve pile is free to play on the tableau or a foundation.</p>
-					<h3>Wastepile</h3>
-					<p>The last two cards from the stock are transfered here; Both cards are playable on the tableau or a foundation.</p>
-					<button class="choose">Play Agnes Solitaire</button>
+Agnes is  member of the ever-famous Klondike solitaire family. However, its rules are changed to make the odds of winning the game easier. The first difference between Agnes and Klondike is that the top of the deck is dealt to the first foundation; the rest of the foundations are built up by suit starting with this card's rank. The tableau piles are built the same as in Klondike, down by suit and in alternating colors. Ranks in this game wrap around, so a king or pile starting with a king can be played on an ace. Free tableau spaces can be filled by any card or pile starting with a card that's one less than the foundation seed. The other difference is how the deck is dealt; click the top of the deck to deal one card to each of the seven reserve piles. The top card of each reserve can be played on the foundations or the tableau; empty reserve slots will remain empty until the next deal. When the deck is down to two last cards, they're transferred to the normal wastepile and both are available to play. Since the foundation starts of with one card and many cards are exposed for play at once, Agnes is a game that allows for much more skill and higher odds of winning than its more popular parent.
+					</blockquote>
 				</div>
 			</li>
 			<li id="alternations">
 				<h2>Alternations</h2>
 				<div class="description alternations">
 					<div class="layout"></div>
+					<h3>Alternations Solitaire Rules</h3>
 					<blockquote>
+Alternations is a medium length solitaire game using two decks of cards. The game is won when all eight foundations are built up in rank and suit from Ace to King. Build the tableaus down in rank; suit does not matter. Full or incomplete face-up piles can be placed upon each other, and free spaces may be fill by any card. When you see no more moves available, click the top of the deck to move it to the waste, this card can be played on the foundations or the tableau.
 					</blockquote>
 				</div>
 			</li>
@@ -181,37 +184,29 @@
 				<h2>Baker's Dozen</h2>
 				<div class="description bakersdozen">
 					<div class="layout"></div>
+					<h3>Baker's Dozen Solitaire Rules</h3>
                                         <blockquote>
-                                        Agnes tries be an easier Klondike variety by exposing many cards for play simultaneously. Due to how the foundations are built, it is also requires a bit more skill than most solitaire games.</blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series from Ace to King, in suit.</p>
-					<h3>Tableau:</h3>
-					<p>Only the top card of each tableau pile may be played on the foundation or another tableau. The tableau is built downwards, regardless of suit. Free tableau spaces may not be filled.
-					<h3>Reserve:</h3>
-					<p>Click the stock to transfer a card to each of the 7 reserve piles. The top card in any reserve pile is free to play on the tableau or a foundation.</p>
-					<h3>Wastepile</h3>
-					<p>The last two cards from the stock are transfered here; Both cards are playable on the tableau or a foundation.</p>
-					<button class="choose">Play Baker's Dozen Solitaire</button>
+The aptly named Baker's Dozen is a fairly easy, yet thoughtful solitaire game. All Kings are automatically moved to the bottom of their respective stacks. Place any uncovered Aces on the foundations, which are built in suit to Kings. Stacks are built downwards in rank without regard to suit, but only one card at a time may be moved. Freed piles cannot be built upon. Be careful to plan ahead and not block any potential future moves, but since nothing is hidden and Kings start out moved out of the way, it's usually possible to win this game with a bit of foresight.
+					</blockquote>
 				</div>
 			</li>
 			<li id="bakersgame">
 				<h2>Baker's Game</h2>
 				<div class="description freecell">
 					<div class="layout"></div>
+					<h3>Baker's Game Solitaire Rules</h3>
                                         <blockquote>
-						Baker's Game is much like Freecell, except that tableau stacks are built downwards by suit, instead of by alternating color. This makes for a more challenging and rewarding solitaire when Freecell gets too easy.
-					<h3>Foundation:</h3>
-					<p>Built in series from Ace to King, in suit.</p>
-					<h3>Play:</h3>
-					<p>The top card from the tableau can be played on the foundation, another tableau pile/empty space, or a free slot in the reserve. Build the tableau downwards by suit. Whole or partial runs may be moved as long as there's enough free reserve and tableau cells to move all the cards.</p>
-					<button class="choose">Play Baker's Game</button>
+Baker's Game is actually the stricter mother of the much more popular Freecell solitaire. The layout is the same, and the foundations are still built up from Aces to Kings in suit. Free slots can be filled by any card, and any pile in series can be moved as long as there are enough free cells and/or tableau openings. The twist is that stacks are built downwards in rank and suit, so you must plan much more carefully and be a bit luckier to free up slots in this game. Because of this, although harder, winning a game of Baker's Game feels extremely rewarding compared to Freecell.
+					</blockquote>
 				</div>
 			</li>
 			<li id="baroness">
 				<h2>Baroness</h2>
 				<div class="description baroness">
 					<div class="layout"></div>
+					<h3>Baroness Solitaire Rules (Five Piles, Thirteens)</h3>
 					<blockquote>
+Baroness is a simple addition solitaire game. The game is won if you can manage to discard the entire deck. Any pair of cards equal to 13 can be discarded, and Kings can be discarded on their own. A unique aspect of this solitaire is that cards are automatically dealt from the deck to ensure there are at least five cards in play at all times. Free slots may be filled by any card, and in fact must be filled before clicking the deck to deal one card to each tableau pile. This solitaire game has fairly good odds of winning if you can discard in such a way as to consistently free up piles.
 					</blockquote>
 				</div>
 			</li>
@@ -219,7 +214,9 @@
 				<h2>Calculation</h2>
 				<div class="description calculation">
 					<div class="layout"></div>
+					<h3>Calculation Solitaire Rules (Broken Intervals)</h3>
 					<blockquote>
+Calculation is a unique solitaire game. The foundations start with one Ace, two, three, and four, and the goal is to build each, regardless of suit, up to a king. What makes this game unique is that the foundations are built in intervals of one, two, three, and four respectively. For example, build the first foundation as ace -> two -> three, etc; the second foundation is build two -> four -> six, and so on. The top card of the deck can be played on a foundation or on any of the four wastepiles. While there are no restrictions on how to build the waste, once a card is placed there, it can only be subsequently moved to a foundation. These rules give Calculation solitaire an immense allowance for skill. Plan carefully by trying to discard in the same sequences you'd build the foundation, and try to cover as few cards as possible with Kings as they're always played last.
 					</blockquote>
 				</div>
 			</li>
@@ -227,7 +224,9 @@
 				<h2>Canfield</h2>
 				<div class="description canfield">
 					<div class="layout"></div>
+					<h3>Canfield Solitaire Rules (Demon)</h3>
 					<blockquote>
+Canfield is a solitaire game that was originally created to be nearly unwinnable, but due to people easing the rules over the years, it can now often be won with a bit of skill. At first one card is delt from the deck to the first foundation. Build the rest of the foundations up by suit according to this cards rank. Build the tableau by playing cards of descending rank and alternating color; moves of partial or full stacks are also allowed. When you created a free slot, the top card from the reserve, if available, automatically fills it. If the reserve is empty, and card or pile can be moved to a free slot. If no more moves are avaible, click the deck to deal three cards to the waste pile. The top card in the waste and the reserve are always available to play on the foundation or tableau. Once the deck is exhausted, click it to move all the cards from the waste back to the deck again. This can be done without limit. Due to the lax movement rules and the fact that relatively few cards start off unavailable, a good winning strategy for this solitaire is to card on getting all cards from the reserve in play as soon as possible. If you can manage this, then play the waste pile carefully by only moving out cards that open additional moves or let you free tableau spaces. You'll be winning Canfield solitaire in no time!
 					</blockquote>
 				</div>
 			</li>
@@ -235,35 +234,29 @@
 				<h2>Double Klondike</h2>
 				<div class="description doubleklondike">
 					<div class="layout"></div>
+					<h3>Double Klondike Solitaire Rules</h3>
                                         <blockquote>
-						Double Klondike is Klondike played with two decks.
+Double Klondike plays exactly like Klondike, except for using two decks and having nine tableaus instead of seven. But because alot more moves are possible, its much easier to win at this solitaire. Build up the foundations in suit from Ace to King. Build tableaus downwards by alternating color. Free tableau spaces can be fill only by kings. Click the deck to deal three cards to the waste, the top of which is playable. Click the deck to move all cards from the waste back to the deck.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series from Ace to King, in suit.</p>
-					<h3>Tableau:</h3>
-					<p>The top card of each pile may be played on another tableau pile or on the foundation. Tableau piles are built downwards by alternating color. Partial or complete face up runs may be moved. Free spaces may only be filled by a King or a pile starting with a King.</p>
-					<h3>Wastepile</h3>
-					<p>Click the stock to transfer 3 cards to the wastepile. The top card on the wastepile may be played on the foundation or tableau. When the stock is deplected, click it to start a new stock with the remaining waste cards.</p>
 				</div>
 			</li>
 			<li id="eightoff">
 				<h2>Eight Off</h2>
 				<div class="description eightoff">
 					<div class="layout"></div>
+					<h3>Eight Off Solitaire Rules</h3>
                                         <blockquote>
-                                          Freecell is a modern solitaire game, developed for computer play. It is one of the most skillful solitaires; if you stratgize by opening as many spaces as possible early on and build long runs, you can win practically every game.</blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series from Ace to King, in suit.</p>
-					<h3>Play:</h3>
-					<p>The top card from the tableau can be played on the foundation, another tableau pile, or a free slot in the reserve. Free tableau slots can by filled by a King. Build the tableau downwards by suit. Whole or partial runs may be moved as long as there's enough free reserve cells to move all the cards.</p>
-					<button class="choose">Play Eight Off</button>
+Eightoff is an older ancestor in the Freecell lineage of solitaire, and provides some interesting twists if you’re used to racking up hundreds of wins in Freecell. You have eight reserve slots available, but one card is immediately dealt to the first four. Tableaus are built down in rank and suit. The rest of the rules are the same as Freecell. Overall it’s about as winnable a solitaire as its more popular grandchild, and the same general strategy applies: focus on emptying piles with cards you can move to the foundation as soon as possible.
+					</blockquote>
 				</div>
 			</li>
 			<li id="thefan">
 				<h2>The Fan</h2>
 				<div class="description thefan">
 					<div class="layout"></div>
+					<h3>The Fan Solitaire Rules</h3>
 					<blockquote>
+The Fan plays like La Belle Lucie, but with two twists. If you clear a fan, you can than place any King in its place. But because this opens so many additional possibilities, you are not allowed to reshuffle the playing field. Regardless, The Fan makes for an enjoyable solitaire thats fairly winnable if you take the time to plan many moves ahead.
 					</blockquote>
 				</div>
 			</li>
@@ -271,108 +264,79 @@
 				<h2>Flower Garden</h2>
 				<div class="description flower-garden">
 					<div class="layout"></div>
+					<h3>Flower Garden Solitaire Rules</h3>
                                         <blockquote>
-                                          Flower Garden is a solitaire game that provides a nice mix of skill and luck. You have a good chance of besting this solitaire if you can make a blank tableau space without playing to many cards from the garden.</blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series from Ace to King, in suit.</p>
-					<h3>Play:</h3>
-					<p>Any card from the bouquet (reserve) may be played on the foundation or garden (tableau). The top card of each garden pile may be played on the foundation or another garden pile. The garden may be built downwards, regardless of suit. Free garden spaces may be filled by any card.</p>
-					<button class="choose">Play Flower Garden</button>
+Flower Garden is a solitaire game that requires a good deal of planning ahead, but is more winnable that if first appears. The tableaus are build downwards in rank and suit, and only one card can be moved at a time. The entire reserve is immediately available to play on the tableau or foundations; keep in mind though that the larger a tableau stack is, the harder it is to get at its buried cards. If you are able to free one or two tableau spaces without playing too many cards from the reserve, you stand a pretty good chance of beating this solitaire.
+					</blockquote>
 				</div>
 			</li>
 			<li id="forty-thieves">
 				<h2>Forty Thieves</h2>
 				<div class="description forty-thieves">
 					<div class="layout"></div>
+					<h3>Forty Thieves Solitaire Rules (Napoleon at Saint Helena, Roosevelt at San Juan, Big Forty)</h3>
                                         <blockquote>
-                                        Forty Thieves (aka Napoleon at Saint Helena, Roosevelt at San Juan, Big Forty) is a among the most popular two pack solitaire games. It is also one of the most notoriously difficult solitaires to win in general, requiring a great amount of skill and luck.</blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series from Ace to King, in suit.</p>
-					<h3>Play:</h3>
-					<p>The top card of each tableau pile may be played on the foundation or another tableau. The tableau is built downwards by suit. Piles may not be moved. Free tableau spaces may be filled by any card.
-					<h3>Wastepile:</h3>
-					<p>Click the stock to transfer 1 card to the wastepile. The top card may be played on the foundation or a tableau pile.</p>
-					<button class="choose">Play Forty Thieves</button>
+Forty Thieves is probably the most popular solitaire game played with two decks, but it takes a lot of time, luck, and skill to win. Build the foundations up in suit from Ace to King. The tableaus are build downwards by suit, and only one card can be moved at a time. Empty tableau slots can be filled by any card. If play is exhausted, click the deal to upturn the top card; this can be played on any foundation or tableau.
+					</blockquote>
 				</div>
 			</li>
 			<li id="freecell">
 				<h2>Freecell</h2>
 				<div class="description freecell">
 					<div class="layout"></div>
+					<h3>Freecell Solitaire Rules</h3>
                                         <blockquote>
-                                          Freecell is a modern solitaire game, developed for computer play. It is one of the most skillful solitaires; if you stratgize by opening as many spaces as possible early on and build long runs, you can win practically every game.</blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series from Ace to King, in suit.</p>
-					<h3>Play:</h3>
-					<p>The top card from the tableau can be played on the foundation, another tableau pile/empty space, or a free slot in the reserve. Build the tableau downwards by alternating colors. Whole or partial runs may be moved as long as there's enough free reserve and tableau cells to move all the cards.</p>
-					<button class="choose">Play Freecell</button>
+Freecell is a fairly modern solitaire game that was popularized by its inclusion on many computer systems. Unlike most solitaires, almost no luck is involved and with strategy more than 99.9% of its games can be won.  Build the foundations up from Aces to Kings in suit. Build the tableaus down by rank and alternating color. Free tableau spaces can be filled by any card, and the free reserve cells can be filled by any one card at a time. Because of this, the length of the piles you can move is limited only by the amount of enough free cells and/or tableau openings. Strategize by building long runs and opening up tableau spaces as early as possible and you’ll be well on your way to winning almost every game of Freecell solitaire you play!
+					</blockquote>
 				</div>
 			</li>
 			<li id="golf">
 				<h2>Golf</h2>
 				<div class="description golf">
 					<div class="layout"></div>
+					<h3>Golf Solitaire Rules</h3>
                                         <blockquote>
-                                          Golf is a simple yet addicting solitaire that allows for a bit of skill.
-                                        </blockquote>
-					<h3>How to win:</h3>
-					<p>Discard all cards from the tableau</p>
-					<h3>Play:</h3>
-					<p>Any free card one rank from the top card in the waste pile may be discarded.</p>
-					<h3>Deck:</h3>
-					<p>Click the deck to transfer the top card to the waste pile.</p>
-					<button class="choose">Play Golf</button>
+Golf is a fairly simple solitaire that allows for a bit of skill. The goal is to discard all cards in the tableau. The top card of each pile is free, cards that are one away from the top of the wastepile may be discarded. Click the deck to deliver one more card to the waste. Try to discard cards that will allow for long streaks of play. If you like Golf solitaire, another popular variant is the pictorial Tri Towers.
+					</blockquote>
 				</div>
 			</li>
 			<li id="grandfathers-clock">
 				<h2>Grandfather's Clock</h2>
 				<div class="description grandfathers-clock">
 					<div class="layout"></div>
+					<h3>Grandfather's Clock Solitaire Rules</h3>
                                         <blockquote>
-                                          A pictorial solitaire game, Grandfather's Clock is a relaxing alternative to the mentally taxing solitaires like Spider or Freecell.
-                                        </blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series and suit up to the pile's hour position on a clock. Jacks through Kings are 11s through 13s.</p>
-					<h3>Play:</h3>
-					<p>The top card from the tableau may be played on the foundation or another tableau pile. The tableu is built downwards, regardless of suit.</p>
-					<button class="choose">Play Grandfather's Clock</button>
+Grandfather’s Clock is a pictorial solitaire game that involves little strategy, yet is still easy to win. This solitaire’s goal is to build the foundations in suit, up to the pile’s hour position. For example, to complete the top pile starting with the nine of clubs play a 10, Jack, and Queen. On the next play (10 of hearts), play the Jack, Queen, King, and Ace. In this solitaire build the tableaus downwards regardless of suit, but you can only move one card at a time. Even with this restriction Grandfather’s Clock is a solitaire that can often be one with a little be of foresight.
+					</blockquote>
 				</div>
 			</li>
 			<li id="klondike">
 				<h2>Klondike</h2>
 				<div class="description klondike">
 					<div class="layout"></div>
+					<h3>Klondike Solitaire Rules (Patience, Fascination)</h3>
                                         <blockquote>
-                                        Klondike (also called Patience or Fascination) is one of the hardest solitaires to consistently win. Despite this, it is one of, if not the most popular solitaire game, with legions devoted to studying the odds of winning a particular game, finding strategies to overcome its cruel randomness, or just playing it as their favorite idle pasttime.
+Klondike is the most popular solitaire game, so much so that the word “solitaire” immediately brings to mind this specific game. The game is won when all the foundations are built in up rank and suit from Ace to King. The tableaus are built downwards by rank and alternatioing color, and faceup piles of any length can be moved. However, only Kings can fill empty columns. Click the deck to transfer three cards to the wastepile, the top of which is playable. When the deck is exhausted, click it again to replenish it from the cards in the waste. A common strategy to make this solitaire easier is to -not- play cards from the waste unless it gives you an opportunity to turn up a face down card, or if it lets you move a card to the foundation. Another strategy is to work on turning up the larger face down piles first, as this increases the number of cards in play, and in turn the number of moves you can make. Even with this strategies not every game of Klondike solitaire is winnable, but you’ll have a much better success rate. Good Luck!
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series from Ace to King, in suit.</p>
-					<h3>Tableau:</h3>
-					<p>The top card of each pile may be played on another tableau pile or on the foundation. Tableau piles are built downwards by alternating color. Partial or complete face up runs may be moved. Free spaces may only be filled by a King or a pile starting with a King.</p>
-					<h3>Wastepile</h3>
-					<p>Click the stock to transfer 3 cards to the wastepile. The top card on the wastepile may be played on the foundation or tableau. When the stock is deplected, click it to start a new stock with the remaining waste cards.</p>
-					<button class="choose">Play Klondike</button>
 				</div>
 			</li>
 			<li id="klondike1t">
 				<h2>Klondike (Vegas Style)</h2>
 				<div class="description klondike1t">
 					<div class="layout"></div>
-					<blockquote>This popular Klondike variety is no easier than its 3 card turnover brother, despite all cards in the stock always being available for play. But it is a faster solitaire to play through, so it won't take long to find a winning deal.</blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series from Ace to King, in suit.</p>
-					<h3>Tableau:</h3>
-					<p>The top card of each pile may be played on another tableau pile or on the foundation. Tableau piles are built downwards by alternating color. Partial or complete face up runs may be moved. Free spaces may only be filled by a King or a pile starting with a King.</p>
-					<h3>Wastepile</h3>
-					<p>Click the stock to transfer 1 card to the wastepile. The top card on the wastepile may be played on the foundation or tableau.</p>
-					<button class="choose">Play Klondike (Vegas Style)</button>
+					<h3>Vegas Klondike Solitaire Rules</h3>
+					<blockquote>
+Klondike Vegas is the gamblers variety of Klondike solitaire. In this game you turn over only one card from the waste at a time, but you’re not allowed to restock the deck. Since you only have once chance to play every card, you can see why casinos adopted this solitaire.
+					</blockquote>
 				</div>
 			</li>
 			<li id="labellelucie">
 				<h2>La Belle Lucie</h2>
 				<div class="description labellelucie">
 					<div class="layout"></div>
+					<h3>La Belle Lucie Solitaire Rules</h3>
 					<blockquote>
+La Belle Lucie is a solitaire game that’s organized into fans, instead of stacks. The top card of each fan can be played either on a foundation or another fan. Foundations are build up in rank and suit; the fans are built down in rank and suit. If you empty a fan, you cannot place another card in its place. Because of this restriction, you can click the click up to two times to shuffle the cards into new fans of three. Even with the reshuffle and thorough, La Belle Lucie is still a solitaire game that requires a great amount of luck to win. This is because if a fan contains a King that is hiding a lower ranked card of the same suit, the hidden card can never be played. If you like La Belle Lucie but prefer a somewhat more strategic and winnable solitaire game, try the aptly named "The Fan."
 					</blockquote>
 				</div>
 			</li>
@@ -380,184 +344,120 @@
 				<h2>Monte Carlo</h2>
 				<div class="description monte-carlo">
 					<div class="layout"></div>
+					<h3>Monte Carlo Solitaire Rules</h3>
                                         <blockquote>
-                                          Monte Carlo is a simple card matching variety of solitaire, requiring a decent mix of luck and planning to win.
+Monte Carlo is a fun and simple matching type of solitaire. Any two horizontally, vertically, or diagonally adjacent cards of the same rank may be discarded. Then you can click the deck to collapse all empty spaces in the field and deal cards until all five rows are again filled. The game is won when all cards are discarded.
                                         </blockquote>
-					<h3>How to win:</h3>
-					<p>Discard all cards.</p>
-					<h3>Play:</h3>
-					<p>Cards horizontally, vertically, or diagonally adjacent to each other may be discarded. When play's exahausted, click the deck to collapse all empty spaces and deal cards until all five rows are full or the deck's empty.</p>
-					<button class="choose">Play Monte Carlo</button>
 				</div>
 			</li>
 			<li id="pyramid">
 				<h2>Pyramid</h2>
 				<div class="description pyramid">
 					<div class="layout"></div>
+					<h3>Pyramid Solitaire Rules</h3>
                                         <blockquote>
-                                          Pyramid is a simple addition solitaire game, but winnable deals are exceedingly rare.
+Pyramid is a simple addition solitaire that is very hard to consistently win. The goal is to discard every card in the deck. Play by discarding any pair of free cards that add to 13; Kings may be discarded on their own. Click the deck to transfer the top card to the waste; the tops of both the waste and the deck are available to play.
                                         </blockquote>
-					<h3>How to win:</h3>
-					<p>Discard all cards.</p>
-					<h3>Play:</h3>
-					<p>Any pair of uncovered cards totaling 13 maybe be discarded.</p>
-					<h3>Wastepile</h3>
-					<p>Click the stock to move the top card to the waste and uncover the next card in the stock. The top cards of both the waste and the stock are playable.</p>
-					<button class="choose">Play Pyramid</button>
 				</div>
 			</li>
 			<li id="russian-solitaire">
 				<h2>Russian Solitaire</h2>
 				<div class="description russian-solitaire">
 					<div class="layout"></div>
+					<h3>Russian Solitaire Rules</h3>
                                         <blockquote>
-                                          Russian Solitaire is perfect when you feel Yukon is too easy.
+Russian Solitaire is a variant of Yukon. The main difference is that stacks can only be built downwards by suit instead of alternating color; this difference only though makes Russian solitaire a far more difficult game to win. The rules otherwise are the same. Play the foundations from Ace to King according to suit, any face up card in the tableau can be moved, and free spaces may be filled with Kings.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series and suit from Ace to King</p>
-					<h3>Play:</h3>
-					<p>Tableau piles are built downwards by suit. Any face up tableau card can be played on the top of another tableau pile; the cards above it are also moved as one stack. Free tableau spaces can only be filled with a King.</p>
-					<button class="choose">Play Russian Solitaire</button>
 				</div>
 			</li>
 			<li id="scorpion">
 				<h2>Scorpion</h2>
 				<div class="description scorpion">
 					<div class="layout"></div>
+					<h3>Scorpion Solitaire Rules</h3>
                                         <blockquote>
-                                          Scorpion is a luck based solitaire game who's goal, like Spider, is to build single-suited runs. But unlike Spider, there's very little room for skill and a winnable deal is rare.
+Scorpion solitaire is an incredibly difficult and luck-reliant run-building solitaire. The game is won when four complete runs from Ace to King are built and then discarded. All face up cards are available for play, runs are build downwards in suit. Free columns may be filed with stacks starting with a King. When you run out of available moves, click the stock to transfer the three remaining cards to the first three tableaus.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Automatically filled when an in suit run from King to Ace is completed</p>
-					<h3>Play:</h3>
-					<p>The top card of each tableau pile can be built on downwards, in suit. Any face up card in the tableau can be moved; when moved, the cards above it are also moved as one stack. Free tableau spaces can only be filled with a King</p>
-					<h3>Reserve:</h3>
-					<p>Click the reserve to deal all three cards onto the first three tableau piles.</p>
-					<button class="choose">Play Scorpion</button>
 				</div>
 			</li>
 			<li id="simple-simon">
 				<h2>Simple Simon</h2>
 				<div class="description simple-simon">
 					<div class="layout"></div>
+					<h3>Simple Simon Solitaire Rules</h3>
                                         <blockquote>
-                                          Simple Simon is a one deck mix of Freecell and Spider.
+Simple Simon, despite its name, is a actually very skillful solitaire. It’s somewhat similar to Spider solitaire; the goal is to make four in-suit runs from Ace to King, which will be automatically discarded. Any in-suit run or single card at the bottom of a pile may be moved, and these piles may be moved onto any free card one rank higher than it, regardless of suit. Free spaces can be filled by any card. A good strategy of winning this solitaire is to free as many slots in the beginning of the game as you can. Also while playing, try to avoid moving Kings to free slots if possible, as this will just block off the slot until the whole running beginning with that King is completed.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Automatically filled when an in suit run from King to Ace is completed</p>
-					<h3>Play:</h3>
-					<p>Tableau piles are built downwards, regardless of suit. The top card card of any tableau pile can be played on another tableau pile or empty space. Partial or complete in-suit runs may also be played.</p>
-					<button class="choose">Play Simple Simon</button>
 				</div>
 			</li>
 			<li id="spider">
 				<h2>Spider</h2>
 				<div class="description spider">
 					<div class="layout"></div>
+					<h3>Spider Solitaire Rules</h3>
                                         <blockquote>
-                                          Spider has been called the "King of Solitaires," and is rumored to have been a favorite pasttime with Franklin D. Roosevelt. This 2 pack solitaire tremendously rewards skill, and while not every hand is winnable, experienced players can overcome even the nastiest of deals.
+Spider has been called the “King of Solitaires,” and is rumored to have been a favoriate past-time with Franklin D. Roosevelt. This two pack solitaire tremendously rewards skill, and while not every hand is winnable, experience lets when take advantage of difficult deals much more than in any other solitaire game. To win, make and discard eight in-suit runs from Ace to King. The tableau piles are built downwards, regardless of suit. Any top card or in-suit run on a pile may be played the tableau or a free space. If you see no more available plays, click the deck to deal one card to each tableau pile; note that this can only be done if no piles are empty. Work to uncover as many cards as possible while opening up free spaces. Free spaces are extremely important in Spider solitaire as they let you easily organize out of suit piles and move longer runs of disorganized cards, so avoid playing Kings on them unless absolutely necessary.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Automatically filled when an in suit run from King to Ace is completed</p>
-					<h3>Play:</h3>
-					<p>Tableau piles are built downwards, regardless of suit. The top card card of any tableau pile can be played on another tableau pile or empty space. Partial or complete in-suit runs may also be played.</p>
-					<h3>Deck:</h3>
-					<p>If there are no empty tableau spaces, click the deck to deal one card to each tableau pile.</p>
-					<button class="choose">Play Spider</button>
 				</div>
 			</li>
 			<li id="spider1s">
 				<h2>Spider (1 Suite)</h2>
 				<div class="description spider1s">
 					<div class="layout"></div>
+					<h3>1 Suit Spider Solitaire Rules</h3>
                                         <blockquote>
-                                          This version is the easy Spider. One suite Spider is great for learning the basic strategies of quickly uncovering cards and opening free spaces. It also perfect one its own as a slow, relaxing Solitaire game.
+1 Suit Spider is the easy version of Spider solitaire.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Automatically filled when an in suit run from King to Ace is completed</p>
-					<h3>Play:</h3>
-					<p>Tableau piles are built downwards, regardless of suit. The top card card of any tableau pile can be played on another tableau pile or empty space. Partial or complete in-suit runs may also be played.</p>
-					<h3>Deck:</h3>
-					<p>If there are no empty tableau spaces, click the deck to deal one card to each tableau pile.</p>
-					<button class="choose">Play Spider 1 Suit</button>
 				</div>
 			</li>
 			<li id="spider2s">
 				<h2>Spider (2 Suite)</h2>
 				<div class="description spider2s">
 					<div class="layout"></div>
+					<h3>2 Suit Spider Solitaire Rules</h3>
                                         <blockquote>
-                                          This is the medium difficulty Spider. While not a breeze like the one suit Spider, nearly every hand is still winnable, and its by far one of the most skill-dependant solitaire games.
+This is the medium difficulty of Spider solitaire. Although not a breeze to win, most deals are in fact winnable, and its still a very skill-reliant type of solitaire.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Automatically filled when an in suit run from King to Ace is completed</p>
-					<h3>Play:</h3>
-					<p>Tableau piles are built downwards, regardless of suit. The top card card of any tableau pile can be played on another tableau pile or empty space. Partial or complete in-suit runs may also be played.</p>
-					<h3>Deck:</h3>
-					<p>If there are no empty tableau spaces, click the deck to deal one card to each tableau pile.</p>
-					<button class="choose">Play Spider 2 Suit</button>
 				</div>
 			</li>
 			<li id="spiderette">
 				<h2>Spiderette</h2>
 				<div class="description spiderette">
 					<div class="layout"></div>
+					<h3>Spiderette Solitaire Rules</h3>
                                         <blockquote>
-                                          With the layout of Klondike and the gameplay of Spider, Spiderette is a much more difficult solitaire than either of its parents. Your best hope of winning is to uncover as many cards as possible early on.
+Spiderette solitaire is a one deck version of Spider that uses the same layout as Klondike. Like Spider, the surest way to win is to to uncover many cards and free spaces early on. This solitaire game is still very difficult as a large amount of the deck starts off obscured.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Automatically filled when an in suit run from King to Ace is completed</p>
-					<h3>Play:</h3>
-					<p>Tableau piles are built downwards, regardless of suit. The top card card of any tableau pile can be played on another tableau pile or empty space. Partial or complete in-suit runs may also be played.</p>
-					<h3>Deck:</h3>
-					<p>If there are no empty tableau spaces, click the deck to deal one card to each tableau pile.</p>
-					<button class="choose">Play Spiderette</button>
 				</div>
 			</li>
 			<li id="tri-towers">
 				<h2>Tri Towers</h2>
 				<div class="description tri-towers">
 					<div class="layout"></div>
+					<h3>Tri Towers Solitaire Rules (Tri Peaks)</h3>
                                         <blockquote>
-                                          Tri-Towers (aka Tri Peaks) is a modern solitaire; like Freecell, it was designed to be played on a computer. Given it's simplicity, fast play, and reliance on luck, it's often seen in casino game machines and bars.
+Tri Towers is a variant of Golf solitaire. To play, discard any free card that is one away from the top card in the wastepile. Kings wrap around to Aces, so King -> Ace -> Two is a valid sequence. This solitaire game is one when every card in the towers is discarded. If you can make any more moves, click the deck to turn a new card over to the waste. As in Golf solitaire, try to play long sequences of moves. Another strategy is to prefer discarding cards that are blocking two cards instead of one.
                                         </blockquote>
-					<h3>How to win:</h3>
-					<p>Discard all cards from the towers</p>
-					<h3>Play:</h3>
-					<p>Any free card one rank from the top card in the waste pile may be discarded. Kings may be placed on Aces, and vice-versa.</p>
-					<h3>Deck:</h3>
-					<p>Click the deck to transfer the top card to the waste pile.</p>
-					<button class="choose">Play Tri Towers</button>
 				</div>
 			</li>
 			<li id="will-o-the-wisp">
 				<h2>Will O' The Wisp</h2>
 				<div class="description will-o-the-wisp">
 					<div class="layout"></div>
+					<h3>Will O' The Wisp Solitaire Rules</h3>
                                         <blockquote>
-                                          Will O' The Wisp makes Spiderette easier by starting with less buried cards. But it's still one of the more difficult Solitaires, requiring great skill and luck.
+Will O’ The Wisp, like Spiderette solitaire, is a one deck version of Spider. Its a bit easier to win this solitaire though as less cards start off buried.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Automatically filled when an in suit run from King to Ace is completed</p>
-					<h3>Play:</h3>
-					<p>Tableau piles are built downwards, regardless of suit. The top card card of any tableau pile can be played on another tableau pile or empty space. Partial or complete in-suit runs may also be played.</p>
-					<h3>Deck:</h3>
-					<p>If there are no empty tableau spaces, click the deck to deal one card to each tableau pile.</p>
-					<button class="choose">Play Will O' The Wisp</button>
 				</div>
 			</li>
 			<li id="yukon">
 				<h2>Yukon</h2>
 				<div class="description yukon">
 					<div class="layout"></div>
+					<h3>Yukon Solitaire Rules</h3>
                                         <blockquote>
-                                          Yukon is a blend of two solitaire games, Klondike and Scorpion. Despite its two parents being mostly luck-based, Yukon itself is a largely skill-based solitaire.
+Yukon is a very skillful solitaire focused on moving piles instead of single cards. To win build all foundations in rank, from Ace to King. All face up cards in the tableau are free to move. Build the tableau stacks downward in color and alternating color; when you move a card, all the cards above it are moved as a stack. Kings can be played on emptied columns. The key to playing Yukon solitaire well is to focus on getting as many cards face up as possible. Only start playing cards to the foundations if no more moves are available. With this type of play, you keep a wealth of possibilities open, greatly increasing the odds of winning this solitaire game.
                                         </blockquote>
-					<h3>Foundation:</h3>
-					<p>Built in series and suit from Ace to King</p>
-					<h3>Play:</h3>
-					<p>Tableau piles are built downwards by alternating color. Any face up tableau card can be played on the top of another tableau pile; the cards above it are also moved as one stack. Free tableau spaces can only be filled with a King.</p>
-					<button class="choose">Play Yukon</button>
 				</div>
 			</li>
 		</ul>

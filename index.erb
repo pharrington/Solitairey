@@ -1,5 +1,5 @@
 <!doctype html>
-<% if development %>
+<% if development || offline%>
 <html>
 <% else %>
 <html manifest="cache.manifest">
@@ -509,10 +509,12 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
         </div>
 	<img src=loading.gif class="loading hidden">
 	<div class="chromestore hidden">
+	<% unless offline %>
 		<a class=hide>[Hide]</a>
                 <a href=https://chrome.google.com/webstore/detail/dofbnmhnoodmmlhflbcihicmbnhhinhp>
                   <img src=ChromeWebStore_Badge_v2_206x58.png>
                 </a>
+	<% end %>
 	</div>
 </body>
 </html>

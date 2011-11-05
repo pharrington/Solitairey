@@ -6,12 +6,34 @@ MINIFIED = "#{PREFIX}/all-min.js"
 COMBINED = "#{PREFIX}/combined-min.js"
 COMPRESSOR = "ext/yuicompressor-2.4.2/build/yuicompressor-2.4.2.jar"
 TEMPLATE = "index.erb"
+OFFLINE_FILES = %w[air ancient_egyptians backgrounds dondorf font jolly-royal js/combined-min.js js/solver-freecell-worker.js layouts/mini paris cards.css green.jpg]
+ZIP_FILE = "chrome_store.zip"
 
-def create_index(index, development = false)
+def create_index(index, development = false, offline = false)
   require "erb"
 
   File.open(index, "w") do |f|
     f.write(ERB.new(File.read(TEMPLATE)).result(binding))
+  end
+end
+
+def create_zip zip_name
+  require "zip/zipfilesystem"
+
+  create_index "index-offline.html", false, true
+
+  Zip::ZipFile.open(zip_name, Zip::ZipFile::CREATE) do |zip|
+    write_directory zip, "index-offline.html", "index.html"
+    OFFLINE_FILES.each { |fn| write_directory zip, fn }
+  end
+end
+
+def write_directory zip, name, dest_name = name
+  if File.file? name
+    zip.file.open(dest_name, "w") { |f| f.puts File.read(name) }
+  elsif File.directory? name
+    zip.dir.mkdir name
+    Dir["#{name}/*"].each { |fn| write_directory zip, fn }
   end
 end
 
@@ -42,6 +64,11 @@ end
 desc "production file with seperated, unminified source files"
 file "index.html" => [TEMPLATE, COMBINED] do
   create_index "index.html"
+end
+
+desc "create a zip file of the production build suitable for offline use"
+file ZIP_FILE => [TEMPLATE, COMBINED] do
+  create_zip ZIP_FILE
 end
 
 task :clean do

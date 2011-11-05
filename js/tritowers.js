@@ -156,6 +156,7 @@ YUI.add("tri-towers", function (Y) {
 					return this.autoPlay(true);
 				default:
 					return false;
+				}
 			},
 
 			isFree: function () {

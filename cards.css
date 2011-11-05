@@ -364,8 +364,8 @@ p {
 
 #social {
 	position: fixed;
-	bottom: 23px;
-	right: 85px;
+	bottom: 15px;
+	left: 15px;
 }
 
 .layout {

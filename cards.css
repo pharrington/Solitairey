@@ -523,7 +523,6 @@ button:hover {
 .description blockquote {display: none;}
 .description h3 {display: none;}
 .description p {display: none;}
-.description button {display: none;}
 
 .chromestore {
 	position: fixed;
@@ -620,7 +619,7 @@ button:hover {
 	cursor: pointer;
 }
 
-#about_popup .close-chooser, #options-chooser .close-chooser {
+#about_popup .close-chooser, #options-chooser .close-chooser, #rules_popup .close-chooser {
 	width: auto;
 	margin: 20px 0 0 0;
 	font-size: 20px;
@@ -653,4 +652,8 @@ a.external {
 .features ul {
 	list-style-type: disc;
 	margin-left: 30px;
+}
+
+#rules_popup .description blockquote, #rules_popup .description h3{
+	display: block;
 }

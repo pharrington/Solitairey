@@ -109,6 +109,36 @@
 		};
 	}()),
 
+	Rules = (function () {
+		var popupNode = cacheNode("#rules_popup"),
+		    copied,
+		    rootNode,
+		    visible = false;
+
+		function sourceNode() {
+			return Y.one("#" + active.name);
+		}
+
+		return {
+			show: function () {
+				copied = sourceNode().one(".description");
+				popupNode().one("button").insert(copied, "before");
+				popupNode().removeClass("hidden");
+				Fade.show();
+				visible = true;
+			},
+
+			hide: function () {
+				if (!(visible && copied)) { return; }
+
+				sourceNode().appendChild(copied);
+				popupNode().addClass("hidden");
+				Fade.hide();
+				visible = false;
+			}
+		};
+	})(),
+
 	GameChooser = {
 		selected: null,
 		fade: false,
@@ -667,12 +697,14 @@
 		var hideMenus = function () {
 			GameChooser.hide();
 			OptionsChooser.hide();
+			Rules.hide();
 			hideAbout();
 		    };
 
 		Y.on("click", restart, Y.one("#restart"));
 		Y.on("click", showPopup.partial("GameChooser"), Y.one("#choose_game"));
 		Y.on("click", showPopup.partial("OptionsChooser"), Y.one("#choose_options"));
+		Y.on("click", showPopup.partial("Rules"), Y.one("#rules"));
 		Y.on("click", showPopup.partial("About"), Y.one("#about"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new_deal"));
@@ -705,6 +737,9 @@
 				break;
 			case "About":
 				showAbout();
+				break;
+			case "Rules":
+				Rules.show();
 				break;
 			}
 		});

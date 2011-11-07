@@ -20,6 +20,7 @@
 	    yui = YUI({fetchCSS: false, bootstrap: false}), Y,
 	    body = cacheNode("body"),
 	    games = {
+		"accordion": "Accordion",
 	        "acesup": "AcesUp",
 		"agnes": "Agnes",
 		"alternations": "Alternations",

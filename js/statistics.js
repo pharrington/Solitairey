@@ -89,6 +89,7 @@ YUI.add("statistics", function (Y) {
 	 */
 	function winDisplay() {
 		var nameMap = {
+			Accordion: "Accordion",
 			AcesUp: "Aces Up",
 			Agnes: "Agnes",
 			Alternations: "Alternations",

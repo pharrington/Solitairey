@@ -179,23 +179,37 @@ Y.mix(Accordion.Foundation.Stack, {
 
 Y.mix(Accordion.Tableau.Stack, {
 	setCardPosition: function (card) {
-		var amplitude = 8,
-		    count = this.cards.length,
-		    last = this.last(),
-		    x = (Math.PI / (amplitude - 1)) * (count / 2) - (Math.PI / 2),
-		    top = card.height * 0.1 * count + this.top,
-		    width = card.width * 5.5,
-		    left = Math.sin(x) * width + width + card.width,
-		    delta = 0,
+		var perRow = 11,
+		    radius = 7,
+		    cards = this.cards,
+		    total = cards.length + 1,
+		    mod,
+		    arc,
+		    delta,
+		    x, y,
+		    top, left,
 		    sign;
 
-		if (last) {
-			delta = left - last.left;
-			sign = delta > 0 ? 1 : -1;
-			left = last.left + sign * Math.max(Math.abs(delta), card.width * 0.5);
+		mod = total % perRow;
+		arc = radius / 2 >>> 0;
+		x = mod;
+		y = (total - 1) / perRow >>> 0;
+		delta = Math.abs(perRow - mod);
+		sign = y % 2 ? 1 : -1;
+
+		/*
+		if ((total > arc && total < 52 - arc) && delta <= arc) {
+			x -= Math.pow((arc - delta) / arc, 2);
+			y -= sign * Math.pow((arc - delta) / arc, 2);
 		}
-		card.left = left;
-		card.top = top;
+		*/
+
+		if (sign === 1) {
+			x = perRow - x;
+		}
+
+		card.left = x * card.width * 1 + this.left;
+		card.top = y * card.height * 1.4 + this.top;
 	}
 
 }, true);

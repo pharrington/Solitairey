@@ -185,27 +185,34 @@ Y.mix(Accordion.Tableau.Stack, {
 		    total = cards.length + 1,
 		    mod,
 		    arc,
-		    delta,
+		    toEnd,
 		    x, y,
 		    top, left,
+		    odd,
+		    delta,
 		    sign;
 
-		mod = total % perRow;
+		mod = (total - 1) % perRow;
 		arc = radius / 2 >>> 0;
 		x = mod;
 		y = (total - 1) / perRow >>> 0;
-		delta = Math.abs(perRow - mod);
-		sign = y % 2 ? 1 : -1;
+		toEnd = perRow - mod - 1;
+		odd = y % 2 ? true : false;
+		delta = perRow - mod + 1;
 
-		/*
-		if ((total > arc && total < 52 - arc) && delta <= arc) {
-			x -= Math.pow((arc - delta) / arc, 2);
-			y -= sign * Math.pow((arc - delta) / arc, 2);
+		console.log(total, toEnd, mod);
+		if ((total > arc && total < 52 - arc) && Math.abs(delta) <= arc) {
+			x -= Math.pow((arc - toEnd) / arc, 2);
+			if (delta < 0) {
+				sign = 1;
+			} else {
+				sign = -1;
+			}
+			y += sign * Math.pow((arc - toEnd) / arc, 2);
 		}
-		*/
 
-		if (sign === 1) {
-			x = perRow - x;
+		if (odd) {
+			x = perRow - 1 - x;
 		}
 
 		card.left = x * card.width * 1 + this.left;

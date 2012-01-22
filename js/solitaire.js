@@ -157,8 +157,8 @@ Y.mix(Solitaire, {
 	activeCard: null,
 	moves: null,
 	selector: "body",
-	offset: {left: 50, top: 70},
-	padding: {x: 50, y: 50},
+	offset: {left: 185, top: 70},
+	padding: {x: 185, y: 50},
 	widthScale: 0,
 
 	noop: function () {},

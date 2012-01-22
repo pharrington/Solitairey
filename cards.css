@@ -657,3 +657,18 @@ a.external {
 #rules_popup .description blockquote, #rules_popup .description h3{
 	display: block;
 }
+
+#adleft {
+	left: 0px;
+}
+
+#adright {
+	right: 0px;
+}
+
+.skyscraper {
+	position: absolute;
+	top: 70px;
+	width: 160px;
+	height: 600px;
+}

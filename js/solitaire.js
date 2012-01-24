@@ -158,7 +158,7 @@ Y.mix(Solitaire, {
 	moves: null,
 	selector: "body",
 	offset: {left: 185, top: 70},
-	padding: {x: 185, y: 50},
+	padding: {x: 50, y: 50},
 	widthScale: 0,
 
 	noop: function () {},
@@ -331,6 +331,7 @@ Y.mix(Solitaire, {
 			this.createStacks();
 			this.createEvents();
 			this.createDraggables();
+
 			callback.call(this);
 
 		});

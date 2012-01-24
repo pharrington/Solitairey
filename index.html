@@ -19,22 +19,6 @@
 	<![if lt IE 9]>
 	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css">
 	<![endif]>
-
-	<script type="text/javascript" src="js/combined-min.js"></script>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9447574-2']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
 </head>
 <body>
 
@@ -68,28 +52,6 @@
         <div id="rules_popup" class="hidden popup">
           <button class=close-chooser>OK</button>
 	</div>
-	
-	<div class="skyscraper" id=adleft>
-		<script type="text/javascript">
-		google_ad_client = "ca-pub-7267056250167671";
-		/* left */
-		google_ad_slot = "2963125677";
-		google_ad_width = 160;
-		google_ad_height = 600;
-		</script>
-		<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-	</div>
-	<div class="skyscraper" id=adright>
-		<script type="text/javascript">
-		google_ad_client = "ca-pub-7267056250167671";
-		/* right */
-		google_ad_slot = "1752431989";
-		google_ad_width = 160;
-		google_ad_height = 600;
-		</script>
-		<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-	</div>
-	
         <div id="about_popup" class="hidden popup">
           <p>
           Solitairey is a collection of Solitaire games created by me, <a class="external" href=http://www.facebook.com/lordpharrington>Paul Harrington</a>.<br />
@@ -491,5 +453,70 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
                 </a>
 	
 	</div>
+
+	<script type="text/javascript" src="js/combined-min.js"></script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9447574-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<div class="skyscraper" id=adleft></div>
+<script>
+function loadAd(id, settingsCallback, loadCallback) {
+	var element = document.getElementById(id),
+	    script = document.createElement("script");
+
+        if (element === null) { return; }
+
+	script.src = "http://pagead2.googlesyndication.com/pagead/show_ads.js";
+	if (loadCallback) {
+		script.onload = loadCallback;
+	}
+
+        settingsCallback();
+	element.appendChild(script);
+}
+
+window.setTimeout(function () {
+loadAd("adleft", function () {
+	google_ad_client = "ca-pub-7267056250167671";
+        // left
+	google_ad_slot = "2963125677";
+	google_ad_width = 160;
+	google_ad_height = 600;
+
+        // i guess we wont be needing this!
+        document.write = function (content) {
+          document.getElementById("adleft").innerHTML = content;
+        }
+
+	}, function () {
+		loadAd("adright", function () {
+			google_ad_client = "ca-pub-7267056250167671";
+			// right
+			google_ad_slot = "1752431989";
+			google_ad_width = 160;
+			google_ad_height = 600;
+
+                        document.write = function (content) {
+                          document.getElementById("adright").innerHTML = content;
+                        }
+
+		})
+	}
+);
+}, 3000);
+</script>
+
 </body>
 </html>

@@ -21,69 +21,6 @@
 	<![if lt IE 9]>
 	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css">
 	<![endif]>
-<% if development %>
-        <!--<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>-->
-	<script type="text/javascript" src="js/yui-all-min.js"></script>
-	<script type="text/javascript" src="js/yui-breakout.js"></script>
-	<script type="text/javascript" src="js/solitaire.js"></script>
-	<script type="text/javascript" src="js/analytics.js"></script>
-	<script type="text/javascript" src="js/iphone.js"></script>
-	<script type="text/javascript" src="js/util.js"></script>
-	<script type="text/javascript" src="js/auto-stack-clear.js"></script>
-	<script type="text/javascript" src="js/auto-turnover.js"></script>
-	<script type="text/javascript" src="js/autoplay.js"></script>
-	<script type="text/javascript" src="js/ie-opera-background-fix.js"></script>
-	<script type="text/javascript" src="js/statistics.js"></script>
-	<script type="text/javascript" src="js/acesup.js"></script>
-	<script type="text/javascript" src="js/agnes.js"></script>
-	<script type="text/javascript" src="js/alternations.js"></script>
-	<script type="text/javascript" src="js/baroness.js"></script>
-	<script type="text/javascript" src="js/bakersdozen.js"></script>
-	<script type="text/javascript" src="js/bakersgame.js"></script>
-	<script type="text/javascript" src="js/canfield.js"></script>
-	<script type="text/javascript" src="js/doubleklondike.js"></script>
-	<script type="text/javascript" src="js/eightoff.js"></script>
-	<script type="text/javascript" src="js/thefan.js"></script>
-	<script type="text/javascript" src="js/golf.js"></script>
-	<script type="text/javascript" src="js/klondike.js"></script>
-	<script type="text/javascript" src="js/klondike1t.js"></script>
-	<script type="text/javascript" src="js/labellelucie.js"></script>
-	<script type="text/javascript" src="js/flowergarden.js"></script>
-	<script type="text/javascript" src="js/fortythieves.js"></script>
-	<script type="text/javascript" src="js/freecell.js"></script>
-	<script type="text/javascript" src="js/grandclock.js"></script>
-	<script type="text/javascript" src="js/montecarlo.js"></script>
-	<script type="text/javascript" src="js/pyramid.js"></script>
-	<script type="text/javascript" src="js/russian-solitaire.js"></script>
-	<script type="text/javascript" src="js/scorpion.js"></script>
-	<script type="text/javascript" src="js/simplesimon.js"></script>
-	<script type="text/javascript" src="js/spider.js"></script>
-	<script type="text/javascript" src="js/spider1s.js"></script>
-	<script type="text/javascript" src="js/spider2s.js"></script>
-	<script type="text/javascript" src="js/spiderette.js"></script>
-	<script type="text/javascript" src="js/tritowers.js"></script>
-	<script type="text/javascript" src="js/will-o-the-wisp.js"></script>
-	<script type="text/javascript" src="js/yukon.js"></script>
-	<script type="text/javascript" src="js/calculation.js"></script>
-	<script type="text/javascript" src="js/accordion.js"></script>
-	<script type="text/javascript" src="js/solver-freecell.js"></script>
-	<script type="text/javascript" src="js/application.js"></script>
-<% else %>
-	<script type="text/javascript" src="js/combined-min.js"></script>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9447574-2']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-<% end %>
 </head>
 <body>
 <% unless development %>
@@ -117,28 +54,6 @@
         <div id="rules_popup" class="hidden popup">
           <button class=close-chooser>OK</button>
 	</div>
-	<% unless development %>
-	<div class="skyscraper" id=adleft>
-		<script type="text/javascript">
-		google_ad_client = "ca-pub-7267056250167671";
-		/* left */
-		google_ad_slot = "2963125677";
-		google_ad_width = 160;
-		google_ad_height = 600;
-		</script>
-		<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-	</div>
-	<div class="skyscraper" id=adright>
-		<script type="text/javascript">
-		google_ad_client = "ca-pub-7267056250167671";
-		/* right */
-		google_ad_slot = "1752431989";
-		google_ad_width = 160;
-		google_ad_height = 600;
-		</script>
-		<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-	</div>
-	<% end %>
         <div id="about_popup" class="hidden popup">
           <p>
           Solitairey is a collection of Solitaire games created by me, <a class="external" href=http://www.facebook.com/lordpharrington>Paul Harrington</a>.<br />
@@ -549,5 +464,117 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
                 </a>
 	<% end %>
 	</div>
+<% if development %>
+        <!--<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>-->
+	<script type="text/javascript" src="js/yui-all-min.js"></script>
+	<script type="text/javascript" src="js/yui-breakout.js"></script>
+	<script type="text/javascript" src="js/solitaire.js"></script>
+	<script type="text/javascript" src="js/analytics.js"></script>
+	<script type="text/javascript" src="js/iphone.js"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript" src="js/auto-stack-clear.js"></script>
+	<script type="text/javascript" src="js/auto-turnover.js"></script>
+	<script type="text/javascript" src="js/autoplay.js"></script>
+	<script type="text/javascript" src="js/ie-opera-background-fix.js"></script>
+	<script type="text/javascript" src="js/statistics.js"></script>
+	<script type="text/javascript" src="js/acesup.js"></script>
+	<script type="text/javascript" src="js/agnes.js"></script>
+	<script type="text/javascript" src="js/alternations.js"></script>
+	<script type="text/javascript" src="js/baroness.js"></script>
+	<script type="text/javascript" src="js/bakersdozen.js"></script>
+	<script type="text/javascript" src="js/bakersgame.js"></script>
+	<script type="text/javascript" src="js/canfield.js"></script>
+	<script type="text/javascript" src="js/doubleklondike.js"></script>
+	<script type="text/javascript" src="js/eightoff.js"></script>
+	<script type="text/javascript" src="js/thefan.js"></script>
+	<script type="text/javascript" src="js/golf.js"></script>
+	<script type="text/javascript" src="js/klondike.js"></script>
+	<script type="text/javascript" src="js/klondike1t.js"></script>
+	<script type="text/javascript" src="js/labellelucie.js"></script>
+	<script type="text/javascript" src="js/flowergarden.js"></script>
+	<script type="text/javascript" src="js/fortythieves.js"></script>
+	<script type="text/javascript" src="js/freecell.js"></script>
+	<script type="text/javascript" src="js/grandclock.js"></script>
+	<script type="text/javascript" src="js/montecarlo.js"></script>
+	<script type="text/javascript" src="js/pyramid.js"></script>
+	<script type="text/javascript" src="js/russian-solitaire.js"></script>
+	<script type="text/javascript" src="js/scorpion.js"></script>
+	<script type="text/javascript" src="js/simplesimon.js"></script>
+	<script type="text/javascript" src="js/spider.js"></script>
+	<script type="text/javascript" src="js/spider1s.js"></script>
+	<script type="text/javascript" src="js/spider2s.js"></script>
+	<script type="text/javascript" src="js/spiderette.js"></script>
+	<script type="text/javascript" src="js/tritowers.js"></script>
+	<script type="text/javascript" src="js/will-o-the-wisp.js"></script>
+	<script type="text/javascript" src="js/yukon.js"></script>
+	<script type="text/javascript" src="js/calculation.js"></script>
+	<script type="text/javascript" src="js/accordion.js"></script>
+	<script type="text/javascript" src="js/solver-freecell.js"></script>
+	<script type="text/javascript" src="js/application.js"></script>
+<% else %>
+	<script type="text/javascript" src="js/combined-min.js"></script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9447574-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<% end %>
+<% unless development %>
+<div class="skyscraper" id=adleft></div>
+<script>
+function loadAd(id, settingsCallback, loadCallback) {
+	var element = document.getElementById(id),
+	    script = document.createElement("script");
+
+        if (element === null) { return; }
+
+	script.src = "http://pagead2.googlesyndication.com/pagead/show_ads.js";
+	if (loadCallback) {
+		script.onload = loadCallback;
+	}
+
+        settingsCallback();
+	element.appendChild(script);
+}
+
+window.setTimeout(function () {
+loadAd("adleft", function () {
+	google_ad_client = "ca-pub-7267056250167671";
+        // left
+	google_ad_slot = "2963125677";
+	google_ad_width = 160;
+	google_ad_height = 600;
+
+        // i guess we wont be needing this!
+        document.write = function (content) {
+          document.getElementById("adleft").innerHTML = content;
+        }
+
+	}, function () {
+		loadAd("adright", function () {
+			google_ad_client = "ca-pub-7267056250167671";
+			// right
+			google_ad_slot = "1752431989";
+			google_ad_width = 160;
+			google_ad_height = 600;
+
+                        document.write = function (content) {
+                          document.getElementById("adright").innerHTML = content;
+                        }
+
+		})
+	}
+);
+}, 3000);
+</script>
+<% end %>
 </body>
 </html>

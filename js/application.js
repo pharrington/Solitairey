@@ -20,7 +20,6 @@
 	    yui = YUI({fetchCSS: false, bootstrap: false}), Y,
 	    body = cacheNode("body"),
 	    games = {
-		"accordion": "Accordion",
 	        "acesup": "AcesUp",
 		"agnes": "Agnes",
 		"alternations": "Alternations",
@@ -670,7 +669,7 @@
 		Y = YUI;
 
 		exportAPI();
-		Y.on("domready", load);
+		load();
 	}
 
 	function showDescription() {
@@ -789,6 +788,7 @@
 		active.name = name;
 		active.game = Y.Solitaire[games[name]];
 		Y.Cookie.set("options", name, {expires: new Date(new Date().getTime() + twoWeeks)});
+
 		newGame();
 	}
 
@@ -805,6 +805,7 @@
 				clearDOM();
 				active.game = Y.Solitaire[games[active.name]];
 				try {
+					active.game.cleanup();
 					active.game.loadGame(save);
 				} catch (e) {
 					playGame(active.name);

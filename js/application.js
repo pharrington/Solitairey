@@ -669,7 +669,7 @@
 		Y = YUI;
 
 		exportAPI();
-		load();
+		Y.on("domready", load);
 	}
 
 	function showDescription() {

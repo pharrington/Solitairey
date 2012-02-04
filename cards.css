@@ -366,6 +366,7 @@ p {
 	position: fixed;
 	bottom: 15px;
 	left: 15px;
+	z-index: 2;
 }
 
 .layout {
@@ -671,4 +672,5 @@ a.external {
 	top: 70px;
 	width: 160px;
 	height: 600px;
+	z-index: 1;
 }

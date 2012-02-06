@@ -61,7 +61,8 @@
 		"solver-freecell",
 		"solitaire-autoplay",
 	        "solitaire-ios",
-		"analytics"],
+		"analytics",
+		"ads"],
 
 	Fade = (function() {
 		var el = null,

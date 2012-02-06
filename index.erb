@@ -528,58 +528,7 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
 </script>
 <% end %>
 <% unless development %>
-<div class="skyscraper" id=adleft></div>
-<script>
-(function (window, undefined) {
-var delay = 5000;
-
-function loadAd(id, settingsCallback, loadCallback) {
-	var element = document.getElementById(id),
-	    script = document.createElement("script");
-
-        if (element === null) { return; }
-
-	script.src = "http://pagead2.googlesyndication.com/pagead/show_ads.js";
-	if (loadCallback) {
-		script.onload = loadCallback;
-	}
-
-        settingsCallback();
-	element.appendChild(script);
-}
-
-window.setTimeout(function () {
-	loadAd("adleft", function () {
-		google_ad_client = "ca-pub-7267056250167671";
-		// left
-		google_ad_slot = "2963125677";
-		google_ad_width = 160;
-		google_ad_height = 600;
-
-        // i guess we wont be needing this!
-		document.write = function (content) {
-			document.getElementById("adleft").innerHTML = content;
-		};
-
-	}, function () {
-		loadAd("adright", function () {
-			google_ad_client = "ca-pub-7267056250167671";
-			// right
-			google_ad_slot = "1752431989";
-			google_ad_width = 160;
-			google_ad_height = 600;
-
-			document.write = function (content) {
-				document.getElementById("adright").innerHTML = content;
-			}
-
-		})
-	}
-);
-}, delay);
-
-})(this);
-</script>
+  <div class="skyscraper" id=adleft></div>
 <% end %>
 </body>
 </html>

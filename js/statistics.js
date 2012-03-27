@@ -122,7 +122,7 @@ YUI.add("statistics", function (Y) {
 			TriTowers: "Tri Towers",
 			Yukon: "Yukon"},
 		    
-		    stats = Record(localStorage[Solitaire.game.name() + "record"]),
+		    stats = getRecord(localStorage[Solitaire.game.name() + "record"]),
 
 		    streakCount, winCount, loseCount,
 
@@ -175,7 +175,7 @@ YUI.add("statistics", function (Y) {
 		localStorage["currentGame"] = Solitaire.game.name();
 	}
 
-	function Record(raw) {
+	function getRecord(raw) {
 		function parse() {
 			var entries = raw.split("|");
 

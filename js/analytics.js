@@ -43,7 +43,7 @@ Y.on("popup", function (popup) {
 });
 
 Y.mix(Analytics, {
-	/* TODO this interface is ridiculously GA influenced
+	/* TODO this interface is copped from GA
 	 * think harder
 	 */
 	track: function (category, event, name, value, nointeract) {

@@ -204,15 +204,7 @@ p {
 	cursor: pointer;
 }
 
-.close-chooser {
-	font-size: 30px;
-	border: 0px;
-	margin: 20px auto;
-	width: 300px;
-	display: block;
-}
-
-#win_display {
+#win-display {
 	background-color: #EEC;
 	width: 550px;
 	height: 240px;
@@ -224,27 +216,27 @@ p {
 	box-shadow: 0 0 10px 3px #fff;
 }
 
-#win_display > p {
+#win-display > p {
 	font-size: 2.2em;
 	text-align: center;
 	text-shadow: #fff 1px 1px 1px;
 	font-weight: bold;
 }
 
-#win_display > h2 {
+#win-display > h2 {
 	margin-bottom: 1em;
 	font-size: 1.3em;
 }
 
-#win_display ul {
+#win-display ul {
 	font-size: 1.1em;
 }
 
-#win_display li {
+#win-display li {
 	margin-bottom: 0.2em;
 }
 
-#solver_bar {
+#solver-bar {
 	width: 500px;
 	height: 15px;
 	padding: 10px;
@@ -516,7 +508,7 @@ button:hover {
 	box-shadow: none;
 }
 
-.replay_options {
+.replay-options {
 	display: table;
 	margin: 20px auto;
 }
@@ -550,17 +542,22 @@ button:hover {
 .popup {
 	width: 700px;
 	margin: 25px auto;
+	padding: 7px;
+	border-radius: 7px;
+	background: #222;
+	box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.8);
+	z-index: 1001;
+}
+
+.popup-content {
 	background-color: #fff;
 	background: -webkit-linear-gradient(white 50%, #ddd);
 	background: -moz-linear-gradient(white 50%, #ddd);
 	background: -ms-linear-gradient(white 50%, #ddd);
 	background: -o-linear-gradient(white 50%, #ddd);
 	padding: 20px 20px 70px 20px;
-	z-index: 1001;
 	font-family: Questrial;
 	font-size: 20px;
-	border-radius: 10px;
-	border: #111 5px solid;
 }
 
 .tabview .yui3-tabview-panel {
@@ -593,14 +590,14 @@ button:hover {
 	outline: 0;
 }
 
-.card_preview {
+.card-preview {
 	display: inline-block;
 	margin: 15px 5px 0 0;
 	width: 210px;
 	cursor: pointer;
 }
 
-.card_preview img {
+.card-preview img {
 	height: 128px;
 	margin-right: 10px;
 }
@@ -620,7 +617,15 @@ button:hover {
 	cursor: pointer;
 }
 
-#about_popup .close-chooser, #options-chooser .close-chooser, #rules_popup .close-chooser {
+.close-chooser {
+	font-size: 30px;
+	border: 0px;
+	margin: 20px auto;
+	width: 300px;
+	display: block;
+}
+
+#about-popup .close-chooser, #options-chooser .close-chooser, #rules-popup .close-chooser {
 	width: auto;
 	margin: 20px 0 0 0;
 	font-size: 20px;
@@ -630,6 +635,7 @@ button:hover {
 	background-image: -moz-linear-gradient(#f0f0f0 50%, #bbb);
 	background-image: -ms-linear-gradient(#f0f0f0 50%, #bbb);
 	background-image: -o-linear-gradient(#f0f0f0 50%, #bbb);
+	border:0;
 }
 
 #background {
@@ -655,8 +661,13 @@ a.external {
 	margin-left: 30px;
 }
 
-#rules_popup .description blockquote, #rules_popup .description h3{
+#rules-popup .description blockquote, #rules-popup .description h3{
 	display: block;
+}
+
+#rules-popup blockquote {
+	line-height: 1.3;
+	font-size: 18px;
 }
 
 #adleft {
@@ -673,4 +684,85 @@ a.external {
 	width: 160px;
 	height: 600px;
 	z-index: 1;
+}
+
+.infogroup {
+	height: 120px;
+	border: 2px solid #000;
+	border-radius: 5px;
+	margin: 20px 0 0 20px;
+	width: 340px;
+}
+
+.infonav, .infopanel {
+	float: left;
+	line-height: 36px;
+}
+
+.infonav {
+	height: 100%;
+	background: #000;
+	text-shadow: 2px 2px 1px #333;
+}
+
+.infopanel {
+	padding: 0 0 0 10px;
+	width: 230px;
+}
+
+.navli {
+	display: block;
+	color: #fff;
+	padding: 0 5px;
+}
+
+.panelli {
+	margin: 0;
+	text-shadow: 1px 1px 1px #eee;
+}
+
+.panellabel::after {
+	content: ":";
+}
+
+.panelvalue {
+	position: absolute;
+	right: 0;
+}
+
+.stats-title {
+	background: rgba(220, 220, 220, 0.8) url(DownArrowSmall.png) no-repeat 97%;
+	padding: 5px;
+	border-radius: 5px;
+	border: 3px solid transparent;
+	z-index: 10;
+}
+
+.stats-title:hover {
+	border: 3px solid #000;
+	cursor: pointer;
+}
+
+.popup-title-content {
+	position: absolute;
+	background: white;
+	padding: 15px 0px 15px 40px;
+	margin-top: -5px;
+	box-shadow: 0 5px 5px 1px rgba(50, 50, 50, 0.5);
+	z-index: 5;
+}
+
+.stats-gameli {
+	float: left;
+	width: 180px;
+	padding-left: 10px;
+	font-size: 18px;
+	line-height: 1.3;
+	cursor: pointer;
+	text-shadow: 1px 1px 1px #f0f0f0;
+	border-radius: 5px;
+}
+
+.stats-gameli:hover {
+	background: #ddd;
 }

@@ -146,7 +146,7 @@ YUI.add("solver-freecell", function (Y) {
 			window.clearTimeout(this.timer);
 			this.timer = null;
 
-			withSelector("#solver_bar .pause", function (node) {
+			withSelector("#solver-bar .pause", function (node) {
 				node.removeClass("pause");
 				node.addClass("play");
 			});
@@ -203,7 +203,7 @@ YUI.add("solver-freecell", function (Y) {
 
 			Solitaire.Autoplay.disable();
 
-			withSelector("#solver_bar .play", function (node) {
+			withSelector("#solver-bar .play", function (node) {
 				node.removeClass("play");
 				node.addClass("pause");
 			});
@@ -248,7 +248,7 @@ YUI.add("solver-freecell", function (Y) {
 
 			if (solved) {
 				indicator.set("text", "Solution found");
-				withSelector("#solver_bar .controls", function (node) {
+				withSelector("#solver-bar .controls", function (node) {
 					node.removeClass("hidden");
 				});
 
@@ -260,9 +260,9 @@ YUI.add("solver-freecell", function (Y) {
 		},
 
 		show: function () {
-			if (Y.one("#solver_bar")) { return; }
+			if (Y.one("#solver-bar")) { return; }
 
-			var bar = Y.Node.create("<div id=solver_bar></div>"),
+			var bar = Y.Node.create("<div id=solver-bar></div>"),
 			    indicator = Y.Node.create("<span class=indicator>"),
 			    next = Y.Node.create("<div class=fastforward>"),
 			    prev = Y.Node.create("<div class=rewind>"),
@@ -402,7 +402,7 @@ YUI.add("solver-freecell", function (Y) {
 
 			this.stop();
 
-			withSelector("#solver_bar .controls", function (node) {
+			withSelector("#solver-bar .controls", function (node) {
 				node.addClass("hidden");
 			});
 

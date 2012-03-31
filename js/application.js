@@ -111,8 +111,8 @@
 	}()),
 
 	Rules = (function () {
-		var popupNode = cacheNode("#rules_popup"),
-		    copied,
+		var popupNode = cacheNode("#rules-popup"),
+		    description,
 		    rootNode,
 		    visible = false;
 
@@ -122,17 +122,17 @@
 
 		return {
 			show: function () {
-				copied = sourceNode().one(".description");
-				popupNode().one("button").insert(copied, "before");
+				description = sourceNode().one(".description");
+				popupNode().one("button").insert(description, "before");
 				popupNode().removeClass("hidden");
 				Fade.show();
 				visible = true;
 			},
 
 			hide: function () {
-				if (!(visible && copied)) { return; }
+				if (!(visible && description)) { return; }
 
-				sourceNode().appendChild(copied);
+				sourceNode().appendChild(description);
 				popupNode().addClass("hidden");
 				Fade.hide();
 				visible = false;
@@ -227,14 +227,14 @@
 
 				value = options[option].get();
 				if (typeof value === "boolean") {
-					document.getElementById(option + "_toggle").checked = value;
+					document.getElementById(option + "-toggle").checked = value;
 				}
 			}
 		},
 
 		attachEvents: function () {
 			Y.delegate("change", function (e) {
-				var name = this.get("id").replace("_toggle", ""),
+				var name = this.get("id").replace("-toggle", ""),
 				    option = Options.properties[name];
 
 				if (option) {
@@ -253,7 +253,7 @@
 				Preloader.preload(false);
 				Preloader.loaded(resize);
 				Options.save();
-			}, "#graphics-options .cards", ".card_preview");
+			}, "#graphics-options .cards", ".card-preview");
 		},
 
 		element: (function () {
@@ -297,7 +297,7 @@
 
 					createList(Themes, "#graphics-options .cards", function (collection) {
 						return Y.Node.create(Y.Lang.sub(
-							"<li class=card_preview><img src={base}/facedown.png><img src={base}/h12.png></li>", {
+							"<li class=card-preview><img src={base}/facedown.png><img src={base}/h12.png></li>", {
 								base: collection.basePath(90)
 							}));
 					});
@@ -620,14 +620,14 @@
 			img.show();
 		},
 
-		imageNode: cacheNode("#background_image"),
+		imageNode: cacheNode("#background-image"),
 		node: function () {
 			var node = Y.one("#background"),
 			    image;
 
 			if (!node) {
 				node = Y.Node.create("<div id=background>").appendTo(body());
-				image = Y.Node.create("<img id=background_image>");
+				image = Y.Node.create("<img id=background-image>");
 				image.on("load", this.resize.bind(this));
 				node.append(image);
 			}
@@ -678,17 +678,8 @@
 		GameChooser.choose();
 	}
 
-	var aboutPopup = cacheNode("#about_popup");
-
-	function showAbout() {
-		aboutPopup().removeClass("hidden");
-		Fade.show();
-	}
-
-	function hideAbout() {
-		aboutPopup().addClass("hidden");
-		Fade.hide();
-	}
+	var aboutPopup = cacheNode("#about-popup"),
+	    statsPopup = cacheNode("#stats-popup");
 
 	function showPopup(popup) {
 		Y.fire("popup", popup);
@@ -699,16 +690,19 @@
 			GameChooser.hide();
 			OptionsChooser.hide();
 			Rules.hide();
-			hideAbout();
+			statsPopup().addClass("hidden");
+			aboutPopup().addClass("hidden");
+			Fade.hide();
 		    };
 
 		Y.on("click", restart, Y.one("#restart"));
-		Y.on("click", showPopup.partial("GameChooser"), Y.one("#choose_game"));
-		Y.on("click", showPopup.partial("OptionsChooser"), Y.one("#choose_options"));
+		Y.on("click", showPopup.partial("GameChooser"), Y.one("#choose-game"));
+		Y.on("click", showPopup.partial("OptionsChooser"), Y.one("#choose-options"));
 		Y.on("click", showPopup.partial("Rules"), Y.one("#rules"));
 		Y.on("click", showPopup.partial("About"), Y.one("#about"));
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
-		Y.on("click", newGame, Y.one("#new_deal"));
+		Y.on("click", newGame, Y.one("#new-deal"));
+		Y.on("click", Y.Solitaire.Statistics.statsDisplay, Y.one("#stats"));
 
 		Y.on("click", hideChromeStoreLink, Y.one(".chromestore"));
 
@@ -737,10 +731,15 @@
 				OptionsChooser.show();
 				break;
 			case "About":
-				showAbout();
+				aboutPopup().removeClass("hidden");
+				Fade.show();
 				break;
 			case "Rules":
 				Rules.show();
+				break;
+			case "Stats":
+				statsPopup().removeClass("hidden");
+				Fade.show();
 				break;
 			}
 		});
@@ -848,7 +847,8 @@
 			windowHeight: 0,
 			resizeEvent: "resize",
 			GameChooser: GameChooser,
-			newGame: newGame
+			newGame: newGame,
+			cacheNode: cacheNode
 		};
 	}
 

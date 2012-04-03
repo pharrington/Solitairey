@@ -19,19 +19,22 @@
 
 	<ul id="menu">
 		<li class="begin">
-			<a id="new_deal">Deal New Cards</a>
+			<a id="new-deal">Deal New Cards</a>
 		</li>
 		<li>
 			<a id="restart">Restart Game</a>
 		</li>
 		<li>
-			<a id="choose_game">Choose Solitaire Game...</a>
+			<a id="choose-game">Choose Solitaire Game...</a>
 		</li>
                 <li class="divider">
 			<a id="undo">Undo</a>
 		</li>
+		<li>
+			<a id="stats">Stats</a>
+		</li>
                 <li>
-			<a id="choose_options">Options</a>
+			<a id="choose-options">Options</a>
 		</li>
 		<li>
 			<a id="rules">Rules</a>
@@ -40,10 +43,10 @@
 			<a id="about">About</a>
 		</li>
 	</ul>
-        <div id="rules_popup" class="hidden popup">
+	<div id="rules-popup" class="hidden popup"><div class="popup-content">
           <button class=close-chooser>OK</button>
-	</div>
-        <div id="about_popup" class="hidden popup">
+	</div></div>
+	<div id="about-popup" class="hidden popup"><div class="popup-content">
           <p>
           Solitairey is a collection of Solitaire games created by me, <a class="external" href=http://www.facebook.com/lordpharrington>Paul Harrington</a>.<br />
           I found the book <a class="external" href="http://www.amazon.com/gp/product/1314837672/ref=as_li_qf_sp_asin_tl?ie=UTF8&tag=solitairey-20&linkCode=as2&camp=217145&creative=399373&creativeASIN=1314837672">150 Ways to Play Solitaire</a> in an old bookstore one day and was fascinated by its huge variety of solitaires, having only known about Freecell and Klondike from playing on the computer.
@@ -73,7 +76,7 @@
           Have a great day.
           </p>
           <button class=close-chooser>OK</button>
-        </div>
+	</div></div>
 	<div id="game-chooser">
 		<div id="game-chooser-contents">
 		<ul id="descriptions">
@@ -404,7 +407,7 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
 		</div>
                 <button class=close-chooser>Return to game</button>
 	</div>
-        <div id=options-chooser class="hidden popup">
+        <div id=options-chooser class="hidden popup"><div class="popup-content">
           <div class="tabview">
             <ul>
               <li><a href="#play-options">Gameplay</a></li>
@@ -414,20 +417,20 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
             <div>
               <div id=play-options>
                 <p>
-                  <label for=animateCards_toggle>Animate Cards</label>
-                  <input id=animateCards_toggle type=checkbox />
+                  <label for=animateCards-toggle>Animate Cards</label>
+                  <input id=animateCards-toggle type=checkbox />
                 </p>
                 <p>
-                  <label for=autoplay_toggle>Autoplay Solved Games</label>
-                  <input id=autoplay_toggle type=checkbox />
+                  <label for=autoplay-toggle>Autoplay Solved Games</label>
+                  <input id=autoplay-toggle type=checkbox />
                 </p>
                 <p>
-                  <label for=autoFlip_toggle>Automatically Flip Cards</label>
-                  <input id=autoFlip_toggle type=checkbox />
+                  <label for=autoFlip-toggle>Automatically Flip Cards</label>
+                  <input id=autoFlip-toggle type=checkbox />
                 </p>
                 <p>
-                  <label for=enableSolver_toggle>Enable Solver</label>
-                  <input id=enableSolver_toggle type=checkbox />
+                  <label for=enableSolver-toggle>Enable Solver</label>
+                  <input id=enableSolver-toggle type=checkbox />
                 </p>
               </div>
               <div id=graphics-options>
@@ -443,7 +446,7 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
             </div>
           </div>
           <button class=close-chooser>OK</button>
-        </div>
+	</div></div>
 	<img src=loading.gif class="loading hidden">
 	<div class="chromestore hidden">
 	
@@ -452,6 +455,51 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
                   <img src=ChromeWebStore_Badge_v2_206x58.png>
                 </a>
 	
+	</div>
+	<div id=stats-popup class="hidden popup">
+		<div class="popup-content">
+			<div class="popup-title-group">
+				<h1 class="stats-title"><span id=stats-game></span> stats</h1>
+				<ul class="popup-title-content hidden">
+				</ul>
+			</div>
+			<div class="infogroup">
+				<div class="infopanel">
+					<p class="panelli">
+						<span class=panellabel>Games played</span><span id=stats-gamesplayed class=panelvalue></span>
+					</p>
+					<p class="panelli">
+						<span class=panellabel>Win percentage</span><span id=stats-winpercentage class=panelvalue></span>
+					</p>
+					<p class="panelli">
+						<span class=panellabel>Wins</span><span id=stats-wins class=panelvalue></span>
+					</p>
+					<p class="panelli">
+						<span class=panellabel>Loses</span><span id=stats-loses class=panelvalue></span>
+					</p>
+					<p class="panelli">
+						<span class=panellabel>Current streak</span><span id=stats-currentstreak class=panelvalue></span>
+					</p>
+					<p class="panelli">
+						<span class=panellabel>Best streak</span><span id=stats-beststreak class=panelvalue></span>
+					</p>
+				</div>
+			</div>
+			<button class=close-chooser>OK</button>
+		</div>
+	</div>
+	<div id=win-display class="hidden">
+		<p>You win! You're awesome.</p>
+		<h2><span id=win-display-game></span> stats:</h2>
+		<ul>
+			<li>Current win streak: <span id=win-display-streak class='streak'></span></li>
+			<li>Total wins: <span id=win-display-wins class='wins'></span></li>
+			<li>Total loses: <span id=win-display-loses class='loses'></span></li>
+			<div class=replay_options>
+				<button class=new_deal>New Deal</button>
+				<button class=choose_game>Choose Game</button>
+			</div>
+		</ul>
 	</div>
 
         <!--<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>-->

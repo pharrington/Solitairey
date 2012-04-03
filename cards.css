@@ -625,7 +625,7 @@ button:hover {
 	display: block;
 }
 
-#about-popup .close-chooser, #options-chooser .close-chooser, #rules-popup .close-chooser {
+#stats-popup .close-chooser, #about-popup .close-chooser, #options-chooser .close-chooser, #rules-popup .close-chooser {
 	width: auto;
 	margin: 20px 0 0 0;
 	font-size: 20px;
@@ -687,16 +687,14 @@ a.external {
 }
 
 .infogroup {
-	height: 120px;
-	border: 2px solid #000;
-	border-radius: 5px;
+	height: 150px;
 	margin: 20px 0 0 20px;
 	width: 340px;
 }
 
 .infonav, .infopanel {
 	float: left;
-	line-height: 36px;
+	line-height: 1.5;
 }
 
 .infonav {

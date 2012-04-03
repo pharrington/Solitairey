@@ -64,7 +64,10 @@ YUI.add("statistics", function (Y) {
 	    statsTitle = cacheNode(".stats-title"),
 	    statsGame = cacheNode("#stats-game"),
 	    statsGamesList = cacheNode("#stats-popup .popup-title-content"),
+	    statsWinPercentage = cacheNode("#stats-winpercentage"),
 	    statsWins = cacheNode("#stats-wins"),
+	    statsLoses = cacheNode("#stats-loses"),
+	    statsCurrentStreak = cacheNode("#stats-currentstreak"),
 	    statsBestStreak = cacheNode("#stats-beststreak"),
 	    statsGamesPlayed = cacheNode("#stats-gamesplayed"),
 
@@ -302,11 +305,16 @@ YUI.add("statistics", function (Y) {
 			var gameName = typeof name === "string" ? name : Solitaire.game.name(),
 			    stats = getRecord(localStorage[gameName + "record"]),
 			    streaks = stats.streaks(),
+			    all = stats.all(),
+			    wins = stats.wins(),
+			    winpercent = all.length ? wins.length / all.length * 100: 0,
+			    currentStreak,
 			    bestStreak;
 
 			if (!streaks.length) {
-				bestStreak = 0;
+				bestStreak = currentStreak = 0;
 			} else {
+				currentStreak = streaks.last().length;
 				bestStreak = streaks.sort(function (a, b) {
 					return a.length - b.length;
 				}).last().length;
@@ -314,10 +322,13 @@ YUI.add("statistics", function (Y) {
 
 			attachEvents();
 
+			statsGamesPlayed().setContent(all.length);
 			statsGame().setContent(nameMap[gameName]);
-			statsWins().setContent(stats.wins().length);
+			statsWinPercentage().setContent(Math.floor(winpercent) + "%");
+			statsWins().setContent(wins.length);
+			statsLoses().setContent(stats.loses().length);
+			statsCurrentStreak().setContent(currentStreak);
 			statsBestStreak().setContent(bestStreak);
-			statsGamesPlayed().setContent(stats.all().length);
 
 			populateGamesList();
 

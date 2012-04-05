@@ -1503,7 +1503,8 @@ Y.Solitaire.Animation = {
 				duration: duration,
 			}, card, function () {
 				card.positioned = true;
-				node.setStyle("zIndex", zIndex);
+				node.setStyle("zIndex", card.zIndex);
+				console.log(card.suit + card.rank + ": after move " + zIndex);
 			}));
 
 			q.run();

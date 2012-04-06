@@ -1503,7 +1503,7 @@ Y.Solitaire.Animation = {
 				duration: duration,
 			}, card, function () {
 				card.positioned = true;
-				node.setStyle("zIndex", zIndex);
+				node.setStyle("zIndex", card.zIndex);
 			}));
 
 			q.run();

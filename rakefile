@@ -30,7 +30,7 @@ end
 
 def write_directory zip, name, dest_name = name
   if File.file? name
-    zip.file.open(dest_name, "w") { |f| f.puts File.read(name) }
+    zip.file.open(dest_name, "w") { |f| f.print File.read(name) }
   elsif File.directory? name
     zip.dir.mkdir name
     Dir["#{name}/*"].each { |fn| write_directory zip, fn }

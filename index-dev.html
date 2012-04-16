@@ -17,7 +17,7 @@
 </head>
 <body>
 
-	<ul id="menu">
+	<ul id="menu" class="top-menu">
 		<li class="begin">
 			<a id="new-deal">Deal New Cards</a>
 		</li>
@@ -169,7 +169,7 @@ Calculation is a unique solitaire game. The foundations start with one Ace, two,
 					<div class="layout"></div>
 					<h3>Canfield Solitaire Rules (Demon)</h3>
 					<blockquote>
-Canfield is a solitaire game that was originally created to be nearly unwinnable, but due to people easing the rules over the years, it can now often be won with a bit of skill. At first one card is delt from the deck to the first foundation. Build the rest of the foundations up by suit according to this cards rank. Build the tableau by playing cards of descending rank and alternating color; moves of partial or full stacks are also allowed. When you created a free slot, the top card from the reserve, if available, automatically fills it. If the reserve is empty, and card or pile can be moved to a free slot. If no more moves are avaible, click the deck to deal three cards to the waste pile. The top card in the waste and the reserve are always available to play on the foundation or tableau. Once the deck is exhausted, click it to move all the cards from the waste back to the deck again. This can be done without limit. Due to the lax movement rules and the fact that relatively few cards start off unavailable, a good winning strategy for this solitaire is to card on getting all cards from the reserve in play as soon as possible. If you can manage this, then play the waste pile carefully by only moving out cards that open additional moves or let you free tableau spaces. You'll be winning Canfield solitaire in no time!
+Canfield is a solitaire game that was originally created to be nearly unwinnable, but due to people easing the rules over the years, it can now often be won with a bit of skill. At first one card is delt from the deck to the first foundation. Build the rest of the foundations up by suit according to this cards rank. Build the tableau by playing cards of descending rank and alternating color; moves of partial or full stacks are also allowed. When you created a free slot, the top card from the reserve, if available, automatically fills it. If the reserve is empty, any card or pile can be moved to a free slot. If no more moves are avaible, click the deck to deal three cards to the waste pile. The top card in the waste and the reserve are always available to play on the foundation or tableau. Once the deck is exhausted, click it to move all the cards from the waste back to the deck again. This can be done without limit. Due to the lax movement rules and the fact that relatively few cards start off unavailable, a good winning strategy for this solitaire is to card on getting all cards from the reserve in play as soon as possible. If you can manage this, then play the waste pile carefully by only moving out cards that open additional moves or let you free tableau spaces. You'll be winning Canfield solitaire in no time!
 					</blockquote>
 				</div>
 			</li>
@@ -501,6 +501,9 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
 			</div>
 		</ul>
 	</div>
+	<div id=seed-value-bar class="top-menu hidden">
+		Foundations start with <span id=seed-value></span>
+	</div>
 
         <!--<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>-->
 	<script type="text/javascript" src="js/yui-all-min.js"></script>
@@ -514,6 +517,8 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
 	<script type="text/javascript" src="js/autoplay.js"></script>
 	<script type="text/javascript" src="js/ie-opera-background-fix.js"></script>
 	<script type="text/javascript" src="js/statistics.js"></script>
+	<script type="text/javascript" src="js/display-seed-value.js"></script>
+	<script type="text/javascript" src="js/accordion.js"></script>
 	<script type="text/javascript" src="js/acesup.js"></script>
 	<script type="text/javascript" src="js/agnes.js"></script>
 	<script type="text/javascript" src="js/alternations.js"></script>

@@ -1,5 +1,5 @@
 PREFIX = "js"
-JS = %w[yui-breakout analytics ads solitaire analytics util iphone auto-stack-clear auto-turnover autoplay ie-opera-background-fix statistics solver-freecell agnes golf klondike klondike1t flowergarden fortythieves freecell grandclock montecarlo pyramid russian-solitaire scorpion spider spider1s spider2s spiderette tritowers will-o-the-wisp yukon simplesimon bakersdozen eightoff acesup alternations bakersgame baroness canfield doubleklondike thefan labellelucie calculation application]
+JS = %w[yui-breakout analytics ads solitaire analytics util iphone auto-stack-clear auto-turnover autoplay ie-opera-background-fix statistics display-rank-value solver-freecell agnes golf klondike klondike1t flowergarden fortythieves freecell grandclock montecarlo pyramid russian-solitaire scorpion spider spider1s spider2s spiderette tritowers will-o-the-wisp yukon simplesimon bakersdozen eightoff acesup alternations bakersgame baroness canfield doubleklondike thefan labellelucie calculation application]
 YUI = "#{PREFIX}/yui-all-min.js"
 ALL = "#{PREFIX}/all.js"
 MINIFIED = "#{PREFIX}/all-min.js"
@@ -30,7 +30,7 @@ end
 
 def write_directory zip, name, dest_name = name
   if File.file? name
-    zip.file.open(dest_name, "w") { |f| f.puts File.read(name) }
+    zip.file.open(dest_name, "w") { |f| f.print File.read(name) }
   elsif File.directory? name
     zip.dir.mkdir name
     Dir["#{name}/*"].each { |fn| write_directory zip, fn }

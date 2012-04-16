@@ -9,18 +9,7 @@ YUI.add("statistics", function (Y) {
 	    Solitaire = Y.Solitaire,
 	    Statistics = Y.namespace("Solitaire.Statistics"),
 	    isAttached = false,
-
-	    cacheNode = function (selector) {
-		var node;
-
-		return function () {
-			if (!node) {
-				node = Y.one(selector);
-			}
-
-			return node;
-		}
-	    },
+	    cacheNode = Solitaire.Util.cacheNode,
 
 	    populateGamesList = (function () {
 		var isPopulated = false;
@@ -344,4 +333,4 @@ YUI.add("statistics", function (Y) {
 		}
 	});
 
-}, "0.0.1", {requires: ["solitaire", "array-extras", "breakout"]});
+}, "0.0.1", {requires: ["solitaire", "util", "array-extras", "breakout"]});

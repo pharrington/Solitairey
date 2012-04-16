@@ -69,14 +69,7 @@ a {
 	transition: box-shadow 0s;
 }
 
-#menu {
-	display: table;
-	list-style: none;
-	color: #000;
-	font-weight: bold;
-	font-size: 16px;
-	margin: 0 auto;
-	border-radius: 0 0 15px 15px;
+.top-menu {
 	border-style: solid;
 	background: #eee;
 	background: -webkit-linear-gradient(#fff, #ddd);
@@ -84,7 +77,17 @@ a {
 	background: -o-linear-gradient(#fff, #ddd);
 	background: -ms-linear-gradient(#fff, #ddd);
 	box-shadow: 0 1px 12px 0.5px #000;
+}
+
+#menu {
+	display: table;
 	height: 35px;
+	margin: 0 auto;
+	border-radius: 0 0 15px 15px;
+	color: #000;
+	font-weight: bold;
+	font-size: 16px;
+	list-style: none;
 }
 
 #menu li {
@@ -763,4 +766,17 @@ a.external {
 
 .stats-gameli:hover {
 	background: #ddd;
+}
+
+#seed-value-bar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 15px;
+	padding: 6px 10px 14px 10px;
+	border-radius: 0 0 0 15px;
+}
+
+#seed-value {
+	font-weight: bold;
 }

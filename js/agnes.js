@@ -3,12 +3,9 @@ YUI.add("agnes", function (Y) {
 		return (first + 1) % 13 === second % 13;
 	}
 
-	function seedRank() {
-		return Game.foundation.stacks[0].first().rank;
-	};
-
 	var Solitaire = Y.Solitaire,
 	    Klondike = Solitaire.Klondike,
+	    seedRank = Solitaire.Util.seedRank,
 	    Agnes = Solitaire.Agnes = instance(Klondike, {
 		fields: ["Foundation", "Deck", "Waste", "Tableau", "Reserve"],
 
@@ -156,4 +153,4 @@ YUI.add("agnes", function (Y) {
 			}
 		})
 	    });
-}, "0.0.1", {requires: ["klondike"]});
+}, "0.0.1", {requires: ["klondike", "util"]});

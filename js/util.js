@@ -67,6 +67,13 @@ Y.mix(Util, {
 
 			return node;
 		}
+	},
+
+	mapRank: function (rank) {
+		var map = {1: "Ace", 11: "Jack", 12: "Queen", 13: "King"},
+		    mappedRank = map[rank];
+
+		return mappedRank ? mappedRank : rank;
 	}
 });
 }, "0.0.1", {requires: ["solitaire", "array-extras"]});

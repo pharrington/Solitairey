@@ -641,6 +641,10 @@ button:hover {
 	border:0;
 }
 
+#options-chooser {
+	width: 730px;
+}
+
 #background {
 	position: fixed;
 	left: 0;

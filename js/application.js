@@ -681,7 +681,8 @@
 	}
 
 	var aboutPopup = cacheNode("#about-popup"),
-	    statsPopup = cacheNode("#stats-popup");
+	    statsPopup = cacheNode("#stats-popup"),
+	    winPopup = cacheNode("#win-display");
 
 	function showPopup(popup) {
 		Y.fire("popup", popup);
@@ -725,6 +726,8 @@
 		});
 
 		Y.on("Application|popup", function (popup) {
+			winPopup().addClass("hidden");
+
 			switch (popup) {
 			case "GameChooser":
 				GameChooser.show(false);

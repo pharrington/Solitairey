@@ -49,6 +49,18 @@ Y.mix(Util, {
 		return Y.Array.filter(Solitaire.game.tableau.stacks, function (stack) {
 			return !stack.cards.length;
 		});
+	},
+
+	cacheNode: function (selector) {
+		var node;
+
+		return function () {
+			if (!node) {
+				node = Y.one(selector);
+			}
+
+			return node;
+		}
 	}
 });
 }, "0.0.1", {requires: ["solitaire", "array-extras"]});

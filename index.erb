@@ -43,7 +43,7 @@
 	<iframe id="fb" src="http://www.facebook.com/plugins/like.php?href=www.solitairey.com&amp;layout=button_count&amp;show_faces=false&amp;width=50&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
 </div>
 <% end %>
-	<ul id="menu">
+	<ul id="menu" class="top-menu">
 		<li class="begin">
 			<a id="new-deal">Deal New Cards</a>
 		</li>
@@ -526,6 +526,9 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
 				<button class=choose_game>Choose Game</button>
 			</div>
 		</ul>
+	</div>
+	<div id=seed-value-bar class="top-menu hidden">
+		Foundations start with <span id=seed-value></span>
 	</div>
 <% if development %>
         <!--<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>-->

@@ -51,6 +51,12 @@ Y.mix(Util, {
 		});
 	},
 
+	seedRank: function () {
+		var seed = Game.foundation.stacks[0].first();
+
+		return seed ? seed.rank : 0;
+	},
+
 	cacheNode: function (selector) {
 		var node;
 

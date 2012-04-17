@@ -18,4 +18,13 @@ YUI.add("display-seed-value", function (Y) {
 			rankContainer().addClass("hidden");
 		}
 	});
+
+	Y.on("fieldResize", function (scale, width, height) {
+		if (width <= 1185) {
+			rankContainer().addClass("bottom");
+		} else {
+			rankContainer().removeClass("bottom");
+		}
+	});
+
 }, "0.0.1", {requires: ["solitaire", "util"]});

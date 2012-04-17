@@ -81,7 +81,13 @@ function loadLeft() {
 	document.write = document.writeln = writer(left);
 };
 
-Y.on("newGame", loadLeft);
-Y.on("loadGame", loadLeft);
+function loadLigit() {
+	var url = "ligi.html";
+
+	document.getElementById("adleftbody").src = url;
+}
+
+Y.on("newGame", loadLigit);
+Y.on("loadGame", loadLigit);
 
 }, "1.0.0", {requires: ["solitaire"]});

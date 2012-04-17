@@ -82,7 +82,7 @@ function loadLeft() {
 };
 
 function loadLigit() {
-	var url = "ligi.html";
+	var url = "liji.html";
 
 	document.getElementById("adleftbody").src = url;
 }

@@ -1,4 +1,5 @@
 YUI.add("solitaire-ios", function (Y) {
+	return; // mobile code needs to be reworked
 	if (!Y.UA.ios) { return; }
 
 	var Solitaire = Y.Solitaire,

@@ -439,9 +439,7 @@ Y.mix(Solitaire, {
 		});
 	},
 
-	resize: function (scale) {
-		Y.fire("beforeResize");
-
+	resize: function (scale, width, height) {
 		this.scale(scale);
 
 		this.unanimated(function () {
@@ -472,8 +470,6 @@ Y.mix(Solitaire, {
 				stack.update();
 			});
 		});
-
-		Y.fire("afterResize");
 	},
 
 	scale: function (scale) {

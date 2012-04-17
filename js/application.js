@@ -749,6 +749,10 @@
 			}
 		});
 
+		Y.on("fieldResize", function (ratio, w, h) {
+			active.game.resize(ratio);
+		});
+
 		attachResize();
 	}
 
@@ -781,7 +785,7 @@
 		Y.Solitaire.Application.windowHeight = height;
 		ratio = Math.min((width - normalize(offset.left)) / game.width(), (height - normalize(offset.top)) / game.height());
 
-		active.game.resize(ratio);
+		Y.fire("fieldResize", ratio, width, height);
 		GameChooser.refit();
 		Fade.resize();
 		Backgrounds.resize();

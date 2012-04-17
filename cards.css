@@ -773,12 +773,18 @@ a.external {
 }
 
 #seed-value-bar {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	right: 0;
 	height: 15px;
 	padding: 6px 10px 14px 10px;
 	border-radius: 0 0 0 15px;
+}
+
+#seed-value-bar.bottom {
+	top: auto;
+	bottom: 0;
+	border-radius: 15px 0 0 0 ;
 }
 
 #seed-value {

@@ -945,6 +945,5 @@
 		}
 	};
 
-        document.write = function () {};
 	yui.use.apply(yui, modules().concat(main));
 }());

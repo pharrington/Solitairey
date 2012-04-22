@@ -931,6 +931,7 @@
 			}, this);
 
 			this.load(Y.Solitaire.Card.base.theme + "/facedown.png");
+			this.load(Y.Solitaire.Card.base.theme + "/freeslot.png");
 
 			Y.Array.each(icons, function (image) {
 				this.load("layouts/mini/" + image + ".png");

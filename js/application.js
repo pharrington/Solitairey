@@ -898,6 +898,12 @@
 			image.onload = function () {
 				--this.loadingCount;
 			}.bind(this);
+
+			// don't freeze the page if there's an error preloading an image
+			image.onerror = function () {
+				--this.loadingCount;
+			}.bind(this);
+
 			image.src = path;
 
 			this.loadingCount++;

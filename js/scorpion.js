@@ -42,6 +42,13 @@ var Solitaire = Y.Solitaire,
 				card.moveTo(stacks[i]);
 			}
 		});
+
+		setTimeout(function () {
+			Game.eachStack(function (stack) {
+				Y.fire("tableau:afterPush", stack);
+				Game.endTurn();
+			}, "tableau");
+		}, 0);
 	},
 
 	height: function () { return this.Card.base.height * 5.6; },

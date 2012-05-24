@@ -239,7 +239,7 @@ var Solitaire = Y.Solitaire,
 		 */
 
 		validTarget: function (card) {
-			if (!(this.rank === card.rank && card.isFree())) { return false; }
+			if (this === card || !(this.rank === card.rank && card.isFree())) { return false; }
 
 			return Math.abs(card.row() - this.row()) <= 1 &&
 				Math.abs(card.column() - this.column()) <= 1;

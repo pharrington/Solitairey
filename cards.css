@@ -790,3 +790,18 @@ a.external {
 #seed-value {
 	font-weight: bold;
 }
+
+.hint {
+	-webkit-transition: box-shadow 0.2s linear;
+	-moz-transition: box-shadow 0.2s linear;
+	-ms-transition: box-shadow 0.2s linear;
+	transition: box-shadow 0.2s linear;
+}
+
+.hint-from {
+	box-shadow: 0 0 6px 4px rgba(255, 252, 143, 0.9);
+}
+
+.hint-to {
+	box-shadow: 0 0 6px 4px rgba(143, 252, 143, 0.9);
+}

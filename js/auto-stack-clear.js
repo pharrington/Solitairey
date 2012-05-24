@@ -40,6 +40,7 @@ YUI.add("auto-stack-clear", function (Y) {
 		    cards = stack.cards,
 		    count = cards.length - startIndex;
 
+		Solitaire.pushUndoStack();
 		// find the first empty foundation
 		foundation = Y.Array.find(Solitaire.game.foundation.stacks, function (stack) {
 			return !stack.cards.length;

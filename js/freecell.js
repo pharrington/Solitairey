@@ -108,8 +108,16 @@ var Solitaire = Y.Solitaire,
 			return card.color !== this.color && card.rank === this.rank + 1;
 		},
 
-		validTarget: function (stack) {
-			var target = stack.last();
+		validTarget: function (cardOrStack) {
+			var stack, target;
+
+			if (cardOrStack.field) {
+				stack = cardOrStack;
+				target = stack.last();
+			} else {
+				target = cardOrStack;
+				stack = target.stack;
+			}
 
 			switch (stack.field) {
 			case "tableau":

@@ -35,7 +35,6 @@ var Solitaire = Y.Solitaire,
 		var deck = this.deck.stacks[0],
 		    waste = this.waste.stacks[0],
 		    updatePosition = Klondike.Card.updatePosition,
-		    last,
 		    Card = Solitaire.game.Card,
 		    card,
 		    moved = [],
@@ -143,8 +142,16 @@ var Solitaire = Y.Solitaire,
 			}
 		},
 
-		validTarget: function (stack) {
-			var target = stack.last();
+		validTarget: function (cardOrStack) {
+			var target, stack;
+
+			if (cardOrStack.field) {
+				target = cardOrStack.last();
+				stack = cardOrStack;
+			} else {
+				target = cardOrStack;
+				stack = cardOrStack.stack;
+			}
 
 			switch (stack.field) {
 			case "tableau":

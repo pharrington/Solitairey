@@ -61,6 +61,13 @@ var availableMoves = 0,
 				}
 			}, "tableau");
 		});
+
+		setTimeout(function () {
+			Game.eachStack(function (stack) {
+				Y.fire("tableau:afterPush", stack);
+				Game.endTurn();
+			}, "tableau");
+		}, 0);
 	},
 
 	Stack: instance(Solitaire.Stack),

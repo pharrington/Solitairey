@@ -187,6 +187,11 @@ Y.mix(Solitaire, {
 		Y.fire("undo");
 	},
 
+	pushUndoStack: function () {
+		Solitaire.moves.length && Undo.push(Solitaire.moves);
+		Solitaire.moves = [];
+	},
+
 	pushMove: function (move) {
 		var moves = Solitaire.moves;
 		moves && moves.push(move);
@@ -668,10 +673,7 @@ Y.Solitaire.Events = {
 		drop: function (e) {
 			if (!Solitaire.activeCard) { return; }
 
-			var card = Solitaire.activeCard,
-
-			    stack = card.proxyStack,
-			    origin = card.stack,
+			var stack = Solitaire.activeCard.proxyStack,
 			    target,
 			    first;
 		       
@@ -693,8 +695,7 @@ Y.Solitaire.Events = {
 		},
 
 		endTurn: function () {
-			Solitaire.moves.length && Undo.push(Solitaire.moves);
-			Solitaire.moves = [];
+			Solitaire.pushUndoStack();
 			Solitaire.activeCard = null;
 			Game.eachStack(function (s) {
 				s.updateCardsStyle();

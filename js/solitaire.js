@@ -497,7 +497,6 @@ Y.mix(Solitaire, {
 		    fields;
 
 		Y.on("selectstart", cancel, document);
-		Y.on("mousedown", cancel, document.body);
 		Y.on("contextmenu", function (e) {
 			var target = e.target;
 
@@ -1392,6 +1391,7 @@ Y.Solitaire.Stack = {
 			var node = this.node;
 
 			node = this.node = Y.Node.create("<img class='stack'>")
+				.set("draggable", false)
 				.setData("target", this)
 				.plug(Y.Plugin.Drop, {
 					useShim: true

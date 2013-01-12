@@ -631,6 +631,7 @@
 			if (!node) {
 				node = Y.Node.create("<div id=background>").appendTo(body());
 				image = Y.Node.create("<img id=background-image>");
+				image.set("draggable", false);
 				image.on("load", this.resize.bind(this));
 				node.append(image);
 			}

@@ -15,7 +15,7 @@ var Solitaire = Y.Solitaire,
 			card.faceUp();
 			card.flipPostMove(delay);
 			stack++;
-			if (stack === 8) { stack = 0; }
+			if (stack === stacks.length) { stack = 0; }
 		}
 	},
 
@@ -27,12 +27,12 @@ var Solitaire = Y.Solitaire,
 		    rStacks = this.reserve.stacks,
 		    tStacks = this.tableau.stacks;
 
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < rStacks.length; i++) {
 			stack = rStacks[i];
 			!stack.last() && total++;
 		}
 
-		for (i = 0; i < 8; i++) {
+		for (i = 0; i < tStacks.length; i++) {
 			stack = tStacks[i];
 			exclude !== stack && !tStacks[i].last() && freeTableaus++;
 		}

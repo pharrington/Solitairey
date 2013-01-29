@@ -64,8 +64,7 @@
 	        "solitaire-ios",
 		"display-seed-value",
 		"hint",
-		"analytics",
-		"ads"],
+		"analytics"],
 
 	Fade = (function() {
 		var el = null,

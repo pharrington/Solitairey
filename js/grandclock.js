@@ -78,7 +78,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				hspacing: 1.25,
 				top: function () { return Solitaire.Card.height * 3; },
-				left: function () { return 175 + Solitaire.Card.width * 3.25; }
+				left: function () { return Solitaire.Card.width * 3.25; }
 			}
 		},
 		field: "foundation",

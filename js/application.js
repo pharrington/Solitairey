@@ -63,7 +63,6 @@
 		"solitaire-autoplay",
 	        "solitaire-ios",
 		"display-seed-value",
-		"hint",
 		"analytics"],
 
 	Fade = (function() {

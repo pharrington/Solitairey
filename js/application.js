@@ -801,8 +801,14 @@
 		newGame();
 	}
 
+	function getSavedGame(name) {
+		name = name || "saved-game";
+
+		return localStorage[name] || Y.Cookie.get(name);
+	}
+
 	function load() {
-		var save = Y.Cookie.get("saved-game");
+		var save = getSavedGame();
 
 		attachEvents();
 		Options.load();
@@ -832,7 +838,7 @@
 	}
 
 	function restart() {
-		var init = Y.Cookie.get("initial-game"),
+		var init = getSavedGame("initial-game"),
 		    game = active.game;
 
 		if (init) {

@@ -283,11 +283,9 @@ Y.mix(Solitaire, {
 	},
 
 	save: function (name) {
-		var data = this.serialize(),
-		    name = name || "saved-game",
-		    twoWeeks = 1206900000;
+		name = name || "saved-game";
 
-		Y.Cookie.set(name, data, {expires: new Date(new Date().getTime() + twoWeeks)});
+		localStorage[name] = this.serialize();
 	},
 
 	loadGame: function (data) {
@@ -301,7 +299,7 @@ Y.mix(Solitaire, {
 	},
 
 	newGame: function () {
-		Y.Cookie.remove("saved-game");
+		localStorage.removeItem("saved-game");
 
 		this.withoutFlip(function () {
 			this.setup(this.deal);
@@ -561,7 +559,7 @@ Y.mix(Solitaire, {
 
 	win: function () {
 		Y.fire("win");
-		Y.Cookie.remove("saved-game");
+		localStorage.removeItem("saved-game");
 	},
 
 	endTurn: function () {

@@ -212,11 +212,11 @@ YUI.add("statistics", function (Y) {
 	}
 
 	function getCurrentGameRecord() {
-		return getRecord(getRecordName(Solitaire.game.name()));
+		return getRecord(Solitaire.game.name());
 	}
 
-	function getRecord(name) {
-		var raw = localStorage[name];
+	function getRecord(game) {
+		var raw = localStorage[getRecordName(game)];
 
 		function parse() {
 			if (!raw || raw === "") {
@@ -288,7 +288,7 @@ YUI.add("statistics", function (Y) {
 
 		statsDisplay: function (name) {
 			var gameName = typeof name === "string" ? name : Solitaire.game.name(),
-			    stats = getCurrentGameRecord(),
+			    stats = getRecord(gameName),
 			    streaks = stats.streaks(),
 			    all = stats.all(),
 			    wins = stats.wins(),

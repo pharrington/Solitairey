@@ -106,14 +106,12 @@ YUI.add("statistics", function (Y) {
 
 	Y.on("loadGame", function () {
 		loaded = Solitaire.game.name();
-		saveProgress();
 		won = false;
 	});
 
 	Y.on("endTurn", function () {
 		if (!loaded) {
 			loaded = Solitaire.game.name();
-			saveProgress();
 		}
 	});
 
@@ -193,7 +191,7 @@ YUI.add("statistics", function (Y) {
 	}
 
 	function record(value) {
-		var key = localStorage["currentGame"] + "record",
+		var key = getRecordName(Solitaire.game.name()),
 		    record = localStorage[key] || "";
 
 		record += new Date().getTime() + "_" + value + "|";
@@ -203,25 +201,27 @@ YUI.add("statistics", function (Y) {
 
 	function recordLose() {
 		record(0);
-
-		clearProgress();
 	}
 
 	function recordWin() {
 		record(1);
-
-		clearProgress();
 	}
 
-	function clearProgress() {
-		localStorage.removeItem("currentGame");
+	function resetRecord(game) {
+		localStorage.removeItem(recordName(game));
 	}
 
-	function saveProgress() {
-		localStorage["currentGame"] = Solitaire.game.name();
+	function getRecordName(game) {
+		return game + "record";
 	}
 
-	function getRecord(raw) {
+	function getCurrentGameRecord() {
+		return getRecord(getRecordName(Solitaire.game.name()));
+	}
+
+	function getRecord(name) {
+		var raw = localStorage[name];
+
 		function parse() {
 			if (!raw || raw === "") {
 				return [];
@@ -279,7 +279,7 @@ YUI.add("statistics", function (Y) {
 	Y.mix(Statistics, {
 		winDisplay: function () {
 			var gameName = Solitaire.game.name(),
-			    stats = getRecord(localStorage[gameName + "record"]);
+			    stats = getCurrentGameRecord();
 
 			attachEvents();
 
@@ -292,7 +292,7 @@ YUI.add("statistics", function (Y) {
 
 		statsDisplay: function (name) {
 			var gameName = typeof name === "string" ? name : Solitaire.game.name(),
-			    stats = getRecord(localStorage[gameName + "record"]),
+			    stats = getCurrentGameRecord(),
 			    streaks = stats.streaks(),
 			    all = stats.all(),
 			    wins = stats.wins(),

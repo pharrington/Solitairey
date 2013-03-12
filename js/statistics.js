@@ -207,10 +207,6 @@ YUI.add("statistics", function (Y) {
 		record(1);
 	}
 
-	function resetRecord(game) {
-		localStorage.removeItem(recordName(game));
-	}
-
 	function getRecordName(game) {
 		return game + "record";
 	}

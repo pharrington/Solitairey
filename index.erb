@@ -547,53 +547,9 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
 <% if development %>
 	<!--<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>-->
 	<script type="text/javascript" src="js/yui-all-min.js"></script>
-	<script type="text/javascript" src="js/yui-breakout.js"></script>
-	<script type="text/javascript" src="js/solitaire.js"></script>
-	<script type="text/javascript" src="js/analytics.js"></script>
-	<script type="text/javascript" src="js/iphone.js"></script>
-	<script type="text/javascript" src="js/util.js"></script>
-	<script type="text/javascript" src="js/auto-stack-clear.js"></script>
-	<script type="text/javascript" src="js/auto-turnover.js"></script>
-	<script type="text/javascript" src="js/autoplay.js"></script>
-	<script type="text/javascript" src="js/ie-opera-background-fix.js"></script>
-	<script type="text/javascript" src="js/statistics.js"></script>
-	<script type="text/javascript" src="js/display-seed-value.js"></script>
-	<script type="text/javascript" src="js/hint.js"></script>
-	<script type="text/javascript" src="js/accordion.js"></script>
-	<script type="text/javascript" src="js/acesup.js"></script>
-	<script type="text/javascript" src="js/agnes.js"></script>
-	<script type="text/javascript" src="js/alternations.js"></script>
-	<script type="text/javascript" src="js/baroness.js"></script>
-	<script type="text/javascript" src="js/bakersdozen.js"></script>
-	<script type="text/javascript" src="js/bakersgame.js"></script>
-	<script type="text/javascript" src="js/canfield.js"></script>
-	<script type="text/javascript" src="js/doubleklondike.js"></script>
-	<script type="text/javascript" src="js/eightoff.js"></script>
-	<script type="text/javascript" src="js/thefan.js"></script>
-	<script type="text/javascript" src="js/golf.js"></script>
-	<script type="text/javascript" src="js/klondike.js"></script>
-	<script type="text/javascript" src="js/klondike1t.js"></script>
-	<script type="text/javascript" src="js/labellelucie.js"></script>
-	<script type="text/javascript" src="js/flowergarden.js"></script>
-	<script type="text/javascript" src="js/fortythieves.js"></script>
-	<script type="text/javascript" src="js/freecell.js"></script>
-	<script type="text/javascript" src="js/grandclock.js"></script>
-	<script type="text/javascript" src="js/montecarlo.js"></script>
-	<script type="text/javascript" src="js/pyramid.js"></script>
-	<script type="text/javascript" src="js/russian-solitaire.js"></script>
-	<script type="text/javascript" src="js/scorpion.js"></script>
-	<script type="text/javascript" src="js/simplesimon.js"></script>
-	<script type="text/javascript" src="js/spider.js"></script>
-	<script type="text/javascript" src="js/spider1s.js"></script>
-	<script type="text/javascript" src="js/spider2s.js"></script>
-	<script type="text/javascript" src="js/spiderette.js"></script>
-	<script type="text/javascript" src="js/tritowers.js"></script>
-	<script type="text/javascript" src="js/will-o-the-wisp.js"></script>
-	<script type="text/javascript" src="js/yukon.js"></script>
-	<script type="text/javascript" src="js/calculation.js"></script>
-	<script type="text/javascript" src="js/accordion.js"></script>
-	<script type="text/javascript" src="js/solver-freecell.js"></script>
-	<script type="text/javascript" src="js/application.js"></script>
+	<% JS.each do |js| %>
+		<script src="js/<%= js %>.js"></script>
+	<% end %>
 <% else %>
 	<script type="text/javascript" src="js/combined-min.js"></script>
 <% end %>

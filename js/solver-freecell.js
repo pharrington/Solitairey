@@ -186,6 +186,8 @@ YUI.add("solver-freecell", function (Y) {
 			    next = this.remainingMoves.next;
 
 			Solitaire.Statistics.disable();
+			Solitaire.WinDisplay.disable();
+
 			this.playCurrent(game);
 
 			if (next) {
@@ -429,4 +431,4 @@ YUI.add("solver-freecell", function (Y) {
 	Y.on("beforeSetup", function () {
 		FreecellSolver.resume(true);
 	});
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire", "statistics", "win-display"]});

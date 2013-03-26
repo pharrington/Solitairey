@@ -10,6 +10,7 @@ YUI.add("statistics", function (Y) {
 	    Statistics = Y.namespace("Solitaire.Statistics"),
 	    isAttached = false,
 	    cacheNode = Solitaire.Util.cacheNode,
+	    selectedGame,
 
 	    populateGamesList = (function () {
 		var isPopulated = false;
@@ -21,8 +22,9 @@ YUI.add("statistics", function (Y) {
 			}
 
 			var namesArray = [],
-			    listNode = new Y.Node(document.createDocumentFragment()),
-			    p, v;
+				nameMap = Solitaire.Application.nameMap,
+				listNode = new Y.Node(document.createDocumentFragment()),
+				p, v;
 
 			for (p in nameMap) {
 				if (!nameMap.hasOwnProperty(p)) { continue; }
@@ -43,12 +45,6 @@ YUI.add("statistics", function (Y) {
 		}
 	    })(),
 
-	    winDisplayNode = cacheNode("#win-display"),
-	    winDisplayGame = cacheNode("#win-display-game"),
-	    winDisplayStreak = cacheNode("#win-display-streak"),
-	    winDisplayWins = cacheNode("#win-display-wins"),
-	    winDisplayLoses = cacheNode("#win-display-loses"),
-
 	    statsNode = cacheNode("#stats-popup"),
 	    statsTitle = cacheNode(".stats-title"),
 	    statsGame = cacheNode("#stats-game"),
@@ -58,42 +54,7 @@ YUI.add("statistics", function (Y) {
 	    statsLoses = cacheNode("#stats-loses"),
 	    statsCurrentStreak = cacheNode("#stats-currentstreak"),
 	    statsBestStreak = cacheNode("#stats-beststreak"),
-	    statsGamesPlayed = cacheNode("#stats-gamesplayed"),
-
-	    nameMap = {
-			Accordion: "Accordion",
-			AcesUp: "Aces Up",
-			Agnes: "Agnes",
-			Alternations: "Alternations",
-			BakersDozen: "Baker's Dozen",
-			BakersGame: "Baker's Game",
-			Baroness: "Baroness",
-			Calculation: "Calculation",
-			Canfield: "Canfield",
-			DoubleKlondike: "Double Klondike",
-			Eightoff: "Eight Off",
-			Klondike: "Klondike",
-			Klondike1T: "Klondike (Vegas style)",
-			TheFan: "The Fan",
-			FlowerGarden: "Flower Garden",
-			FortyThieves: "Forty Thieves",
-			Freecell: "Freecell",
-                        Golf: "Golf",
-			GClock: "Grandfather's Clock",
-			LaBelleLucie: "La Belle Lucie",
-			MonteCarlo: "Monte Carlo",
-			Pyramid: "Pyramid",
-			RussianSolitaire: "Russian Solitaire",
-			Scorpion: "Scorpion",
-			SimpleSimon: "Simple Simon",
-			Spider: "Spider",
-			Spider1S: "Spider (1 Suit)",
-			Spider2S: "Spider (2 Suit)",
-                        Spiderette: "Spiderette",
-                        WillOTheWisp: "Will O' The Wisp",
-			TriTowers: "Tri Towers",
-			Yukon: "Yukon"
-	    };
+	    statsGamesPlayed = cacheNode("#stats-gamesplayed");
 
 	if (!localStorage) { return; }
 
@@ -118,85 +79,38 @@ YUI.add("statistics", function (Y) {
 	Y.on("win", function () {
 		if (won || !enabled) { return; }
 
-		var winDisplayDelay = 1000;
 		loaded = null;
 		won = true;
 
 		recordWin();
-
-		explodeFoundations();
-	});
-
-	Y.on("beforeSetup", function () {
-		winDisplayNode().addClass("hidden");
-		Statistics.enable();
 	});
 
 	function attachEvents() {
 		if (isAttached) { return; }
 
-		var Application = Solitaire.Application,
-		    activeGame = Solitaire.game.name();
-
-		Y.on("click", function () {
-			Application.newGame();
-		}, Y.one("#win-display .new_deal"));
-
-		Y.on("click", function () {
-			Application.GameChooser.show(true);
-		}, Y.one("#win-display .choose_game"));
+		var Application = Solitaire.Application;
 
 		Y.on("click", function () {
 			statsGamesList().toggleClass("hidden");
 		}, statsTitle());
 
 		Y.on("click", function () {
-			Application.Confirmation.show("Are you sure you want to reset all " + nameMap[activeGame] + " stats?", function () {
-				resetRecord(activeGame);
-				Statistics.statsDisplay(activeGame);
+			if (!selectedGame) {
+				selectedGame = Solitaire.game.name();
+			}
+
+			Application.Confirmation.show("Are you sure you want to reset all " + Solitaire.Application.nameMap[selectedGame] + " stats?", function () {
+				resetRecord(selectedGame);
+				Statistics.statsDisplay(selectedGame);
 			});
 		}, Y.one("#stats-reset"));
 
 		Y.delegate("click", function (e) {
-			activeGame = e.target.getData("game");
-			Statistics.statsDisplay(activeGame);
+			selectedGame = e.target.getData("game");
+			Statistics.statsDisplay(selectedGame);
 		}, statsGamesList(), ".stats-gameli");
 
 		isAttached = true;
-	}
-
-	function explodeFoundations() {
-		var delay = 500,
-		    duration = 900,
-		    interval = 900;
-
-		Game.eachStack(function (stack) {
-			stack.eachCard(function (card) {
-				if (!card) { return; }
-
-				var node = card.node;
-				if (card !== stack.last()) {
-					setTimeout(function (node) {
-						node.addClass("hidden");
-					}.partial(node), delay);
-
-					return;
-				}
-
-				node.plug(Y.Breakout, {columns: 5});
-				(function (node) {
-					setTimeout(function () {
-						node.breakout.explode({random: 0.65, duration: duration});
-					}, delay);
-				})(node);
-
-				delay += interval;
-			});
-		}, "foundation");
-
-		setTimeout(function () {
-			Statistics.winDisplay();
-		}, delay + 200);
 	}
 
 	function record(value) {
@@ -222,10 +136,6 @@ YUI.add("statistics", function (Y) {
 
 	function getRecordName(game) {
 		return game + "record";
-	}
-
-	function getCurrentGameRecord() {
-		return getRecord(Solitaire.game.name());
 	}
 
 	function getRecord(game) {
@@ -286,19 +196,6 @@ YUI.add("statistics", function (Y) {
 	}
 
 	Y.mix(Statistics, {
-		winDisplay: function () {
-			var gameName = Solitaire.game.name(),
-			    stats = getCurrentGameRecord();
-
-			attachEvents();
-
-			winDisplayGame().setContent(nameMap[gameName]);
-			winDisplayStreak().setContent(stats.streaks().last().length);
-			winDisplayWins().setContent(stats.wins().length);
-			winDisplayLoses().setContent(stats.loses().length);
-			winDisplayNode().removeClass("hidden");
-		},
-
 		statsDisplay: function (name) {
 			var gameName = typeof name === "string" ? name : Solitaire.game.name(),
 			    stats = getRecord(gameName),
@@ -320,17 +217,21 @@ YUI.add("statistics", function (Y) {
 
 			attachEvents();
 
-			statsGamesPlayed().setContent(all.length);
-			statsGame().setContent(nameMap[gameName]);
-			statsWinPercentage().setContent(Math.floor(winpercent) + "%");
-			statsWins().setContent(wins.length);
-			statsLoses().setContent(stats.loses().length);
-			statsCurrentStreak().setContent(currentStreak);
-			statsBestStreak().setContent(bestStreak);
+			statsGamesPlayed().set("text", all.length);
+			statsGame().set("text", Solitaire.Application.nameMap[gameName]);
+			statsWinPercentage().set("text", Math.floor(winpercent) + "%");
+			statsWins().set("text", wins.length);
+			statsLoses().set("text", stats.loses().length);
+			statsCurrentStreak().set("text", currentStreak);
+			statsBestStreak().set("text", bestStreak);
 
 			populateGamesList();
 
 			Y.fire("popup", "Stats");
+		},
+
+		getRecord: function (name) {
+			return getRecord(name);
 		},
 
 		enable: function () {

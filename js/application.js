@@ -59,11 +59,47 @@
 		"util",
 		"auto-turnover",
 	        "statistics",
+		"win-display",
 		"solver-freecell",
 		"solitaire-autoplay",
 	        "solitaire-ios",
 		"display-seed-value",
 		"analytics"],
+
+	nameMap = {
+			Accordion: "Accordion",
+			AcesUp: "Aces Up",
+			Agnes: "Agnes",
+			Alternations: "Alternations",
+			BakersDozen: "Baker's Dozen",
+			BakersGame: "Baker's Game",
+			Baroness: "Baroness",
+			Calculation: "Calculation",
+			Canfield: "Canfield",
+			DoubleKlondike: "Double Klondike",
+			Eightoff: "Eight Off",
+			Klondike: "Klondike",
+			Klondike1T: "Klondike (Vegas style)",
+			TheFan: "The Fan",
+			FlowerGarden: "Flower Garden",
+			FortyThieves: "Forty Thieves",
+			Freecell: "Freecell",
+                        Golf: "Golf",
+			GClock: "Grandfather's Clock",
+			LaBelleLucie: "La Belle Lucie",
+			MonteCarlo: "Monte Carlo",
+			Pyramid: "Pyramid",
+			RussianSolitaire: "Russian Solitaire",
+			Scorpion: "Scorpion",
+			SimpleSimon: "Simple Simon",
+			Spider: "Spider",
+			Spider1S: "Spider (1 Suit)",
+			Spider2S: "Spider (2 Suit)",
+                        Spiderette: "Spiderette",
+                        WillOTheWisp: "Will O' The Wisp",
+			TriTowers: "Tri Towers",
+			Yukon: "Yukon"
+	},
 
 	Fade = (function() {
 		var el = null,
@@ -906,7 +942,7 @@
 			GameChooser: GameChooser,
 			Confirmation: Confirmation,
 			newGame: newGame,
-			cacheNode: cacheNode
+			nameMap: nameMap
 		};
 	}
 

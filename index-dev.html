@@ -44,7 +44,7 @@
 		</li>
 	</ul>
 	<div id="rules-popup" class="hidden popup"><div class="popup-content">
-          <button class=close-chooser>OK</button>
+          <button class="popup-button close-chooser">OK</button>
 	</div></div>
 	<div id="about-popup" class="hidden popup"><div class="popup-content">
           <p>
@@ -75,7 +75,7 @@
           Tell me any games or features you want added, report any bugs you find, or just let me know I'm doing a wonderful job :)
           Have a great day.
           </p>
-          <button class=close-chooser>OK</button>
+          <button class="popup-button close-chooser">OK</button>
 	</div></div>
 	<div id="game-chooser">
 		<div id="game-chooser-contents">
@@ -445,7 +445,7 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
               </div>
             </div>
           </div>
-          <button class=close-chooser>OK</button>
+          <button class="popup-button close-chooser">OK</button>
 	</div></div>
 	<img src=loading.gif class="loading hidden">
 	<div class="chromestore hidden">
@@ -455,6 +455,17 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
                   <img src=ChromeWebStore_Badge_v2_206x58.png>
                 </a>
 	
+	</div>
+	<div id=confirmation class="hidden">
+		<div id=confirmation-popup class="popup">
+			<div class="popup-content">
+				<p id=confirmation-prompt></p>
+				<div class="popup-bottom-button-bar">
+					<button id=confirmation-deny class="popup-button">No</button>
+					<button id=confirmation-affirm class="popup-button">Yes</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div id=stats-popup class="hidden popup">
 		<div class="popup-content">
@@ -485,7 +496,10 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
 					</p>
 				</div>
 			</div>
-			<button class=close-chooser>OK</button>
+			<div class="popup-bottom-button-bar">
+				<button class="popup-button close-chooser">OK</button>
+				<button id=stats-reset class="popup-button">Reset</button>
+			</div>
 		</div>
 	</div>
 	<div id=win-display class="hidden">
@@ -505,7 +519,7 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
 		Foundations start with <span id=seed-value></span>
 	</div>
 
-        <!--<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>-->
+	<!--<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>-->
 	<script type="text/javascript" src="js/yui-all-min.js"></script>
 	<script type="text/javascript" src="js/yui-breakout.js"></script>
 	<script type="text/javascript" src="js/solitaire.js"></script>

@@ -135,7 +135,8 @@ YUI.add("statistics", function (Y) {
 	function attachEvents() {
 		if (isAttached) { return; }
 
-		var Application = Solitaire.Application;
+		var Application = Solitaire.Application,
+		    activeGame = Solitaire.game.name();
 
 		Y.on("click", function () {
 			Application.newGame();
@@ -149,8 +150,16 @@ YUI.add("statistics", function (Y) {
 			statsGamesList().toggleClass("hidden");
 		}, statsTitle());
 
+		Y.on("click", function () {
+			Application.Confirmation.show("Are you sure you want to reset all " + nameMap[activeGame] + " stats?", function () {
+				resetRecord(activeGame);
+				Statistics.statsDisplay(activeGame);
+			});
+		}, Y.one("#stats-reset"));
+
 		Y.delegate("click", function (e) {
-			Statistics.statsDisplay(e.target.getData("game"));
+			activeGame = e.target.getData("game");
+			Statistics.statsDisplay(activeGame);
 		}, statsGamesList(), ".stats-gameli");
 
 		isAttached = true;
@@ -205,6 +214,10 @@ YUI.add("statistics", function (Y) {
 
 	function recordWin() {
 		record(1);
+	}
+
+	function resetRecord(game) {
+		localStorage[getRecordName(game)] = "";
 	}
 
 	function getRecordName(game) {

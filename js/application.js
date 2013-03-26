@@ -17,7 +17,7 @@
 	    /* remove {fetchCSS: false, bootstrap: false} during development when additional YUI modules are needed
 	     * TODO: generate this in the build script
 	     */
-	    yui = YUI({fetchCSS: false, bootstrap: false}), Y,
+	    yui = YUI({/*fetchCSS: false, bootstrap: false, filter: "DEBUG"*/}), Y,
 	    body = cacheNode("body"),
 	    games = {
 		"accordion": "Accordion",
@@ -688,6 +688,47 @@
 		Y.fire("popup", popup);
 	}
 
+	var Confirmation = {
+		promptNode: cacheNode("#confirmation-prompt"),
+		node: cacheNode("#confirmation"),
+		affirmButton: cacheNode("#confirmation-affirm"),
+		denyButton: cacheNode("#confirmation-deny"),
+		active: false,
+
+		attachEvents: function(callback) {
+			this.affirmButton().once("click", function () {
+				callback();
+				this.hide();
+			}.bind(this));
+
+			this.denyButton().once("click", function () {
+				this.hide();
+			}.bind(this));
+		},
+
+		resize: function() {
+			if (!this.active) { return; }
+
+			this.node().setStyles({
+				width: this.node().get("winWidth") + "px",
+				height: this.node().get("winHeight") + "px"
+			});
+		},
+
+		hide: function () {
+			this.active = false;
+			this.node().addClass("hidden");
+		},
+
+		show: function (prompt, callback) {
+			this.active = true;
+			this.attachEvents(callback);
+			this.promptNode().set("text", prompt);
+			this.node().removeClass("hidden");
+			this.resize();
+		}
+	};
+
 	function attachEvents() {
 		var hideMenus = function () {
 			GameChooser.hide();
@@ -711,7 +752,7 @@
 
 		Y.delegate("click", showDescription, "#descriptions", "li");
 
-                Y.on("click", hideMenus, Y.all(".close-chooser"));
+		Y.on("click", hideMenus, ".close-chooser");
 
 		Y.one("document").on("keydown", function (e) {
 			if (e.keyCode === 27) {
@@ -721,7 +762,7 @@
 
 		Y.on("afterSetup", function() {
 			active.game.stationary(function () {
-				resize()
+				resize();
 			});
 		});
 
@@ -789,6 +830,7 @@
 		GameChooser.refit();
 		Fade.resize();
 		Backgrounds.resize();
+		Confirmation.resize();
 	}
 
 	function playGame(name) {
@@ -862,6 +904,7 @@
 			windowHeight: 0,
 			resizeEvent: "resize",
 			GameChooser: GameChooser,
+			Confirmation: Confirmation,
 			newGame: newGame,
 			cacheNode: cacheNode
 		};

@@ -950,16 +950,12 @@ Y.Solitaire.Card = {
 		},
 
 		createNode: function () {
-			var groups,
-			    node,
-			    card = this;
+			var node;
 
 			node = this.node = Y.Node.create("<img class='card'>")
 				.setData("target", this)
 				.setAttribute("src", this.imageSrc())
-				.plug(Y.Plugin.Drop, {
-					useShim: false
-				});
+				.plug(Y.Plugin.Drop);
 
 			node.setStyles({left: -this.width, top: -this.height});
 			this.setRankHeight();
@@ -1391,9 +1387,7 @@ Y.Solitaire.Stack = {
 			node = this.node = Y.Node.create("<img class='stack'>")
 				.set("draggable", false)
 				.setData("target", this)
-				.plug(Y.Plugin.Drop, {
-					useShim: true
-				});
+				.plug(Y.Plugin.Drop);
 
 			this.setImageSrc();
 			this.updateStyle();

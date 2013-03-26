@@ -59,7 +59,7 @@ YUI.add("statistics", function (Y) {
 	if (!localStorage) { return; }
 
 	Y.on("newGame", function () {
-		if (loaded) { recordLose(); }
+		if (loaded) { recordLose(loaded); }
 
 		won = false;
 		loaded = null;
@@ -79,10 +79,10 @@ YUI.add("statistics", function (Y) {
 	Y.on("win", function () {
 		if (won || !enabled) { return; }
 
+		recordWin(loaded);
+
 		loaded = null;
 		won = true;
-
-		recordWin();
 	});
 
 	function attachEvents() {
@@ -113,21 +113,24 @@ YUI.add("statistics", function (Y) {
 		isAttached = true;
 	}
 
-	function record(value) {
-		var key = getRecordName(Solitaire.game.name()),
-		    record = localStorage[key] || "";
+	function record(value, game) {
+		var key, record;
+
+		game = game || Solitaire.game.name();
+		key = getRecordName(game);
+		record = localStorage[key] || "";
 
 		record += new Date().getTime() + "_" + value + "|";
 
 		localStorage[key] = record;
 	}
 
-	function recordLose() {
-		record(0);
+	function recordLose(game) {
+		record(0, game);
 	}
 
-	function recordWin() {
-		record(1);
+	function recordWin(game) {
+		record(1, game);
 	}
 
 	function resetRecord(game) {

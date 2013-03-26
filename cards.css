@@ -503,11 +503,6 @@ button {
 }
 
 button:hover {
-	background-color: #a1a172;
-	background-image: -webkit-linear-gradient(#EEC, #a1a172);
-	background-image: -moz-linear-gradient(#EEC, #a1a172);
-	background-image: -ms-linear-gradient(#EEC, #a1a172);
-	background-image: -o-linear-gradient(#EEC, #a1a172);
 	box-shadow: none;
 }
 
@@ -620,18 +615,28 @@ button:hover {
 	cursor: pointer;
 }
 
-.close-chooser {
-	font-size: 30px;
-	border: 0px;
-	margin: 20px auto;
+#game-chooser .close-chooser {
 	width: 300px;
+	margin: 20px auto;
+}
+
+#game-chooser .close-chooser:hover {
+	background-color: #a1a172;
+	background-image: -webkit-linear-gradient(#EEC, #a1a172);
+	background-image: -moz-linear-gradient(#EEC, #a1a172);
+	background-image: -ms-linear-gradient(#EEC, #a1a172);
+	background-image: -o-linear-gradient(#EEC, #a1a172);
+}
+
+.close-chooser, .popup-button {
+	font-size: 20px;
+	border: 0px;
+	margin: 20px 0 0 10px;
 	display: block;
 }
 
-#stats-popup .close-chooser, #about-popup .close-chooser, #options-chooser .close-chooser, #rules-popup .close-chooser {
+.popup-button {
 	width: auto;
-	margin: 20px 0 0 0;
-	font-size: 20px;
 	float: right;
 	background-color: #ddd;
 	background-image: -webkit-linear-gradient(#f0f0f0 50%, #bbb);
@@ -804,4 +809,14 @@ a.external {
 
 .hint-to {
 	box-shadow: 0 0 6px 4px rgba(143, 252, 143, 0.9);
+}
+
+#confirmation {
+	position: absolute;
+	z-index: 10000;
+}
+
+#confirmation-popup {
+	top: 120px;
+	width: 300px;
 }

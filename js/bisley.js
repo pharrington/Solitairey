@@ -27,8 +27,9 @@ var Solitaire = Y.Solitaire,
 
 		for (i = 0; i < 4; i++) {
 			card = aces[i];
-			foundation[i].push(card);
 			card.faceUp();
+			foundation[i].push(card);
+			foundation[i + 4].suit = card.suit;
 		}
 
 		stack = 4;
@@ -84,7 +85,7 @@ var Solitaire = Y.Solitaire,
 				break;
 			case "foundation":
 				if (!target) {
-					return this.rank === 13;
+					return this.rank === 13 && this.suit === stack.suit;
 				} else {
 					return target.suit === this.suit && Math.abs(target.rank - this.rank) === 1;
 				}
@@ -104,15 +105,12 @@ Y.Array.each(Bisley.fields, function (field) {
 Y.mix(Bisley.Stack, {
 	images: { foundation: "freeslot.png" },
 
-	validTarget: function (stack) {
-		return stack.field === "tableau" &&
-		    this.first().validTarget(stack);
-	},
-
 	validCard: function () { return false; }
 }, true);
 
 Y.mix(Bisley.Foundation.Stack, {
+	suit: null,
+
 	layout: function (layout, i) {
 		Solitaire.Stack.layout.call(this, layout, i);
 

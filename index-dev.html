@@ -84,6 +84,7 @@
 			<li id="accordion">
 				<h2>Accordion</h2>
 				<div class="description accordion">
+					<div class="layout"></div>
 					<h3>Accordion Solitaire Rules</h3>
 					<blockquote>
 					</blockquote>
@@ -150,6 +151,16 @@ Baker's Game is actually the stricter mother of the much more popular Freecell s
 					<h3>Baroness Solitaire Rules (Five Piles, Thirteens)</h3>
 					<blockquote>
 Baroness is a simple addition solitaire game. The game is won if you can manage to discard the entire deck. Any pair of cards equal to 13 can be discarded, and Kings can be discarded on their own. A unique aspect of this solitaire is that cards are automatically dealt from the deck to ensure there are at least five cards in play at all times. Free slots may be filled by any card, and in fact must be filled before clicking the deck to deal one card to each tableau pile. This solitaire game has fairly good odds of winning if you can discard in such a way as to consistently free up piles.
+					</blockquote>
+				</div>
+			</li>
+			<li id="bisley">
+				<h2>Bisley</h2>
+				<div class="description bisley">
+					<div class="layout"></div>
+					<h3>Bisley Solitaire Rules</h3>
+					<blockquote>
+						Bisley is a thoughtful solitaire that rewards skill and foresight. To win, play all tableau cards to the foundations. Kings can be played on the empty foundation slots; build the foundations either up in suit on the Aces, or down in suit on the Kings. The tableau stacks are built up or down by suit, one card at a time. Empty tableau spaces cannot be filled.
 					</blockquote>
 				</div>
 			</li>
@@ -521,53 +532,103 @@ Yukon is a very skillful solitaire focused on moving piles instead of single car
 
 	<!--<script type="text/javascript" src="http://yui.yahooapis.com/3.4.1/build/yui/yui-min.js"></script>-->
 	<script type="text/javascript" src="js/yui-all-min.js"></script>
-	<script type="text/javascript" src="js/yui-breakout.js"></script>
-	<script type="text/javascript" src="js/solitaire.js"></script>
-	<script type="text/javascript" src="js/analytics.js"></script>
-	<script type="text/javascript" src="js/iphone.js"></script>
-	<script type="text/javascript" src="js/util.js"></script>
-	<script type="text/javascript" src="js/auto-stack-clear.js"></script>
-	<script type="text/javascript" src="js/auto-turnover.js"></script>
-	<script type="text/javascript" src="js/autoplay.js"></script>
-	<script type="text/javascript" src="js/ie-opera-background-fix.js"></script>
-	<script type="text/javascript" src="js/statistics.js"></script>
-	<script type="text/javascript" src="js/display-seed-value.js"></script>
-	<script type="text/javascript" src="js/hint.js"></script>
-	<script type="text/javascript" src="js/accordion.js"></script>
-	<script type="text/javascript" src="js/acesup.js"></script>
-	<script type="text/javascript" src="js/agnes.js"></script>
-	<script type="text/javascript" src="js/alternations.js"></script>
-	<script type="text/javascript" src="js/baroness.js"></script>
-	<script type="text/javascript" src="js/bakersdozen.js"></script>
-	<script type="text/javascript" src="js/bakersgame.js"></script>
-	<script type="text/javascript" src="js/canfield.js"></script>
-	<script type="text/javascript" src="js/doubleklondike.js"></script>
-	<script type="text/javascript" src="js/eightoff.js"></script>
-	<script type="text/javascript" src="js/thefan.js"></script>
-	<script type="text/javascript" src="js/golf.js"></script>
-	<script type="text/javascript" src="js/klondike.js"></script>
-	<script type="text/javascript" src="js/klondike1t.js"></script>
-	<script type="text/javascript" src="js/labellelucie.js"></script>
-	<script type="text/javascript" src="js/flowergarden.js"></script>
-	<script type="text/javascript" src="js/fortythieves.js"></script>
-	<script type="text/javascript" src="js/freecell.js"></script>
-	<script type="text/javascript" src="js/grandclock.js"></script>
-	<script type="text/javascript" src="js/montecarlo.js"></script>
-	<script type="text/javascript" src="js/pyramid.js"></script>
-	<script type="text/javascript" src="js/russian-solitaire.js"></script>
-	<script type="text/javascript" src="js/scorpion.js"></script>
-	<script type="text/javascript" src="js/simplesimon.js"></script>
-	<script type="text/javascript" src="js/spider.js"></script>
-	<script type="text/javascript" src="js/spider1s.js"></script>
-	<script type="text/javascript" src="js/spider2s.js"></script>
-	<script type="text/javascript" src="js/spiderette.js"></script>
-	<script type="text/javascript" src="js/tritowers.js"></script>
-	<script type="text/javascript" src="js/will-o-the-wisp.js"></script>
-	<script type="text/javascript" src="js/yukon.js"></script>
-	<script type="text/javascript" src="js/calculation.js"></script>
-	<script type="text/javascript" src="js/accordion.js"></script>
-	<script type="text/javascript" src="js/solver-freecell.js"></script>
-	<script type="text/javascript" src="js/application.js"></script>
+	
+		<script src="js/yui-breakout.js"></script>
+	
+		<script src="js/analytics.js"></script>
+	
+		<script src="js/ads.js"></script>
+	
+		<script src="js/solitaire.js"></script>
+	
+		<script src="js/analytics.js"></script>
+	
+		<script src="js/util.js"></script>
+	
+		<script src="js/win-display.js"></script>
+	
+		<script src="js/iphone.js"></script>
+	
+		<script src="js/auto-stack-clear.js"></script>
+	
+		<script src="js/auto-turnover.js"></script>
+	
+		<script src="js/autoplay.js"></script>
+	
+		<script src="js/ie-opera-background-fix.js"></script>
+	
+		<script src="js/statistics.js"></script>
+	
+		<script src="js/display-seed-value.js"></script>
+	
+		<script src="js/solver-freecell.js"></script>
+	
+		<script src="js/agnes.js"></script>
+	
+		<script src="js/golf.js"></script>
+	
+		<script src="js/klondike.js"></script>
+	
+		<script src="js/klondike1t.js"></script>
+	
+		<script src="js/flowergarden.js"></script>
+	
+		<script src="js/fortythieves.js"></script>
+	
+		<script src="js/freecell.js"></script>
+	
+		<script src="js/grandclock.js"></script>
+	
+		<script src="js/montecarlo.js"></script>
+	
+		<script src="js/pyramid.js"></script>
+	
+		<script src="js/russian-solitaire.js"></script>
+	
+		<script src="js/scorpion.js"></script>
+	
+		<script src="js/spider.js"></script>
+	
+		<script src="js/spider1s.js"></script>
+	
+		<script src="js/spider2s.js"></script>
+	
+		<script src="js/spiderette.js"></script>
+	
+		<script src="js/tritowers.js"></script>
+	
+		<script src="js/will-o-the-wisp.js"></script>
+	
+		<script src="js/yukon.js"></script>
+	
+		<script src="js/simplesimon.js"></script>
+	
+		<script src="js/bakersdozen.js"></script>
+	
+		<script src="js/eightoff.js"></script>
+	
+		<script src="js/acesup.js"></script>
+	
+		<script src="js/alternations.js"></script>
+	
+		<script src="js/bakersgame.js"></script>
+	
+		<script src="js/baroness.js"></script>
+	
+		<script src="js/canfield.js"></script>
+	
+		<script src="js/doubleklondike.js"></script>
+	
+		<script src="js/thefan.js"></script>
+	
+		<script src="js/labellelucie.js"></script>
+	
+		<script src="js/calculation.js"></script>
+	
+		<script src="js/bisley.js"></script>
+	
+		<script src="js/application.js"></script>
+	
 
 
 </body>

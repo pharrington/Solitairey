@@ -51,8 +51,8 @@ var Solitaire = Y.Solitaire,
 			total: 8,
 			layout: {
 				hspacing: 1.25,
-				top: 0,
-				left: function () { return Solitaire.Card.width * 2.5; }
+				top: function () { return Solitaire.Card.height * 1.25; },
+				left: function () { return Solitaire.Card.width * 5.75; }
 			}
 		},
 		field: "foundation"
@@ -63,7 +63,7 @@ var Solitaire = Y.Solitaire,
 			total: 13,
 			layout: {
 				hspacing: 1.25,
-				top: function () { return Solitaire.Card.height * 1.5; },
+				top: function () { return Solitaire.Card.height * 2.75; },
 				left: 0
 			}
 		},
@@ -117,7 +117,8 @@ Y.mix(Bisley.Foundation.Stack, {
 		Solitaire.Stack.layout.call(this, layout, i);
 
 		if (i >= 4) {
-			this.left += Solitaire.Card.width * 3;
+			this.left -= Solitaire.Card.width * 5;
+			this.top -= Solitaire.Card.height * 1.25;
 		}
 	}
 }, true);

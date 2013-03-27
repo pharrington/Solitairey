@@ -102,6 +102,8 @@ Y.Array.each(Bisley.fields, function (field) {
 
 
 Y.mix(Bisley.Stack, {
+	images: { foundation: "freeslot.png" },
+
 	validTarget: function (stack) {
 		return stack.field === "tableau" &&
 		    this.first().validTarget(stack);

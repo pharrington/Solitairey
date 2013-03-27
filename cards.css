@@ -486,6 +486,10 @@ p {
 	background-image: url(layouts/mini/calculation.png);
 }
 
+.bisley .layout {
+	background-image: url(layouts/mini/bisley.png);
+}
+
 button {
 	font-size: 18px;
 	margin-right: 27px;

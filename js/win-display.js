@@ -8,8 +8,11 @@ YUI.add("win-display", function (Y) {
 	    Solitaire = Y.Solitaire,
 	    Statistics = Solitaire.Statistics,
 	    WinDisplay = Y.namespace("Solitaire.WinDisplay"),
+	    winDisplayTimer,
 	    isAttached = false,
 	    cacheNode = Solitaire.Util.cacheNode,
+	    
+	    winScreens = [],
 
 	    bodyNode = cacheNode("body"),
 	    winDisplayNode = cacheNode("#win-display"),
@@ -31,11 +34,11 @@ YUI.add("win-display", function (Y) {
 
 		won = true;
 
-		windows3();
+		winScreens[~~(Math.random() * winScreens.length)]();
 	});
 
 	Y.on("beforeSetup", function () {
-		winDisplayNode().addClass("hidden");
+		WinDisplay.cancel();
 		WinDisplay.enable();
 		Bouncer.clear();
 	});
@@ -62,6 +65,7 @@ YUI.add("win-display", function (Y) {
 		height: 0,
 		angle: 2 * Math.PI,
 		velocity: 1000,
+		minYVelocity: 200,
 		gravity: 15,
 		dampening: 0.5,
 		canvas: null,
@@ -92,13 +96,16 @@ YUI.add("win-display", function (Y) {
 			node.remove();
 
 			start = this.actors.length === 0;
-			this.actors.push({
-				node: node._node,
-				velocity: vector,
-				boundingbox: {x: xy[0], y: xy[1], width: ~~card.width, height: ~~card.height},
-				lastUpdate: now,
-				lastSmear: now
-			});
+
+			if (xy) {
+				this.actors.push({
+					node: node._node,
+					velocity: vector,
+					boundingbox: {x: xy[0], y: xy[1], width: ~~card.width, height: ~~card.height},
+					lastUpdate: now,
+					lastSmear: now
+				});
+			}
 
 			if (start) {
 				this.bounceCallback(now);
@@ -147,6 +154,7 @@ YUI.add("win-display", function (Y) {
 			if (boundingbox.y + boundingbox.height >= this.height) {
 				boundingbox.y -= velocity.y * dt;
 				velocity.y *= -this.dampening;
+				velocity.y = Math.min(velocity.y, -this.minYVelocity);
 			}
 
 			this.context.drawImage(image, ~~boundingbox.x, ~~boundingbox.y, boundingbox.width, boundingbox.height);
@@ -166,9 +174,10 @@ YUI.add("win-display", function (Y) {
 
 				this.canvas = node;
 				this.context = node.getContext("2d");
+				bodyNode().appendChild(this.canvas);
 			}
 
-			bodyNode().appendChild(this.canvas);
+			this.canvas.className = "";
 		},
 
 		resize: function () {
@@ -190,7 +199,7 @@ YUI.add("win-display", function (Y) {
 			if (!this.context) { return; }
 
 			this.context.clearRect(0, 0, this.width, this.height);
-			bodyNode().removeChild(this.canvas);
+			this.canvas.className = "hidden";
 
 			this.actors = [];
 		}
@@ -203,7 +212,10 @@ YUI.add("win-display", function (Y) {
 		    activeGame = Solitaire.game.name();
 
 		Y.on("click", function () {
-			Application.newGame();
+			WinDisplay.cancel();
+			setTimeout(function () {
+				Application.newGame();
+			}, 0);
 		}, Y.one("#win-display .new_deal"));
 
 		Y.on("click", function () {
@@ -215,6 +227,7 @@ YUI.add("win-display", function (Y) {
 
 	function windows3() {
 		var delay = 300,
+			winDisplayDelay = 1000,
 			interval = 1000;
 
 		Bouncer.init();
@@ -228,9 +241,7 @@ YUI.add("win-display", function (Y) {
 			});
 		}, "foundation");
 
-		setTimeout(function () {
-			WinDisplay.winDisplay();
-		}, delay + 10000);
+		WinDisplay.winDisplay(winDisplayDelay);
 	}
 
 	function explodeFoundations() {
@@ -262,23 +273,28 @@ YUI.add("win-display", function (Y) {
 			});
 		}, "foundation");
 
-		setTimeout(function () {
-			WinDisplay.winDisplay();
-		}, delay + 200);
+		WinDisplay.winDisplay(delay + 200);
 	}
 
 	Y.mix(WinDisplay, {
-		winDisplay: function () {
-			var gameName = Solitaire.game.name(),
-			    stats = Statistics.getRecord(gameName);
+		winDisplay: function (delay) {
+			winDisplayTimer = setTimeout(function () {
+				var gameName = Solitaire.game.name(),
+					stats = Statistics.getRecord(gameName);
 
-			attachEvents();
+				attachEvents();
 
-			winDisplayGame().set("text", Solitaire.Application.nameMap[gameName]);
-			winDisplayStreak().set("text", stats.streaks().last().length);
-			winDisplayWins().set("text", stats.wins().length);
-			winDisplayLoses().set("text", stats.loses().length);
-			winDisplayNode().removeClass("hidden");
+				winDisplayGame().set("text", Solitaire.Application.nameMap[gameName]);
+				winDisplayStreak().set("text", stats.streaks().last().length);
+				winDisplayWins().set("text", stats.wins().length);
+				winDisplayLoses().set("text", stats.loses().length);
+				winDisplayNode().removeClass("hidden");
+			}, delay);
+		},
+
+		cancel: function () {
+			winDisplayNode().addClass("hidden");
+			clearTimeout(winDisplayTimer);
 		},
 
 		enable: function () {
@@ -289,4 +305,9 @@ YUI.add("win-display", function (Y) {
 			enabled = false;
 		}
 	});
+
+	winScreens.push(explodeFoundations);
+	if (window.HTMLCanvasElement) {
+		winScreens.push(windows3);
+	}
 }, "0.0.1", {requires: ["solitaire", "statistics", "util", "array-extras", "breakout"]});

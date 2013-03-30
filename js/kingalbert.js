@@ -68,7 +68,7 @@ var Solitaire = Y.Solitaire,
 			layout: {
 				hspacing: 0.4,
 				top: function () { return Solitaire.Card.height * 4.4; },
-				left: 0
+				left: function () { return Solitaire.Card.width * 1.25; }
 			}
 		},
 		field: "reserve"

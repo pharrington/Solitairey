@@ -74,14 +74,31 @@ var Solitaire = Y.Solitaire,
 		field: "reserve"
 	},
 
-	Card: instance(Solitaire.Card, {
+	Card: instance(Solitaire.Card, { 
+		playable: function () {
+			switch (this.stack.field) {
+			case "tableau":
+				return this.createProxyStack();
+			case "reserve":
+				return true;
+			default:
+				return false;
+			}
+		},
+
+		createProxyStack: function () {
+			availableMoves = Util.freeTableaus().length;
+
+			return Solitaire.Card.createProxyStack.call(this);
+		},
+
 		validTarget: function (stack) {
 			var target = stack.last();
 
 			switch (stack.field) {
 			case "tableau":
 				if (!target) {
-					return true;
+					return availableMoves > 0;
 				} else {
 					return target.color !== this.color && target.rank === this.rank + 1;
 				}
@@ -108,7 +125,16 @@ Y.Array.each(KingAlbert.fields, function (field) {
 Y.mix(KingAlbert.Stack, {
 	images: {foundation: "freeslot.png", tableau: "freeslot.png" },
 
-	validCard: function () { return false; }
+	validCard: function (card) {
+		return card.color != this.last().color && availableMoves-- > 0;
+	},
+
+	validTarget: function (stack) {
+		if (stack.field != "tableau") { return false; }
+
+		return this.first().validTarget(stack);
+	}
+
 }, true);
 
 Y.mix(KingAlbert.Reserve.Stack, {

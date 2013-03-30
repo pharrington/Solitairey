@@ -946,7 +946,8 @@
 			GameChooser: GameChooser,
 			Confirmation: Confirmation,
 			newGame: newGame,
-			nameMap: nameMap
+			nameMap: nameMap,
+			currentTheme: function () { return Themes.current; }
 		};
 	}
 

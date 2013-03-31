@@ -787,6 +787,10 @@
 		Y.on("click", function () { active.game.undo(); }, Y.one("#undo"));
 		Y.on("click", newGame, Y.one("#new-deal"));
 		Y.on("click", Y.Solitaire.Statistics.statsDisplay, Y.one("#stats"));
+		Y.on("submit", function () {
+			Y.Solitaire.Analytics.track("Donations", "Click", "Paypal button");
+		}, Y.one("#donate"));
+
 
 		Y.on("click", hideChromeStoreLink, Y.one(".chromestore"));
 

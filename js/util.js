@@ -45,9 +45,9 @@ Y.mix(Util, {
 		});
 	},
 
-	freeTableaus: function (card) {
+	freeTableaus: function () {
 		return Y.Array.filter(Solitaire.game.tableau.stacks, function (stack) {
-			return !stack.cards.length;
+			return stack.cards.length === 0;
 		});
 	},
 

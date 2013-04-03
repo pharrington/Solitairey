@@ -2,7 +2,6 @@ YUI.add("king-albert", function (Y) {
 
 var Solitaire = Y.Solitaire,
     Util = Solitaire.Util,
-    availableMoves = 0;
     KingAlbert = Y.Solitaire.KingAlbert = instance(Solitaire, {
 	fields: ["Foundation", "Tableau", "Reserve"],
 
@@ -87,8 +86,6 @@ var Solitaire = Y.Solitaire,
 		},
 
 		createProxyStack: function () {
-			availableMoves = Util.freeTableaus().length;
-
 			return Solitaire.Card.createProxyStack.call(this);
 		},
 
@@ -98,7 +95,7 @@ var Solitaire = Y.Solitaire,
 			switch (stack.field) {
 			case "tableau":
 				if (!target) {
-					return availableMoves > 0;
+					return true;
 				} else {
 					return target.color !== this.color && target.rank === this.rank + 1;
 				}
@@ -126,13 +123,19 @@ Y.mix(KingAlbert.Stack, {
 	images: {foundation: "freeslot.png", tableau: "freeslot.png" },
 
 	validCard: function (card) {
-		return card.color != this.last().color && availableMoves-- > 0;
+		return this.cards.length < Math.pow(2, Util.freeTableaus().length);
 	},
 
 	validTarget: function (stack) {
 		if (stack.field != "tableau") { return false; }
 
-		return this.first().validTarget(stack);
+		var freeTableaus = Util.freeTableaus().length;
+
+		if (!stack.first()) {
+			freeTableaus--;
+		}
+
+		return this.cards.length <= Math.pow(2, freeTableaus);
 	}
 
 }, true);

@@ -11,7 +11,7 @@
 	}
 
 	var active = {
-		name: "klondike",
+		name: "Klondike",
 		game: null
 	    },
 	    /* remove {fetchCSS: false, bootstrap: false} during development when additional YUI modules are needed
@@ -66,6 +66,7 @@
 		"solitaire-autoplay",
 	        "solitaire-ios",
 		"display-seed-value",
+		"save-manager",
 		"analytics"],
 
 	nameMap = {
@@ -434,31 +435,29 @@
 		},
 
 		load: function () {
-			var game = Y.Cookie.get("options"),
-			    options;
+			var options;
+
+			options = localStorage["options"];
+
+			if (!options) {
+				options = Y.Cookie.get("full-options");
+				Y.Cookie.remove("full-options");
+			}
 
 			try {
-				Y.JSON.parse(Y.Cookie.get("full-options"), this.set.bind(this));
+				Y.JSON.parse(options, this.set.bind(this));
 			} catch (e) {
 				// do nothing as we'll just use the default settings
 			}
 
 			if (!Themes.current) { Themes.load(); }
 			if (!Backgrounds.current) { Backgrounds.load(); }
-
-			game && (active.name = game);
 		},
 
 		save: function () {
-			var twoWeeks = 1000 * 3600 * 24 * 14;
-
-			Y.Cookie.set(
-				"full-options",
-				Y.JSON.stringify(mapObject(this.properties, function (key, value) {
-					return value.get();
-				})),
-				{expires: new Date(new Date().getTime() + twoWeeks)}
-			);
+			localStorage["options"] = Y.JSON.stringify(mapObject(this.properties, function (key, value) {
+				return value.get();
+			}));
 		},
 
 		set: function (key, value) {
@@ -878,23 +877,22 @@
 	}
 
 	function playGame(name) {
-		var twoWeeks = 1000 * 3600 * 24 * 14;
-
 		active.name = name;
-		active.game = Y.Solitaire[games[name]];
-		Y.Cookie.set("options", name, {expires: new Date(new Date().getTime() + twoWeeks)});
+		active.game = lookupGame(name);
 
 		newGame();
 	}
 
-	function getSavedGame(name) {
-		name = name || "saved-game";
-
-		return localStorage[name] || Y.Cookie.get(name);
+	function lookupGame(name) {
+		return Y.Solitaire[games[name]] || Y.Solitaire[name];
 	}
 
 	function load() {
-		var save = getSavedGame();
+		var save = Y.Solitaire.SaveManager.getSavedGame();
+
+		if (save.name !== "") {
+			active.name = save.name;
+		}
 
 		attachEvents();
 		Options.load();
@@ -902,12 +900,13 @@
 		Preloader.preload();
 		Preloader.loaded(function () {
 			showChromeStoreLink();
-			if (save) {
+			if (save.serialized !== "") {
 				clearDOM();
-				active.game = Y.Solitaire[games[active.name]];
+				active.game = lookupGame(active.name);
+
 				try {
 					active.game.cleanup();
-					active.game.loadGame(save);
+					active.game.loadGame(save.serialized);
 				} catch (e) {
 					playGame(active.name);
 				}
@@ -924,14 +923,16 @@
 	}
 
 	function restart() {
-		var init = getSavedGame("initial-game"),
+		var save = Y.Solitaire.SaveManager.getSavedGame("initial-game"),
 		    game = active.game;
 
-		if (init) {
-			clearDOM();
-			game.cleanup();
-			game.loadGame(init);
-			game.save();
+		clearDOM();
+		game.cleanup();
+
+		if (save.serialized !== "") {
+			game.loadGame(save.serialized);
+		} else {
+			game.newGame();
 		}
 	}
 
@@ -956,14 +957,14 @@
 	}
 
         function hideChromeStoreLink() {
-		var expires = 1000 * 3600 * 24 * 365; // one year
-
 		Y.one(".chromestore").addClass("hidden");
-		Y.Cookie.set("disable-chromestore-link", true, {expires: new Date(new Date().getTime() + expires)});
+		localStorage["disable-chromestore-link"] = "true";
         }
 
 	function showChromeStoreLink() {
-		if (Y.UA.chrome && !Y.Cookie.get("disable-chromestore-link", Boolean)) {
+		var key = "disable-chromestore-link";
+
+		if (Y.UA.chrome && (localStorage[key] !== "true" || !Y.Cookie.get(key, Boolean))) {
 			Y.one(".chromestore").removeClass("hidden");
 		}
 	}

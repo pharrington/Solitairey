@@ -282,10 +282,14 @@ Y.mix(Solitaire, {
 		});
 	},
 
-	save: function (name) {
-		name = name || "saved-game";
+	save: function (newGame) {
+		var key;
 
-		localStorage[name] = this.serialize();
+		if (newGame) {
+			key = "initial-game";
+		}
+
+		Y.Solitaire.SaveManager.save(this.name(), this.serialize(), key);
 	},
 
 	loadGame: function (data) {
@@ -296,17 +300,18 @@ Y.mix(Solitaire, {
 		});
 
 		Y.fire("loadGame");
+
+		this.save();
 	},
 
 	newGame: function () {
-		localStorage.removeItem("saved-game");
-
+		Y.Solitaire.SaveManager.clear();
 		this.withoutFlip(function () {
 			this.setup(this.deal);
 		});
 
 		Y.fire("newGame");
-		Game.save("initial-game");
+		this.save(true);
 	},
 
 	cleanup: function () {
@@ -559,7 +564,7 @@ Y.mix(Solitaire, {
 
 	win: function () {
 		Y.fire("win");
-		localStorage.removeItem("saved-game");
+		Y.Solitaire.SaveManager.save(this.name());
 	},
 
 	endTurn: function () {
@@ -1656,4 +1661,4 @@ var Undo = {
 	}
 };
 
-}, "0.0.1", {requires: ["dd", "dd-plugin", "dd-delegate", "anim", "transition", "async-queue", "cookie", "array-extras"]});
+}, "0.0.1", {requires: ["save-manager", "dd", "dd-plugin", "dd-delegate", "anim", "transition", "async-queue", "cookie", "array-extras"]});

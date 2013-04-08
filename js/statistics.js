@@ -206,13 +206,18 @@ YUI.add("statistics", function (Y) {
 			    all = stats.all(),
 			    wins = stats.wins(),
 			    winpercent = all.length ? wins.length / all.length * 100: 0,
-			    currentStreak,
-			    bestStreak;
+			    lastRecord,
+			    currentStreak = 0,
+			    bestStreak = 0;
 
 			if (!streaks.length) {
 				bestStreak = currentStreak = 0;
 			} else {
-				currentStreak = streaks.last().length;
+				lastRecord = stats.all().last();
+				if (lastRecord && lastRecord.won) {
+					currentStreak = streaks.last().length;
+				}
+
 				bestStreak = streaks.sort(function (a, b) {
 					return a.length - b.length;
 				}).last().length;

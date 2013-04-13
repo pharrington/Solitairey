@@ -233,8 +233,10 @@ YUI.add("win-display", function (Y) {
 		Bouncer.init();
 
 		Game.eachStack(function (stack) {
+			var length = stack.length();
+
 			stack.eachCard(function (card, index) {
-				card.node.setStyle("zIndex", -2);
+				card.node.setStyle("zIndex", index - length);
 				setTimeout(function () {
 					Bouncer.bounce(card, 0.8, 0.2);
 				}, ~~(interval * (stack.cards.length - 1 - index) + Math.random() * interval + delay));

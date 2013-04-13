@@ -1352,6 +1352,10 @@ Y.Solitaire.Stack = {
 			return this.cards.last();
 		},
 
+		length: function () {
+			return this.cards.length;
+		},
+
 		index: function () {
 			return Game[this.field].stacks.indexOf(this);
 		},

@@ -1,4 +1,4 @@
-YUI.add("calculation", function (Y) {
+YUI.add("seven-toes", function (Y) {
 
 function wrap(array, index) {
 	var len = array.length;
@@ -18,7 +18,7 @@ function inRange(low, high, value) {
 }
 
 var Solitaire = Y.Solitaire,
-    Calculation = Y.Solitaire.Calculation = instance(Solitaire, {
+    SevenToes = Y.Solitaire.SevenToes = instance(Solitaire, {
 	fields: ["Foundation", "Tableau", "Deck", "Waste"],
 
 	deal: function () {
@@ -171,11 +171,11 @@ var Solitaire = Y.Solitaire,
 	})
 });
 
-Y.Array.each(Calculation.fields, function (field) {
-	Calculation[field].Stack = instance(Calculation.Stack);
+Y.Array.each(SevenToes.fields, function (field) {
+	SevenToes[field].Stack = instance(SevenToes.Stack);
 }, true);
 
-Y.mix(Calculation.Tableau.Stack, {
+Y.mix(SevenToes.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
 		    top = last ? last.top + last.rankHeight : this.top,

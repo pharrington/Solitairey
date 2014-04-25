@@ -46,6 +46,7 @@
 		"pyramid": "Pyramid",
 		"russian-solitaire": "RussianSolitaire",
 		"simple-simon": "SimpleSimon",
+		"seven-toes" : "SevenToes",
 		"scorpion": "Scorpion",
 		"spider": "Spider",
 		"spider1s": "Spider1S",

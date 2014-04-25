@@ -18,6 +18,7 @@ function inRange(low, high, value) {
 }
 
 var Solitaire = Y.Solitaire,
+    Klondike = Solitaire.Klondike,
     SevenToes = Y.Solitaire.SevenToes = instance(Solitaire, {
 	fields: ["Foundation", "Tableau", "Deck", "Waste"],
 
@@ -92,7 +93,7 @@ var Solitaire = Y.Solitaire,
 
 	Foundation: {
 		stackConfig: {
-			total: 4,
+			total: 6,
 			layout: {
 				hspacing: 1.25,
 				top: 0,
@@ -102,30 +103,13 @@ var Solitaire = Y.Solitaire,
 		field: "foundation"
 	},
 
-	Tableau: {
-		stackConfig: {
-			total: 4,
-			layout: {
-				hspacing: 1.25,
-				top: function () { return Solitaire.Card.height * 1.25; },
-				left: function () { return Solitaire.Card.width * 3.75; }
-			}
-		},
-		field: "tableau"
-	},
+	Tableau: instance(Klondike.Tableau),
 
-	Deck: instance(Solitaire.Deck, {
-		stackConfig: {
-			total: 1,
-			layout: {
-				hspacing: 0,
-				top: 0,
-				left: 0
-			}
-		},
-		field: "deck"
+ 	Deck: instance(Klondike.Deck, {
+		suits: ["s", "s", "h", "h", "c", "d"],
+		field : "deck"
 	}),
-
+	
 	Waste: {
 		stackConfig: {
 			total: 1,
@@ -174,6 +158,7 @@ var Solitaire = Y.Solitaire,
 Y.Array.each(SevenToes.fields, function (field) {
 	SevenToes[field].Stack = instance(SevenToes.Stack);
 }, true);
+
 
 Y.mix(SevenToes.Tableau.Stack, {
 	setCardPosition: function (card) {

@@ -62,7 +62,16 @@ var Solitaire = Y.Solitaire,
 		field: "foundation"
 	},
 
-	Tableau: instance(Klondike.Tableau),
+	Tableau: instance(Klondike.Tableau, {
+		stackConfig : {
+			total : 7,
+			layout: {
+				hspacing: 1.25,
+				top: function () { return Solitaire.Card.height * 1.5; },
+				left: function () { return Solitaire.Card.width * 2.5; }
+			}
+		}	
+	}),
 
  	Deck: instance(Klondike.Deck, {
 		suits: ["s", "s", "h", "h", "c", "d"],

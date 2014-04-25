@@ -21,50 +21,9 @@ var Solitaire = Y.Solitaire,
     Klondike = Solitaire.Klondike,
     SevenToes = Y.Solitaire.SevenToes = instance(Solitaire, {
 	fields: ["Foundation", "Tableau", "Deck", "Waste"],
-
-	deal: function () {
-		var card,
-		    deck = this.deck.cards,
-		    start = [],
-		    suits = ["s", "c", "d", "h"],
-    		    rank,
-		    found,
-		    i = 51,
-		    foundations = this.foundation.stacks;
-
-		while (i >= 0) {
-			card = deck[i];
-			found = false;
-
-			for (rank = 1; rank <= 4; rank++) {
-				if (card.rank === rank && card.suit === suits[rank - 1]) {
-					found = true;
-					deck.splice(i, 1);
-					start.push(card);
-					break;
-				}
-			}
-
-			i--;
-		}
-
-		start.sort(function (a, b) { return a.rank - b.rank; });
-
-		for (i = 0; i < 4; i++) {
-			card = start[i];
-			foundations[i].push(card);
-			card.faceUp();
-		}
-
-		card.after(function () {
-			Y.Array.each(start, function (c) {
-				Solitaire.Animation.flip(c);
-			});
-		});
-
-		this.deck.createStack();
-	},
-
+	
+	deal: Klondike.deal,
+	
 	turnOver: function () {
 		var last = this.deck.stacks[0].last(),
 		    waste = this.waste.stacks[0];
@@ -139,6 +98,10 @@ var Solitaire = Y.Solitaire,
 		validTarget: function (stack) {
 			var target = stack.last(),
 			    interval;
+	
+			if (!target) {
+				return false;
+			}
 
 			switch (stack.field) {
 			case "tableau":
@@ -171,4 +134,4 @@ Y.mix(SevenToes.Tableau.Stack, {
 	}
 }, true);
 
-}, "0.0.1", {requires: ["solitaire"]});
+}, "0.0.1", {requires: ["solitaire", "klondike"]});

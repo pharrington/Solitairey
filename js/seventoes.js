@@ -1,28 +1,30 @@
 YUI.add("seven-toes", function (Y) {
 
-function wrap(array, index) {
-	var len = array.length;
-
-	index %= len;
-	if (index < 0) { index += len; }
-
-	return array[index];
-}
-
-function inRange(low, high, value) {
-	if (low <= high) {
-		return low <= value && value <= high;
-	} else {
-		return low <= value || value <= high;
-	}
-}
-
 var Solitaire = Y.Solitaire,
     Klondike = Solitaire.Klondike,
     SevenToes = Y.Solitaire.SevenToes = instance(Solitaire, {
 	fields: ["Foundation", "Tableau", "Deck", "Waste"],
 	
-	deal: Klondike.deal,
+	deal: function() {
+		var deck,
+		    foundation,
+		    card,
+			i;
+
+		deck = this.deck;
+		for (i = 0; i < 6; i++)
+		{
+			card = this.deck.pop();
+			foundation = this.foundation.stacks[i];
+			foundation.push(card);
+			card.faceUp();
+			card.flipPostMove(Solitaire.Animation.interval * 5);
+		}
+
+		deck = this.deck.stacks[0];
+		foundation = this.foundation.stacks[0];
+		Klondike.deal.call(this);		
+	},
 	
 	turnOver: function () {
 		var last = this.deck.stacks[0].last(),
@@ -94,14 +96,18 @@ var Solitaire = Y.Solitaire,
 		playable: function () {
 			switch (this.stack.field) {
 			case "waste":
-				return this.isFree();
+				return true;
 			case "tableau":
-				return this.isFree() && this.autoPlay(true);
+				return this.isFree();
 			case "foundation":
 				return false;
 			case "deck":
 				return !Solitaire.game.waste.stacks[0].last();
 			}
+		},
+
+		isFree: function () {
+			return true;
 		},
 
 		validTarget: function (stack) {

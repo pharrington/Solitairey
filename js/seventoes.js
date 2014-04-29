@@ -42,7 +42,7 @@ var Solitaire = Y.Solitaire,
 		foundation = this.foundation.stacks[0];
 		Klondike.deal.call(this);
 	},
-	
+
 	turnOver: function () {
 		var deck = this.deck.stacks[0],
 			waste = this.waste.stacks[0],
@@ -55,21 +55,11 @@ var Solitaire = Y.Solitaire,
 		Card.updatePosition = Solitaire.noop;
 
 		this.withoutFlip(function () {
-			for (i = deck.cards.length, stop = i - 3; i > stop && i; i--) {
 				card = deck.last();
 				moved.push(card);
 				card.faceUp();
-
-				if (i === stop + 1 || i === 1) {
-					card.after(function () {
-						Y.Array.forEach(moved, function (c) {
-							Solitaire.Animation.flip(c);
-						});
-					});
-				}
-
 				card.moveTo(waste);
-			}
+				card.flipPostMove(Solitaire.Animation.interval * 5);
 		});
 
 		Card.updatePosition = updatePosition;
@@ -79,11 +69,13 @@ var Solitaire = Y.Solitaire,
 		});
 	},
 
-	redeal: Solitaire.noop,
+	redeal: Solitaire.Util.moveWasteToDeck,
 
-	height: function () { return this.Card.base.height * 3; },
+	height: function () { return this.Card.base.height * 5; },
 
-	maxStackHeight: function () { return Solitaire.Card.height * 1.9; },
+	autoPlay: function (simulate) { return false; },
+
+	maxStackHeight: function () { return Solitaire.Card.height * 2.4; },
 
 	Stack: instance(Solitaire.Stack, {
 		images: {
@@ -111,7 +103,7 @@ var Solitaire = Y.Solitaire,
 			total : 7,
 			layout: {
 				hspacing: 1.25,
-				top: function () { return Solitaire.Card.height * 2.0; },
+				top: function () { return Solitaire.Card.height * 2.5; },
 				left: function () { return Solitaire.Card.width * 2.5; }
 			}
 		}	
@@ -144,7 +136,7 @@ var Solitaire = Y.Solitaire,
 			case "foundation":
 				return false;
 			case "deck":
-				return !Solitaire.game.waste.stacks[0].last();
+				return true;
 			}
 		},
 
@@ -198,43 +190,6 @@ Y.Array.each(SevenToes.fields, function (field) {
 	SevenToes[field].Stack = instance(SevenToes.Stack);
 }, true);
 
-// TODO Roll this back? Is it single flip or 3-flip?
-Y.mix(SevenToes.Waste.Stack, {
-	// always display only the last three cards
-	setCardPosition: function (card) {
-		var cards = this.cards,
-		    last = cards.last(),
-		    stack = this;
-
-		Y.Array.each(cards.slice(-2), function (card, i) {
-			card.left = stack.left;
-			card.top = stack.top;
-		});
-
-		if (!cards.length) {
-			card.left = stack.left;
-		}
-
-		if (cards.length === 1) {
-			card.left = stack.left + 0.2 * card.width;
-		} else if (cards.length > 1) {
-			last.left = stack.left + 0.2 * card.width;
-			last.top = stack.top;
-			card.left = stack.left + 0.4 * card.width;
-		}
-
-		card.top = stack.top;
-	}
-}, true);
-
-Y.mix(SevenToes.Deck.Stack, {
-	createNode: function () {
-		Solitaire.Stack.createNode.call(this);
-		this.node.on("click", Solitaire.Events.clickEmptyDeck);
-		this.node.addClass("playable");
-	}
-}, true);
-
 Y.mix(SevenToes.Tableau.Stack, {
 	setCardPosition: function (card) {
 		var last = this.cards.last(),
@@ -254,6 +209,14 @@ Y.mix(SevenToes.Foundation.Stack, {
 
 		card.left = left;
 		card.top = top;
+	}
+}, true);
+
+Y.mix(SevenToes.Deck.Stack, {
+	createNode: function () {
+		Solitaire.Stack.createNode.call(this);
+		this.node.on("click", Solitaire.Events.clickEmptyDeck);
+		this.node.addClass("playable");
 	}
 }, true);
 

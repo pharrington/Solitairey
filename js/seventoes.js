@@ -129,19 +129,48 @@ var Solitaire = Y.Solitaire,
 	Card: instance(Solitaire.Card, {
 		playable: function () {
 			switch (this.stack.field) {
+			case "deck":
 			case "waste":
 				return true;
 			case "tableau":
-				return this.isFree();
 			case "foundation":
-				return false;
-			case "deck":
-				return true;
+				return this.isFree();
 			}
 		},
 
 		isFree: function () {
 			return this === this.stack.last();
+		},
+
+		createProxyStack: function () {
+			if (this.isFaceDown) {
+				this.proxyStack = null;
+				return null;
+			}
+
+			var stack = instance(this.stack, {
+				proxy: true,
+				stack: this.stack
+			    }),
+			    cards = stack.cards,
+			    card,
+			    i, len;
+
+			stack.cards = [];
+			stack.push(this, true);
+
+			for (i = cards.indexOf(this) + 1, len = cards.length; i < len; i++) {
+				card = cards[i];
+				if (stack.validProxy(card)) {
+					stack.push(card, true);
+				} else {
+					break;
+				}
+			}
+
+			this.proxyStack = i === len ? stack : null;
+
+			return this.proxyStack;
 		},
 
 		validTarget: function (cardOrStack) {

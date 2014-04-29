@@ -83,6 +83,8 @@ var Solitaire = Y.Solitaire,
 
 	height: function () { return this.Card.base.height * 3; },
 
+	maxStackHeight: function () { return Solitaire.Card.height * 1.9; },
+
 	Stack: instance(Solitaire.Stack, {
 		images: {
 			deck: null,
@@ -109,7 +111,7 @@ var Solitaire = Y.Solitaire,
 			total : 7,
 			layout: {
 				hspacing: 1.25,
-				top: function () { return Solitaire.Card.height * 1.5; },
+				top: function () { return Solitaire.Card.height * 2.0; },
 				left: function () { return Solitaire.Card.width * 2.5; }
 			}
 		}	

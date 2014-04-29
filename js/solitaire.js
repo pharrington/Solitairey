@@ -1295,53 +1295,56 @@ Y.Solitaire.Stack = {
 
 		adjustRankHeight: function () {
 			var cards = this.cards,
-			    card,
-			    last = this.last(),
-			    max = Game.maxStackHeight(),
+				card,
+				last = this.last(),
+				max = Game.maxStackHeight(),
 
-			    sumHidden = 0,
-			    sumVisible = 0,
-			    sumRankHeights,
+				sumHidden = 0,
+				sumVisible = 0,
+				sumHiddenRankHeight = 0,
+				sumVisibleRankHeight = 0,
+				maxRankHeights,
+				totalHeight = 0,
 
-			    height = 0,
-			    Card = Solitaire.Card,
-			    countHidden = 0, countVisible = 0,
-			    rhHidden, rhVisible,
-			    i, len;
+				Card = Solitaire.Card,
+				countHidden = 0, countVisible = 0,
+				i, len;
 
 			if (cards.length <= 1) { return; }
 
 			for (i = 0, len = cards.length - 1; i < len; i++) {
-				// if gaps in the stack are allowed, the stack's layed out horizontally
+				// if gaps in the stack are allowed, the stack's laid out horizontally
 				if (!cards[i]) { return; }
 
 				if (cards[i].isFaceDown) {
-					sumHidden += Card.hiddenRankHeight;
 					countHidden++;
-					height += Card.hiddenRankHeight;
+					sumHiddenRankHeight += Card.hiddenRankHeight;
 				} else {
-					sumVisible += Card.rankHeight;
 					countVisible++;
-					height += Card.rankHeight;
+					sumVisibleRankHeight += Card.rankHeight;
 				}
 			}
 
 			if (last) {
-				height += last.height;
-				sumRankHeights = max - last.height;
+				totalHeight = sumHiddenRankHeight + sumVisibleRankHeight + last.height;
+				maxRankHeights = max - last.height;
 			}
 
-			if (height <= max) {
+			// A stack rank height of 0 means no override of the card rank height.
+			if (totalHeight <= max) {
 				this.rankHeight = 0;
 				this.hiddenRankHeight = 0;
 				return;
 			}
 
-			rhHidden = sumRankHeights * (sumHidden / (sumHidden + sumVisible)) / countHidden;
-			rhVisible = sumRankHeights * (sumVisible / (sumHidden + sumVisible)) / countVisible;
+			// Scale back the stack rank height override
+			sumHiddenRankHeight = maxRankHeights * sumHiddenRankHeight /
+				(sumHiddenRankHeight + sumVisibleRankHeight);
+			sumVisibleRankHeight = maxRankHeights * sumVisibleRankHeight /
+				(sumHiddenRankHeight + sumVisibleRankHeight);
 
-			this.hiddenRankHeight = Math.floor(rhHidden);
-			this.rankHeight = Math.floor(rhVisible);
+			this.hiddenRankHeight = countHidden ? Math.floor(sumHiddenRankHeight / countHidden) : 0;
+			this.rankHeight = countVisible ? Math.floor(sumVisibleRankHeight / countVisible) : 0;
 		},
 
 		first: function () { 

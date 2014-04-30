@@ -7,7 +7,7 @@ function getInterval(stack) {
 
 	for (i = stack.cards.length - 2; i >= 0; i--) {
 		card = stack.cards[i];
-		if (!card.faceUp || card.rank == 13) {
+		if (card.isFaceDown || card.rank == 13) {
 			break;
 		}
 
@@ -149,17 +149,23 @@ var Solitaire = Y.Solitaire,
 			}
 
 			var stack = instance(this.stack, {
-				proxy: true,
-				stack: this.stack
-			    }),
-			    cards = stack.cards,
-			    card,
-			    i, len;
+					proxy: true,
+					stack: this.stack
+				 	}),
+				cards = stack.cards,
+				card,
+				i, start, len;
 
 			stack.cards = [];
 			stack.push(this, true);
+			start = cards.indexOf(this);
+			len = cards.length;
+			if (start === 0 && len > 1 && this.rank !== 13)
+			{
+				return null;
+			}
 
-			for (i = cards.indexOf(this) + 1, len = cards.length; i < len; i++) {
+			for (i = start + 1; i < len; i++) {
 				card = cards[i];
 				if (stack.validProxy(card)) {
 					stack.push(card, true);
@@ -217,6 +223,26 @@ var Solitaire = Y.Solitaire,
 
 Y.Array.each(SevenToes.fields, function (field) {
 	SevenToes[field].Stack = instance(SevenToes.Stack);
+}, true);
+
+Y.mix(SevenToes.Stack, {
+	validTarget: function (stack) {
+
+		switch (stack.field) {
+			case "tableau":
+			case "foundation":
+				if (stack.cards && stack.cards.last())
+				{
+					return stack.cards.length < 13 && stack.cards.last().rank === 13;
+				}
+				else
+				{
+					return this.first().rank === 13;
+				}
+			default:
+				return false;
+			}
+	}
 }, true);
 
 Y.mix(SevenToes.Tableau.Stack, {

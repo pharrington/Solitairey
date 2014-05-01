@@ -110,7 +110,7 @@ var Solitaire = Y.Solitaire,
 	}),
 
  	Deck: instance(Klondike.Deck, {
-		suits: ["s", "s", "h", "h", "c", "d"],
+		suits: ["s", "h", "c", "d", "s", "h"],
 		field : "deck"
 	}),
 	

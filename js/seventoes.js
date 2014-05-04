@@ -63,13 +63,10 @@ var Solitaire = Y.Solitaire,
 		});
 
 		Card.updatePosition = updatePosition;
-
-		waste.eachCard(function (c) {
-			c.updatePosition();
-		});
+		waste.updateCardsPosition();
 	},
 
-	redeal: Solitaire.Util.moveWasteToDeck,
+	redeal: Solitaire.noop,
 
 	height: function () { return this.Card.base.height * 5; },
 
@@ -264,6 +261,23 @@ Y.mix(SevenToes.Foundation.Stack, {
 
 		card.left = left;
 		card.top = top;
+	}
+}, true);
+
+Y.mix(SevenToes.Waste.Stack, {
+	setCardPosition: function (card) {
+		var last = this.cards.last(),
+			top = last ? last.top + last.rankHeight : this.top,
+			left = this.left;
+
+		card.left = left;
+		card.top = top;
+	}
+}, true);
+
+Y.mix(SevenToes.Waste.Stack, {
+	maxStackHeight: function () {
+		return Solitaire.Card.height * 4.8;
 	}
 }, true);
 

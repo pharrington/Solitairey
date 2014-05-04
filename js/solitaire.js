@@ -1293,11 +1293,15 @@ Y.Solitaire.Stack = {
 			Y.fire(stack.field + ":afterPush", stack);
 		},
 
+		maxStackHeight: function () {
+			return Game.maxStackHeight();
+		},
+
 		adjustRankHeight: function () {
 			var cards = this.cards,
 				card,
 				last = this.last(),
-				max = Game.maxStackHeight(),
+				max = this.maxStackHeight(),
 
 				sumHidden = 0,
 				sumVisible = 0,

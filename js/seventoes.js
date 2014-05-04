@@ -17,6 +17,36 @@ function getInterval(stack) {
 	return rank;
 }
 
+function getFullStackRank(stack) {
+	var i, suit;
+
+	// Only stacks of 13 may qualify
+	if (stack.cards.length !== 13) {
+		return 0;
+	}
+
+	// Stacks must be on a king
+	if (stack.cards[0].rank != 13) {
+		return 0;
+	}
+
+	// Everything must be visible
+	if (stack.cards[0].isFaceDown) {
+		return 0;
+	}
+
+	// Everything must be same suit
+	suit = stack.cards[0].suit;
+	for (i = 1; i < 13; i++) {
+		if (stack.cards[i].suit !== suit) {
+			return 0;
+		}
+	}
+
+	// OK, stack looks good. Return the rank of the 2nd card (on top of the base king)
+	return stack.cards[1].rank;
+}
+
 var Solitaire = Y.Solitaire,
     Klondike = Solitaire.Klondike,
     SevenToes = Y.Solitaire.SevenToes = instance(Solitaire, {
@@ -110,7 +140,36 @@ var Solitaire = Y.Solitaire,
 		suits: ["s", "h", "c", "d", "s", "h"],
 		field : "deck"
 	}),
-	
+
+	isWon: function () {
+		// Build a bitwise combination of all the complete stacks.
+		var completed = 0,
+		i, stack, stackRank;
+		for (i = 0; i < this.foundation.stacks.length; i++) {
+			stack = this.foundation.stacks[i];
+			stackRank = getFullStackRank(stack);
+			if (stackRank > 0) {
+				completed = completed | (0x1 << (stackRank - 1));
+			}
+		}
+
+		for (i = 0; i < this.tableau.stacks.length; i++) {
+			stack = this.tableau.stacks[i];
+			stackRank = getFullStackRank(stack);
+			if (stackRank > 0) {
+				completed = completed | (0x1 << (stackRank - 1));
+			}
+		}
+
+		switch (completed) {
+			case 0x111111:
+			case 0x111111000000:
+				return true;
+			default:
+				return false;
+		}
+	},
+
 	Waste: {
 		stackConfig: {
 			total: 1,

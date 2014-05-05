@@ -142,19 +142,11 @@ var Solitaire = Y.Solitaire,
 	}),
 
 	isWon: function () {
-		// Build a bitwise combination of all the complete stacks.
+		// Build a bitwise combination of all the complete stacks on the foundation
 		var completed = 0,
 		i, stack, stackRank;
 		for (i = 0; i < this.foundation.stacks.length; i++) {
 			stack = this.foundation.stacks[i];
-			stackRank = getFullStackRank(stack);
-			if (stackRank > 0) {
-				completed = completed | (0x1 << (stackRank - 1));
-			}
-		}
-
-		for (i = 0; i < this.tableau.stacks.length; i++) {
-			stack = this.tableau.stacks[i];
 			stackRank = getFullStackRank(stack);
 			if (stackRank > 0) {
 				completed = completed | (0x1 << (stackRank - 1));

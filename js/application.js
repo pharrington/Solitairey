@@ -21,7 +21,7 @@
 	    body = cacheNode("body"),
 	    games = {
 		"accordion": "Accordion",
-	        "acesup": "AcesUp",
+		"acesup": "AcesUp",
 		"agnes": "Agnes",
 		"alternations": "Alternations",
 		"bakersdozen": "BakersDozen",
@@ -97,6 +97,7 @@
 			Pyramid: "Pyramid",
 			RussianSolitaire: "Russian Solitaire",
 			Scorpion: "Scorpion",
+			SevenToes: "Seven Toes",
 			SimpleSimon: "Simple Simon",
 			Spider: "Spider",
 			Spider1S: "Spider (1 Suit)",
@@ -155,12 +156,27 @@
 
 	Rules = (function () {
 		var popupNode = cacheNode("#rules-popup"),
-		    description,
-		    rootNode,
-		    visible = false;
+			description,
+			rootNode,
+			visible = false;
 
 		function sourceNode() {
-			return Y.one("#" + active.name);
+			var srcNode = Y.one("#" + active.name),
+				activeGame;
+
+			// HACK: active.name can be either of the form "MonteCarlo" or "monte-carlo" at this point, depending
+			// on whether we've just switched games or not. Without this hack, you don't see rules unless you switch games.
+			// A better fix would be to be more consistent with active.name.
+			if (!srcNode) {
+				for (m in games) {
+					if (games[m] === active.name) {
+						srcNode = Y.one("#" + m);
+						break;
+					}
+				}
+			}
+
+			return srcNode;
 		}
 
 		return {

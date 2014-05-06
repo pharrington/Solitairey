@@ -698,12 +698,17 @@ a.external {
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
-	font-size: 0.6em;
+	font-size: 0.8em;
 	}
 
-.small-rules-table td, .small-rules-table tr{
+.small-rules-table td {
 	text-align: center;
-	padding: 0 1.0em 0 1.0em
+	padding: 0 0.5em 0 0.5em;
+ }
+ 
+.wide-columns td {
+	width: 7em;
+	padding: 0 0 0 0;
  }
  
  .long-rules {

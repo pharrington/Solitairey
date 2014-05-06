@@ -705,6 +705,11 @@ a.external {
 	text-align: center;
 	padding: 0 1.0em 0 1.0em
  }
+ 
+ .long-rules {
+ max-height:470px;
+ overflow:scroll;
+ }
 
  #adleft {
 	left: 0px;

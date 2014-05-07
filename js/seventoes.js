@@ -220,7 +220,7 @@ var Solitaire = Y.Solitaire,
 			// Disallow any partial stack moves.
 			if (start > 0 && len - start > 1 && !cards[start - 1].isFaceDown)
 			{
-				return false;
+				return null;
 			}
 
 			for (i = start + 1; i < len; i++) {

@@ -179,15 +179,19 @@ var Solitaire = Y.Solitaire,
 			switch (this.stack.field) {
 			case "deck":
 			case "waste":
-				return true;
+				return this.isFree();
 			case "tableau":
 			case "foundation":
-				return this.isFree();
+				return this.isFree() || this.isBaseKing();
 			}
 		},
 
 		isFree: function () {
 			return this === this.stack.last();
+		},
+
+		isBaseKing: function () {
+			return (this === this.stack.cards[0] && this.rank === 13 && !this.isFaceDown);
 		},
 
 		createProxyStack: function () {
@@ -271,6 +275,21 @@ var Solitaire = Y.Solitaire,
 
 Y.Array.each(SevenToes.fields, function (field) {
 	SevenToes[field].Stack = instance(SevenToes.Stack);
+}, true);
+
+Y.mix(SevenToes.Stack, {
+	updateCardsStyle: function () {
+	var field = this.field;
+
+	this.eachCard(function (c) {
+		if (c.playable()) {
+			c.node.addClass("playable");
+		} else {
+			c.node.removeClass("playable");
+		}
+		});
+	},
+
 }, true);
 
 Y.mix(SevenToes.Stack, {

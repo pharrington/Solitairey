@@ -1293,6 +1293,7 @@ Y.Solitaire.Stack = {
 			Y.fire(stack.field + ":afterPush", stack);
 		},
 
+		// Allow maximum stack height to be set on a per-stack basis
 		maxStackHeight: function () {
 			return Game.maxStackHeight();
 		},

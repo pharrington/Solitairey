@@ -151,6 +151,10 @@ var Solitaire = Y.Solitaire,
 			if (stackRank > 0) {
 				completed = completed | (0x1 << (stackRank - 1));
 			}
+			else {
+				// Optimization: all 6 foundation stacks need to contribute for a win
+				return false;
+			}
 		}
 
 		switch (completed) {
@@ -212,9 +216,11 @@ var Solitaire = Y.Solitaire,
 			stack.push(this, true);
 			start = cards.indexOf(this);
 			len = cards.length;
-			if (start === 0 && len > 1 && this.rank !== 13)
+
+			// Disallow any partial stack moves.
+			if (start > 0 && len - start > 1 && !cards[start - 1].isFaceDown)
 			{
-				return null;
+				return false;
 			}
 
 			for (i = start + 1; i < len; i++) {
@@ -253,15 +259,16 @@ var Solitaire = Y.Solitaire,
 			switch (stack.field) {
 			case "tableau":
 			case "foundation":
-				if (target.rank === 13) {
-					return this.rank !== 13;
-				}
-
 				interval = getInterval(stack);
 
 				// King at base of target stack
 				if (interval === 13) {
 					return this.rank !== 13;
+				}
+
+				// King on top of target stack
+				else if (target.rank === 13) {
+					return false;
 				}
 
 				// Only allow the modulus card.

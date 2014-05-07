@@ -13,6 +13,7 @@ Current games include:
 - Pyramid
 - Russian Solitaire
 - Scorpion
+- Seven Toes
 - Spider (1, 2, and 4 Suit)
 - Spiderette
 - Tri Towers

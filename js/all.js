@@ -8669,7 +8669,15 @@ var Solitaire = Y.Solitaire,
 				return this.isFree();
 			case "tableau":
 			case "foundation":
-				return this.isFree() || this.isBaseKing();
+				if (this.isFaceDown) {
+					return false;
+				}
+				else if (this.isFree()) {
+					return true;
+				}
+				else {
+					return this.isMoveableSubStack();
+				}
 			}
 		},
 
@@ -8677,13 +8685,48 @@ var Solitaire = Y.Solitaire,
 			return this === this.stack.last();
 		},
 
-		isBaseKing: function () {
-			return (this === this.stack.cards[0] && this.rank === 13 && !this.isFaceDown);
+		isMoveableSubStack: function () {
+			if (this.isFaceDown) {
+				return false;
+			}
+
+			var cards = this.stack.cards;
+			var start = cards.indexOf(this);
+			var len = cards.length;
+
+			// No multi-card moves from deep stacks.
+			if (start > 1 && !cards[start - 2].isFaceDown) {
+				return false;
+			}
+
+			// Full (but not overflowing) K based stacks can be moved.
+			if (this.rank === 13) {
+				return (len - start < 14);
+			}
+			
+			// Only cards on a K or at the base can be dragged with a stack.
+			var parentRank = 13;
+			if (start > 0 && !cards[start - 1].isFaceDown) {
+				parentRank = cards[start - 1].rank;
+			}
+			
+			if (parentRank != 13) {
+				return false;
+			}
+			
+			// We're not a king, but we're a base card or a base on a king. 
+			// (i.e. we are the interval-defining card.)  We can drag stacks
+			// around with us, but only if they're "incomplete" missing at least one of the cards A-Q.
+			return (len - start < 12);
 		},
 
 		createProxyStack: function () {
 			if (this.isFaceDown) {
 				this.proxyStack = null;
+				return null;
+			}
+
+			if (!this.playable()) {
 				return null;
 			}
 
@@ -8700,12 +8743,6 @@ var Solitaire = Y.Solitaire,
 			start = cards.indexOf(this);
 			len = cards.length;
 
-			// Disallow any partial stack moves.
-			if (start > 0 && len - start > 1 && !cards[start - 1].isFaceDown)
-			{
-				return null;
-			}
-
 			for (i = start + 1; i < len; i++) {
 				card = cards[i];
 				if (stack.validProxy(card)) {
@@ -8720,6 +8757,7 @@ var Solitaire = Y.Solitaire,
 			return this.proxyStack;
 		},
 
+		// See also the Stack.validTarget() override below.
 		validTarget: function (cardOrStack) {
 			var target, stack;
 
@@ -8733,7 +8771,7 @@ var Solitaire = Y.Solitaire,
 
 			if (!target) {
 				return this.rank === 13;
-				}
+			}
 
 			if (target.isFaceDown) {
 				return false;
@@ -8742,20 +8780,16 @@ var Solitaire = Y.Solitaire,
 			switch (stack.field) {
 			case "tableau":
 			case "foundation":
-				interval = getInterval(stack);
-
-				// King at base of target stack
-				if (interval === 13) {
+				if (target.rank === 13) {
+					// K on top of target stack: anything goes, including a change of interval
 					return this.rank !== 13;
 				}
-
-				// King on top of target stack
-				else if (target.rank === 13) {
-					return false;
+				else {					
+					// Only allow the modulus card.
+					interval = getInterval(stack);
+					return (this.rank % 13) === (target.rank + interval) % 13;
 				}
 
-				// Only allow the modulus card.
-				return (this.rank % 13) === (target.rank + interval) % 13;
 			default:
 				return false;
 			}
@@ -8769,36 +8803,36 @@ Y.Array.each(SevenToes.fields, function (field) {
 
 Y.mix(SevenToes.Stack, {
 	updateCardsStyle: function () {
-	var field = this.field;
+		var field = this.field;
 
-	this.eachCard(function (c) {
-		if (c.playable()) {
-			c.node.addClass("playable");
-		} else {
-			c.node.removeClass("playable");
-		}
+		this.eachCard(function (c) {
+			if (c.playable()) {
+				c.node.addClass("playable");
+			} else {
+				c.node.removeClass("playable");
+			}
 		});
 	},
 
 }, true);
 
+// See also the Card.validTarget() override above. There may be some DRY violation here, but for now it seems
+// like I have to implement both for things to work properly.
 Y.mix(SevenToes.Stack, {
 	validTarget: function (stack) {
 
 		switch (stack.field) {
 			case "tableau":
 			case "foundation":
-				if (stack.cards && stack.cards.last())
-				{
-					return stack.cards.length < 13 && stack.cards.last().rank === 13;
+				if (stack.cards && stack.cards.last()) {
+					return stack.cards.last().rank === 13;
 				}
-				else
-				{
+				else {
 					return this.first().rank === 13;
 				}
 			default:
 				return false;
-			}
+		}
 	}
 }, true);
 

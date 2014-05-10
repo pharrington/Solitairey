@@ -8686,10 +8686,6 @@ var Solitaire = Y.Solitaire,
 		},
 
 		isMoveableSubStack: function () {
-			if (this.isFaceDown) {
-				return false;
-			}
-
 			var cards = this.stack.cards;
 			var start = cards.indexOf(this);
 			var len = cards.length;
@@ -8703,17 +8699,17 @@ var Solitaire = Y.Solitaire,
 			if (this.rank === 13) {
 				return (len - start < 14);
 			}
-			
+
 			// Only cards on a K or at the base can be dragged with a stack.
 			var parentRank = 13;
 			if (start > 0 && !cards[start - 1].isFaceDown) {
 				parentRank = cards[start - 1].rank;
 			}
-			
+
 			if (parentRank != 13) {
 				return false;
 			}
-			
+
 			// We're not a king, but we're a base card or a base on a king. 
 			// (i.e. we are the interval-defining card.)  We can drag stacks
 			// around with us, but only if they're "incomplete" missing at least one of the cards A-Q.
@@ -8784,7 +8780,7 @@ var Solitaire = Y.Solitaire,
 					// K on top of target stack: anything goes, including a change of interval
 					return this.rank !== 13;
 				}
-				else {					
+				else {
 					// Only allow the modulus card.
 					interval = getInterval(stack);
 					return (this.rank % 13) === (target.rank + interval) % 13;

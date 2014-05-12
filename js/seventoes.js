@@ -157,12 +157,11 @@ var Solitaire = Y.Solitaire,
 			}
 		}
 
-		switch (completed) {
-			case 0x111111:
-			case 0x111111000000:
-				return true;
-			default:
-				return false;
+		if (completed === parseInt("111111", 2) || completed === parseInt("111111000000", 2)) {
+			return true;
+		}
+		else {
+			return false;
 		}
 	},
 

@@ -1,10 +1,10 @@
 PREFIX = "js"
-JS = %w[yui-breakout save-manager analytics ads solitaire analytics util win-display iphone auto-stack-clear auto-turnover autoplay ie-opera-background-fix statistics display-seed-value solver-freecell agnes golf klondike klondike1t flowergarden fortythieves freecell grandclock montecarlo pyramid russian-solitaire scorpion spider spider1s spider2s spiderette tritowers will-o-the-wisp yukon simplesimon bakersdozen eightoff acesup alternations bakersgame baroness canfield doubleklondike thefan labellelucie calculation bisley kingalbert application]
+JS = %w[yui-breakout save-manager analytics ads solitaire analytics util win-display iphone auto-stack-clear auto-turnover autoplay ie-opera-background-fix statistics display-seed-value solver-freecell agnes golf klondike klondike1t flowergarden fortythieves freecell grandclock montecarlo pyramid russian-solitaire scorpion spider spider1s spider2s spiderette tritowers will-o-the-wisp yukon simplesimon bakersdozen eightoff acesup alternations bakersgame baroness canfield doubleklondike thefan labellelucie calculation seventoes bisley kingalbert application]
 YUI = "#{PREFIX}/yui-all-min.js"
 ALL = "#{PREFIX}/all.js"
 MINIFIED = "#{PREFIX}/all-min.js"
 COMBINED = "#{PREFIX}/combined-min.js"
-COMPRESSOR = "ext/yuicompressor-2.4.2/build/yuicompressor-2.4.2.jar"
+COMPRESSOR = "ext/yuicompressor-2.4.8/build/yuicompressor-2.4.8.jar"
 TEMPLATE = "index.erb"
 OFFLINE_FILES = %w[air ancient_egyptians backgrounds dondorf font jolly-royal js/combined-min.js js/solver-freecell-worker.js layouts/mini paris apple-touch-icon-precomposed.png cards.css DownArrowSmall.png green.jpg icon16.png icon48.png index.html liji.html iphone.css loading.gif manifest.json trans.gif yui-tabview.css]
 ZIP_FILE = "chrome_store.zip"
